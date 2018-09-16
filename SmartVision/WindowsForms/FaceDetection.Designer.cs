@@ -1,6 +1,6 @@
 ﻿namespace WindowsForms
 {
-    partial class Form1
+    partial class FaceDetection
     {
         /// <summary>
         /// Required designer variable.
@@ -26,7 +26,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
+        protected void InitializeComponent()
         {
             this.pictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -40,18 +40,18 @@
             this.pictureBox.TabIndex = 1;
             this.pictureBox.TabStop = false;
             // 
-            // Form1
+            // FaceDetection
             // 
             this.ClientSize = new System.Drawing.Size(820, 538);
             this.Controls.Add(this.pictureBox);
-            this.Name = "Form1";
+            this.Name = "FaceDetection";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.PictureBox pictureBox;
+        public System.Windows.Forms.PictureBox pictureBox;
     }
 }
 
