@@ -1,6 +1,6 @@
 ﻿namespace WindowsForms
 {
-    partial class FaceDetection
+    partial class FormFaceDetection
     {
         /// <summary>
         /// Required designer variable.
