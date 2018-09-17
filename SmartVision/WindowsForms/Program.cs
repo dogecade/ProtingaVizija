@@ -16,11 +16,7 @@ namespace WindowsForms
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-<<<<<<< HEAD
             Application.Run(new FormFaceDetection());
-=======
-            Application.Run(new Form1());
->>>>>>> master
         }
     }
 }

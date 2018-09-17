@@ -43,9 +43,8 @@ namespace WindowsForms
                 Console.WriteLine(e);
                 throw;
             }
-
-            Application.Idle += ProcessFrame;
         }
+
         /// <summary>
         /// Processes the frame from webcam input
         /// Author: Deividas Brazenas
