@@ -1,4 +1,4 @@
-# SmartVision / Name TBD 
+# SmartVision / Name TBD
 
 Find your loved ones. Help find people
 (nu čia krc, vėliau) -> semi-promotional descriptionas čiuj
@@ -25,6 +25,3 @@ See also the list of [contributors](https://github.com/dogecade/ProtingaVizija/c
 ## License
 
 TBD
-
-## Build status
-[![Build Status](https://travis-ci.com/dogecade/ProtingaVizija.svg?branch=master)](https://travis-ci.com/dogecade/ProtingaVizija)
