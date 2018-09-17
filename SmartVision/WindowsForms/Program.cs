@@ -16,7 +16,7 @@ namespace WindowsForms
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FaceDetection());
+            Application.Run(new FormFaceDetection());
         }
     }
 }
