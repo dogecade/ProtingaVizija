@@ -1,0 +1,3 @@
+language: csharp
+solution: SmartVision.sln
+install: nuget restore SmartVision.sln
