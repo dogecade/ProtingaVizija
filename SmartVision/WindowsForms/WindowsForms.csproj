@@ -73,7 +73,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <Compile Include="FaceDetection.cs" />
     <Compile Include="FormFaceDetection.cs">
       <SubType>Form</SubType>
@@ -86,18 +85,6 @@
     <Compile Include="WebcamInput.cs" />
     <EmbeddedResource Include="FormFaceDetection.resx">
       <DependentUpon>FormFaceDetection.cs</DependentUpon>
-=======
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
->>>>>>> master
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
