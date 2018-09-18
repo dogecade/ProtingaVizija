@@ -341,7 +341,6 @@
 
         #endregion
 
-        public System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.Panel buttonsPanel;
         private System.Windows.Forms.Button exitButton;
         private System.Windows.Forms.Button addPersonButton;
@@ -351,7 +350,7 @@
         private System.Windows.Forms.TextBox homeText;
         private System.Windows.Forms.Panel bottomPanel;
         private System.Windows.Forms.Panel scanPanel;
-        private System.Windows.Forms.PictureBox scanPictureBox;
+        public System.Windows.Forms.PictureBox scanPictureBox;
         private System.Windows.Forms.Panel logoPanel;
         private System.Windows.Forms.Panel addPersonPanel;
         private System.Windows.Forms.TextBox addPersonText;
