@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
@@ -57,7 +58,7 @@ namespace WindowsForms
 
                 var form = Form.ActiveForm as FormFaceDetection;
 
-                form.pictureBox.Image = imageFrame.Bitmap; 
+                form.pictureBox.Image = imageFrame.Bitmap;
             }
         }
     }
