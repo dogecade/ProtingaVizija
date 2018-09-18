@@ -12,6 +12,8 @@ Extra technical description?
 * **Tomas Drąsutis** [tomas-drasutis](https://github.com/tomas-drasutis)
 * **Jonas Chairutdinovas** [JonasChair](https://github.com/JonasChair)
 * **Arnas Danaitis** [arnasDan](https://github.com/arnasDan)
-See also the list of [contributors](https://github.com/dogecade/ProtingaVizija/contributors).
+* See also the list of [contributors](https://github.com/dogecade/ProtingaVizija/contributors).
 ## License
 TBD
+## Build Status
+[![Build Status](https://travis-ci.com/dogecade/ProtingaVizija.svg?branch=master)](https://travis-ci.com/dogecade/ProtingaVizija)
