@@ -58,7 +58,7 @@ namespace WindowsForms
 
                 var form = Form.ActiveForm as FormFaceDetection;
 
-                form.pictureBox.Image = imageFrame.Bitmap;
+                form.scanPictureBox.Image = imageFrame.Bitmap;
             }
         }
     }
