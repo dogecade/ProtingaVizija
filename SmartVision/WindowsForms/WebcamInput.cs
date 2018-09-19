@@ -38,6 +38,7 @@ namespace WindowsForms
             try
             {
                 capture.Dispose();
+                Application.Idle -= ProcessFrame;
             }
             catch (Exception e)
             {
