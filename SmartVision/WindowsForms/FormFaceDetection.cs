@@ -1,45 +1,56 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace WindowsForms
 {
     public partial class FormFaceDetection : Form
     {
-
+        private bool cameraEnabled = false;
         public FormFaceDetection()
         {
             InitializeComponent();
-            WebcamInput.EnableWebcam();
-            //homePanel.BringToFront();
         }
-
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            homePanel.BringToFront();
+        }
+        
         /// <summary>
         /// Main buttons - switching through panels, exiting application
         /// Author: Tomas Drasutis
         /// </summary>
         private void homeButton_Click(object sender, EventArgs e)
         {
+            if(cameraEnabled)
+            {
+                WebcamInput.DisableWebcam();
+                cameraEnabled = false;
+            }
             homePanel.BringToFront();
         }
 
         private void scanButton_Click(object sender, EventArgs e)
         {
-            scanPanel.BringToFront();
+            if (!cameraEnabled)
+            {
+                WebcamInput.EnableWebcam();
+                scanPanel.BringToFront();
+                cameraEnabled = true;
+            }
         }
-
-        private void Form1_Load(object sender, EventArgs e)
+        private void addPersonButton_Click(object sender, EventArgs e)
         {
-            homePanel.BringToFront();
+            if (cameraEnabled)
+            {
+                WebcamInput.DisableWebcam();
+                cameraEnabled = false;
+            }
+            addPersonPanel.BringToFront();
         }
-
         private void exitButton_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void addPersonButton_Click(object sender, EventArgs e)
-        {
-            addPersonPanel.BringToFront();
         }
 
         /// <summary>
@@ -55,6 +66,7 @@ namespace WindowsForms
                 string lastName = lastNameBox.Text;
                 string dateOfBirth = dateOfBirthPicker.Value.ToShortDateString();
                 string additionalInformation = adInfoBox.Text;
+                Bitmap bitmap = new Bitmap(personPictureBox.Image);
 
             }
             catch (Exception exception)
