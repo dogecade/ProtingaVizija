@@ -11,7 +11,7 @@ namespace WindowsForms
         {
             InitializeComponent();
         }
-        private void Form1_Load(object sender, EventArgs e)
+        private void FormFaceDetection_Load(object sender, EventArgs e)
         {
             homePanel.BringToFront();
         }
@@ -27,6 +27,7 @@ namespace WindowsForms
                 WebcamInput.DisableWebcam();
                 cameraEnabled = false;
             }
+
             homePanel.BringToFront();
         }
 
@@ -46,6 +47,7 @@ namespace WindowsForms
                 WebcamInput.DisableWebcam();
                 cameraEnabled = false;
             }
+
             addPersonPanel.BringToFront();
         }
         private void exitButton_Click(object sender, EventArgs e)
