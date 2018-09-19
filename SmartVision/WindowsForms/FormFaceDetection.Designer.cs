@@ -42,10 +42,10 @@
             this.scanPictureBox = new System.Windows.Forms.PictureBox();
             this.addPersonPanel = new System.Windows.Forms.Panel();
             this.uploadButton = new System.Windows.Forms.Button();
-            this.personPictureBox = new System.Windows.Forms.PictureBox();
+            this.missingPersonPictureBox = new System.Windows.Forms.PictureBox();
             this.dateOfBirthPicker = new System.Windows.Forms.DateTimePicker();
             this.confirmPersonButton = new System.Windows.Forms.Button();
-            this.adInfoBox = new System.Windows.Forms.TextBox();
+            this.additionalInfoBox = new System.Windows.Forms.TextBox();
             this.adInfoLabel = new System.Windows.Forms.Label();
             this.lastNameBox = new System.Windows.Forms.TextBox();
             this.firstNameBox = new System.Windows.Forms.TextBox();
@@ -53,17 +53,14 @@
             this.LastNameLabel = new System.Windows.Forms.Label();
             this.firstNameLabel = new System.Windows.Forms.Label();
             this.addPersonText = new System.Windows.Forms.TextBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.buttonsPanel.SuspendLayout();
             this.logoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.homePanel.SuspendLayout();
-            this.bottomPanel.SuspendLayout();
             this.scanPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scanPictureBox)).BeginInit();
             this.addPersonPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.personPictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.missingPersonPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonsPanel
@@ -163,7 +160,6 @@
             // bottomPanel
             // 
             this.bottomPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bottomPanel.Controls.Add(this.pictureBox1);
             this.bottomPanel.Location = new System.Drawing.Point(206, 324);
             this.bottomPanel.Name = "bottomPanel";
             this.bottomPanel.Size = new System.Drawing.Size(602, 202);
@@ -190,10 +186,10 @@
             // 
             this.addPersonPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.addPersonPanel.Controls.Add(this.uploadButton);
-            this.addPersonPanel.Controls.Add(this.personPictureBox);
+            this.addPersonPanel.Controls.Add(this.missingPersonPictureBox);
             this.addPersonPanel.Controls.Add(this.dateOfBirthPicker);
             this.addPersonPanel.Controls.Add(this.confirmPersonButton);
-            this.addPersonPanel.Controls.Add(this.adInfoBox);
+            this.addPersonPanel.Controls.Add(this.additionalInfoBox);
             this.addPersonPanel.Controls.Add(this.adInfoLabel);
             this.addPersonPanel.Controls.Add(this.lastNameBox);
             this.addPersonPanel.Controls.Add(this.firstNameBox);
@@ -216,15 +212,15 @@
             this.uploadButton.UseVisualStyleBackColor = true;
             this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
             // 
-            // personPictureBox
+            // missingPersonPictureBox
             // 
-            this.personPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.personPictureBox.Location = new System.Drawing.Point(380, 68);
-            this.personPictureBox.Name = "personPictureBox";
-            this.personPictureBox.Size = new System.Drawing.Size(194, 212);
-            this.personPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.personPictureBox.TabIndex = 11;
-            this.personPictureBox.TabStop = false;
+            this.missingPersonPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.missingPersonPictureBox.Location = new System.Drawing.Point(380, 68);
+            this.missingPersonPictureBox.Name = "missingPersonPictureBox";
+            this.missingPersonPictureBox.Size = new System.Drawing.Size(194, 212);
+            this.missingPersonPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.missingPersonPictureBox.TabIndex = 11;
+            this.missingPersonPictureBox.TabStop = false;
             // 
             // dateOfBirthPicker
             // 
@@ -243,13 +239,13 @@
             this.confirmPersonButton.UseVisualStyleBackColor = true;
             this.confirmPersonButton.Click += new System.EventHandler(this.confirmPersonButton_Click);
             // 
-            // adInfoBox
+            // additionalInfoBox
             // 
-            this.adInfoBox.Location = new System.Drawing.Point(120, 168);
-            this.adInfoBox.Multiline = true;
-            this.adInfoBox.Name = "adInfoBox";
-            this.adInfoBox.Size = new System.Drawing.Size(205, 145);
-            this.adInfoBox.TabIndex = 8;
+            this.additionalInfoBox.Location = new System.Drawing.Point(120, 168);
+            this.additionalInfoBox.Multiline = true;
+            this.additionalInfoBox.Name = "additionalInfoBox";
+            this.additionalInfoBox.Size = new System.Drawing.Size(205, 145);
+            this.additionalInfoBox.TabIndex = 8;
             // 
             // adInfoLabel
             // 
@@ -316,14 +312,6 @@
             this.addPersonText.Text = "This is where you can add a missing person";
             this.addPersonText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(120, 59);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(110, 67);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
             // FormFaceDetection
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(75)))));
@@ -342,13 +330,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
             this.homePanel.ResumeLayout(false);
             this.homePanel.PerformLayout();
-            this.bottomPanel.ResumeLayout(false);
             this.scanPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.scanPictureBox)).EndInit();
             this.addPersonPanel.ResumeLayout(false);
             this.addPersonPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.personPictureBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.missingPersonPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -376,11 +362,10 @@
         private System.Windows.Forms.TextBox firstNameBox;
         private System.Windows.Forms.Label dateOfBirthLabel;
         private System.Windows.Forms.Button confirmPersonButton;
-        private System.Windows.Forms.TextBox adInfoBox;
+        private System.Windows.Forms.TextBox additionalInfoBox;
         private System.Windows.Forms.DateTimePicker dateOfBirthPicker;
-        private System.Windows.Forms.PictureBox personPictureBox;
+        private System.Windows.Forms.PictureBox missingPersonPictureBox;
         private System.Windows.Forms.Button uploadButton;
-        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
