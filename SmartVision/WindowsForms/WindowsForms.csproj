@@ -73,6 +73,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MissingPerson.cs" />
     <Compile Include="FaceDetection.cs" />
     <Compile Include="FormFaceDetection.cs">
       <SubType>Form</SubType>
