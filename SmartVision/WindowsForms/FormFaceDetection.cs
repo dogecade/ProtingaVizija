@@ -65,8 +65,8 @@ namespace WindowsForms
                 string firstName = firstNameBox.Text;
                 string lastName = lastNameBox.Text;
                 string dateOfBirth = dateOfBirthPicker.Value.ToShortDateString();
-                string additionalInformation = adInfoBox.Text;
-                Bitmap bitmap = new Bitmap(personPictureBox.Image);
+                string additionalInformation = additionalInfoBox.Text;
+                Bitmap missingPersonBitmap = new Bitmap(missingPersonPictureBox.Image);
 
             }
             catch (Exception exception)
@@ -92,8 +92,8 @@ namespace WindowsForms
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     imageLocation = dialog.FileName;
-                    personPictureBox.ImageLocation = imageLocation;
-                    personPictureBox.BringToFront();
+                    missingPersonPictureBox.ImageLocation = imageLocation;
+                    missingPersonPictureBox.BringToFront();
                 }
             }
             catch (Exception exception)
