@@ -74,6 +74,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContactPerson.cs" />
+    <Compile Include="FormPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPopup.Designer.cs">
+      <DependentUpon>FormPopup.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImageUpload.cs" />
     <Compile Include="MissingPerson.cs" />
     <Compile Include="FaceDetection.cs" />
@@ -89,6 +95,9 @@
     <Compile Include="WebcamInput.cs" />
     <EmbeddedResource Include="FormFaceDetection.resx">
       <DependentUpon>FormFaceDetection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPopup.resx">
+      <DependentUpon>FormPopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
