@@ -7,22 +7,24 @@ namespace WindowsForms
     public partial class FormFaceDetection : Form
     {
         private bool cameraEnabled = false;
+
         public FormFaceDetection()
         {
             InitializeComponent();
         }
+
         private void FormFaceDetection_Load(object sender, EventArgs e)
         {
             homePanel.BringToFront();
         }
-        
+
         /// <summary>
         /// Main buttons - switching through panels, exiting application
         /// Author: Tomas Drasutis
         /// </summary>
         private void homeButton_Click(object sender, EventArgs e)
         {
-            if(cameraEnabled)
+            if (cameraEnabled)
             {
                 WebcamInput.DisableWebcam();
                 cameraEnabled = false;
@@ -40,6 +42,7 @@ namespace WindowsForms
                 cameraEnabled = true;
             }
         }
+
         private void addPersonButton_Click(object sender, EventArgs e)
         {
             if (cameraEnabled)
@@ -50,6 +53,7 @@ namespace WindowsForms
 
             addPersonPanel.BringToFront();
         }
+
         private void exitButton_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -59,17 +63,13 @@ namespace WindowsForms
         /// Gets information about the missing person
         /// Author: Tomas Drasutis
         /// </summary>
-        private void confirmPersonButton_Click(object sender, EventArgs e)
+        private void addMissingPersonButton_Click(object sender, EventArgs e)
         {
-
             try
             {
-                string firstName = firstNameBox.Text;
-                string lastName = lastNameBox.Text;
-                string dateOfBirth = dateOfBirthPicker.Value.ToShortDateString();
-                string additionalInformation = additionalInfoBox.Text;
-                Bitmap missingPersonBitmap = new Bitmap(missingPersonPictureBox.Image);
-
+                Bitmap missingPersonImage = new Bitmap(missingPersonPictureBox.Image);
+                MissingPerson missingPerson = new MissingPerson(firstNameBox.Text, lastNameBox.Text, additionalInfoBox.Text, locationBox.Text, dateOfBirthPicker.Value, lastSeenOnPicker.Value, missingPersonImage);
+                ContactPerson contactPerson = new ContactPerson(contactFirstNameBox.Text, contactLastNameBox.Text, contactPhoneNumberBox.Text, contactEmailAddressBox.Text);
             }
             catch (Exception exception)
             {
@@ -84,24 +84,7 @@ namespace WindowsForms
         /// </summary>
         private void uploadButton_Click(object sender, EventArgs e)
         {
-            String imageLocation = "";
-
-            try
-            {
-                OpenFileDialog dialog = new OpenFileDialog();
-                dialog.Filter = "jpg files(*.jpg)|*.jpg| PNG files(*.png)|*.png| All Files(*.*)|*.*";
-
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    imageLocation = dialog.FileName;
-                    missingPersonPictureBox.ImageLocation = imageLocation;
-                    missingPersonPictureBox.BringToFront();
-                }
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
+            ImageUpload.UploadImage();
         }
 
         /// <summary>
