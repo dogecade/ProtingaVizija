@@ -9,7 +9,7 @@ namespace WindowsForms
     class FaceDetection
     {
         private static CascadeClassifier cascade = new CascadeClassifier("..\\..\\XML\\haarcascade_frontalface_default.xml"); // Used for face detection
-        private string x = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
         /// <summary>
         /// Detects a face in a frame and draws a rectangle around it
         /// </summary>

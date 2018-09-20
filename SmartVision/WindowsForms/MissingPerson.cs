@@ -3,23 +3,24 @@ using System.Drawing;
 
 namespace WindowsForms
 {
-    class MissingPerson
+    class MissingPerson : Person
     {
-        string name;
-        string surname;
-        string description;
-        DateTime birthday;
-        Image photo;
+        private string description;
+        private string lastSeenLocation;
+        private DateTime dateOfBirth;
+        private DateTime lastSeenDate;
+        private Bitmap missingPersonImage;
 
-
-        public MissingPerson(string name, string surname, string description, DateTime birthday, Image photo)
+        public MissingPerson(string firstName, string lastName, string description, string lastSeenLocation, 
+            DateTime dateOfBirth, DateTime lastSeenDate, Bitmap missingPersonImage)
         {
-            this.name = name;
-            this.surname = surname;
+            this.firstName = firstName;
+            this.lastName = lastName;
             this.description = description;
-            this.birthday = birthday;
-            this.photo = photo;
+            this.lastSeenLocation = lastSeenLocation;
+            this.dateOfBirth = dateOfBirth;
+            this.lastSeenDate = lastSeenDate;
+            this.missingPersonImage = missingPersonImage;
         }
-
     }
 }
