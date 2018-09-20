@@ -37,15 +37,26 @@
             this.homeButton = new System.Windows.Forms.Button();
             this.homePanel = new System.Windows.Forms.Panel();
             this.homeText = new System.Windows.Forms.TextBox();
-            this.bottomPanel = new System.Windows.Forms.Panel();
             this.scanPanel = new System.Windows.Forms.Panel();
             this.scanPictureBox = new System.Windows.Forms.PictureBox();
             this.addPersonPanel = new System.Windows.Forms.Panel();
+            this.contactEmailAddressBox = new System.Windows.Forms.TextBox();
+            this.contactEmailAddressLabel = new System.Windows.Forms.Label();
+            this.contactPhoneNumberBox = new System.Windows.Forms.TextBox();
+            this.contactPhoneNumberLabel = new System.Windows.Forms.Label();
+            this.contactLastNameBox = new System.Windows.Forms.TextBox();
+            this.contactLastNameLabel = new System.Windows.Forms.Label();
+            this.contactFirstNameBox = new System.Windows.Forms.TextBox();
+            this.contactFirstNameLabel = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.locationBox = new System.Windows.Forms.TextBox();
+            this.lastSeenOn = new System.Windows.Forms.Label();
+            this.lastSeenOnPicker = new System.Windows.Forms.DateTimePicker();
             this.uploadButton = new System.Windows.Forms.Button();
+            this.additionalInfoBox = new System.Windows.Forms.TextBox();
             this.missingPersonPictureBox = new System.Windows.Forms.PictureBox();
             this.dateOfBirthPicker = new System.Windows.Forms.DateTimePicker();
-            this.confirmPersonButton = new System.Windows.Forms.Button();
-            this.additionalInfoBox = new System.Windows.Forms.TextBox();
+            this.addMissingPersonButton = new System.Windows.Forms.Button();
             this.adInfoLabel = new System.Windows.Forms.Label();
             this.lastNameBox = new System.Windows.Forms.TextBox();
             this.firstNameBox = new System.Windows.Forms.TextBox();
@@ -53,6 +64,7 @@
             this.LastNameLabel = new System.Windows.Forms.Label();
             this.firstNameLabel = new System.Windows.Forms.Label();
             this.addPersonText = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonsPanel.SuspendLayout();
             this.logoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
@@ -143,7 +155,7 @@
             this.homePanel.Controls.Add(this.homeText);
             this.homePanel.Location = new System.Drawing.Point(206, 0);
             this.homePanel.Name = "homePanel";
-            this.homePanel.Size = new System.Drawing.Size(602, 318);
+            this.homePanel.Size = new System.Drawing.Size(602, 538);
             this.homePanel.TabIndex = 1;
             // 
             // homeText
@@ -152,18 +164,10 @@
             this.homeText.ForeColor = System.Drawing.Color.White;
             this.homeText.Location = new System.Drawing.Point(120, 11);
             this.homeText.Name = "homeText";
-            this.homeText.Size = new System.Drawing.Size(351, 23);
+            this.homeText.Size = new System.Drawing.Size(351, 27);
             this.homeText.TabIndex = 0;
             this.homeText.Text = "Main page";
             this.homeText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // bottomPanel
-            // 
-            this.bottomPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bottomPanel.Location = new System.Drawing.Point(206, 324);
-            this.bottomPanel.Name = "bottomPanel";
-            this.bottomPanel.Size = new System.Drawing.Size(602, 202);
-            this.bottomPanel.TabIndex = 2;
             // 
             // scanPanel
             // 
@@ -185,11 +189,24 @@
             // addPersonPanel
             // 
             this.addPersonPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.addPersonPanel.Controls.Add(this.textBox1);
+            this.addPersonPanel.Controls.Add(this.contactEmailAddressBox);
+            this.addPersonPanel.Controls.Add(this.contactEmailAddressLabel);
+            this.addPersonPanel.Controls.Add(this.contactPhoneNumberBox);
+            this.addPersonPanel.Controls.Add(this.contactPhoneNumberLabel);
+            this.addPersonPanel.Controls.Add(this.contactLastNameBox);
+            this.addPersonPanel.Controls.Add(this.contactLastNameLabel);
+            this.addPersonPanel.Controls.Add(this.contactFirstNameBox);
+            this.addPersonPanel.Controls.Add(this.contactFirstNameLabel);
+            this.addPersonPanel.Controls.Add(this.label1);
+            this.addPersonPanel.Controls.Add(this.locationBox);
+            this.addPersonPanel.Controls.Add(this.lastSeenOn);
+            this.addPersonPanel.Controls.Add(this.lastSeenOnPicker);
             this.addPersonPanel.Controls.Add(this.uploadButton);
+            this.addPersonPanel.Controls.Add(this.additionalInfoBox);
             this.addPersonPanel.Controls.Add(this.missingPersonPictureBox);
             this.addPersonPanel.Controls.Add(this.dateOfBirthPicker);
-            this.addPersonPanel.Controls.Add(this.confirmPersonButton);
-            this.addPersonPanel.Controls.Add(this.additionalInfoBox);
+            this.addPersonPanel.Controls.Add(this.addMissingPersonButton);
             this.addPersonPanel.Controls.Add(this.adInfoLabel);
             this.addPersonPanel.Controls.Add(this.lastNameBox);
             this.addPersonPanel.Controls.Add(this.firstNameBox);
@@ -199,8 +216,110 @@
             this.addPersonPanel.Controls.Add(this.addPersonText);
             this.addPersonPanel.Location = new System.Drawing.Point(206, 0);
             this.addPersonPanel.Name = "addPersonPanel";
-            this.addPersonPanel.Size = new System.Drawing.Size(602, 318);
+            this.addPersonPanel.Size = new System.Drawing.Size(602, 538);
             this.addPersonPanel.TabIndex = 2;
+            // 
+            // contactEmailAddressBox
+            // 
+            this.contactEmailAddressBox.Location = new System.Drawing.Point(120, 496);
+            this.contactEmailAddressBox.Name = "contactEmailAddressBox";
+            this.contactEmailAddressBox.Size = new System.Drawing.Size(205, 27);
+            this.contactEmailAddressBox.TabIndex = 25;
+            // 
+            // contactEmailAddressLabel
+            // 
+            this.contactEmailAddressLabel.AutoSize = true;
+            this.contactEmailAddressLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.contactEmailAddressLabel.Location = new System.Drawing.Point(13, 499);
+            this.contactEmailAddressLabel.Name = "contactEmailAddressLabel";
+            this.contactEmailAddressLabel.Size = new System.Drawing.Size(115, 21);
+            this.contactEmailAddressLabel.TabIndex = 24;
+            this.contactEmailAddressLabel.Text = "Email address";
+            // 
+            // contactPhoneNumberBox
+            // 
+            this.contactPhoneNumberBox.Location = new System.Drawing.Point(120, 463);
+            this.contactPhoneNumberBox.Name = "contactPhoneNumberBox";
+            this.contactPhoneNumberBox.Size = new System.Drawing.Size(205, 27);
+            this.contactPhoneNumberBox.TabIndex = 23;
+            // 
+            // contactPhoneNumberLabel
+            // 
+            this.contactPhoneNumberLabel.AutoSize = true;
+            this.contactPhoneNumberLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.contactPhoneNumberLabel.Location = new System.Drawing.Point(13, 466);
+            this.contactPhoneNumberLabel.Name = "contactPhoneNumberLabel";
+            this.contactPhoneNumberLabel.Size = new System.Drawing.Size(124, 21);
+            this.contactPhoneNumberLabel.TabIndex = 22;
+            this.contactPhoneNumberLabel.Text = "Phone number";
+            // 
+            // contactLastNameBox
+            // 
+            this.contactLastNameBox.Location = new System.Drawing.Point(120, 430);
+            this.contactLastNameBox.Name = "contactLastNameBox";
+            this.contactLastNameBox.Size = new System.Drawing.Size(205, 27);
+            this.contactLastNameBox.TabIndex = 21;
+            // 
+            // contactLastNameLabel
+            // 
+            this.contactLastNameLabel.AutoSize = true;
+            this.contactLastNameLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.contactLastNameLabel.Location = new System.Drawing.Point(13, 433);
+            this.contactLastNameLabel.Name = "contactLastNameLabel";
+            this.contactLastNameLabel.Size = new System.Drawing.Size(91, 21);
+            this.contactLastNameLabel.TabIndex = 20;
+            this.contactLastNameLabel.Text = "Last name";
+            // 
+            // contactFirstNameBox
+            // 
+            this.contactFirstNameBox.Location = new System.Drawing.Point(120, 397);
+            this.contactFirstNameBox.Name = "contactFirstNameBox";
+            this.contactFirstNameBox.Size = new System.Drawing.Size(205, 27);
+            this.contactFirstNameBox.TabIndex = 19;
+            // 
+            // contactFirstNameLabel
+            // 
+            this.contactFirstNameLabel.AutoSize = true;
+            this.contactFirstNameLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.contactFirstNameLabel.Location = new System.Drawing.Point(13, 400);
+            this.contactFirstNameLabel.Name = "contactFirstNameLabel";
+            this.contactFirstNameLabel.Size = new System.Drawing.Size(89, 21);
+            this.contactFirstNameLabel.TabIndex = 18;
+            this.contactFirstNameLabel.Text = "First name";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.label1.Location = new System.Drawing.Point(13, 190);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(149, 21);
+            this.label1.TabIndex = 16;
+            this.label1.Text = "Last seen location";
+            // 
+            // locationBox
+            // 
+            this.locationBox.Location = new System.Drawing.Point(120, 187);
+            this.locationBox.Name = "locationBox";
+            this.locationBox.Size = new System.Drawing.Size(205, 27);
+            this.locationBox.TabIndex = 15;
+            // 
+            // lastSeenOn
+            // 
+            this.lastSeenOn.AutoSize = true;
+            this.lastSeenOn.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.lastSeenOn.Location = new System.Drawing.Point(13, 159);
+            this.lastSeenOn.Name = "lastSeenOn";
+            this.lastSeenOn.Size = new System.Drawing.Size(105, 21);
+            this.lastSeenOn.TabIndex = 14;
+            this.lastSeenOn.Text = "Last seen on";
+            // 
+            // lastSeenOnPicker
+            // 
+            this.lastSeenOnPicker.Location = new System.Drawing.Point(120, 154);
+            this.lastSeenOnPicker.Name = "lastSeenOnPicker";
+            this.lastSeenOnPicker.Size = new System.Drawing.Size(205, 27);
+            this.lastSeenOnPicker.TabIndex = 13;
             // 
             // uploadButton
             // 
@@ -211,6 +330,14 @@
             this.uploadButton.Text = "Upload";
             this.uploadButton.UseVisualStyleBackColor = true;
             this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
+            // 
+            // additionalInfoBox
+            // 
+            this.additionalInfoBox.Location = new System.Drawing.Point(120, 220);
+            this.additionalInfoBox.Multiline = true;
+            this.additionalInfoBox.Name = "additionalInfoBox";
+            this.additionalInfoBox.Size = new System.Drawing.Size(205, 111);
+            this.additionalInfoBox.TabIndex = 8;
             // 
             // missingPersonPictureBox
             // 
@@ -224,60 +351,52 @@
             // 
             // dateOfBirthPicker
             // 
-            this.dateOfBirthPicker.Location = new System.Drawing.Point(120, 134);
+            this.dateOfBirthPicker.Location = new System.Drawing.Point(120, 121);
             this.dateOfBirthPicker.Name = "dateOfBirthPicker";
-            this.dateOfBirthPicker.Size = new System.Drawing.Size(205, 23);
+            this.dateOfBirthPicker.Size = new System.Drawing.Size(205, 27);
             this.dateOfBirthPicker.TabIndex = 10;
             // 
-            // confirmPersonButton
+            // addMissingPersonButton
             // 
-            this.confirmPersonButton.Location = new System.Drawing.Point(442, 286);
-            this.confirmPersonButton.Name = "confirmPersonButton";
-            this.confirmPersonButton.Size = new System.Drawing.Size(75, 27);
-            this.confirmPersonButton.TabIndex = 9;
-            this.confirmPersonButton.Text = "Confirm";
-            this.confirmPersonButton.UseVisualStyleBackColor = true;
-            this.confirmPersonButton.Click += new System.EventHandler(this.confirmPersonButton_Click);
-            // 
-            // additionalInfoBox
-            // 
-            this.additionalInfoBox.Location = new System.Drawing.Point(120, 168);
-            this.additionalInfoBox.Multiline = true;
-            this.additionalInfoBox.Name = "additionalInfoBox";
-            this.additionalInfoBox.Size = new System.Drawing.Size(205, 145);
-            this.additionalInfoBox.TabIndex = 8;
+            this.addMissingPersonButton.Location = new System.Drawing.Point(380, 454);
+            this.addMissingPersonButton.Name = "addMissingPersonButton";
+            this.addMissingPersonButton.Size = new System.Drawing.Size(207, 66);
+            this.addMissingPersonButton.TabIndex = 9;
+            this.addMissingPersonButton.Text = "Add missing person";
+            this.addMissingPersonButton.UseVisualStyleBackColor = true;
+            this.addMissingPersonButton.Click += new System.EventHandler(this.addMissingPersonButton_Click);
             // 
             // adInfoLabel
             // 
             this.adInfoLabel.AutoSize = true;
             this.adInfoLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.adInfoLabel.Location = new System.Drawing.Point(17, 162);
+            this.adInfoLabel.Location = new System.Drawing.Point(13, 250);
             this.adInfoLabel.Name = "adInfoLabel";
-            this.adInfoLabel.Size = new System.Drawing.Size(87, 38);
+            this.adInfoLabel.Size = new System.Drawing.Size(99, 42);
             this.adInfoLabel.TabIndex = 7;
             this.adInfoLabel.Text = "Additional \r\ninformation";
             // 
             // lastNameBox
             // 
-            this.lastNameBox.Location = new System.Drawing.Point(120, 101);
+            this.lastNameBox.Location = new System.Drawing.Point(120, 88);
             this.lastNameBox.Name = "lastNameBox";
-            this.lastNameBox.Size = new System.Drawing.Size(205, 23);
+            this.lastNameBox.Size = new System.Drawing.Size(205, 27);
             this.lastNameBox.TabIndex = 5;
             // 
             // firstNameBox
             // 
-            this.firstNameBox.Location = new System.Drawing.Point(120, 68);
+            this.firstNameBox.Location = new System.Drawing.Point(120, 55);
             this.firstNameBox.Name = "firstNameBox";
-            this.firstNameBox.Size = new System.Drawing.Size(205, 23);
+            this.firstNameBox.Size = new System.Drawing.Size(205, 27);
             this.firstNameBox.TabIndex = 4;
             // 
             // dateOfBirthLabel
             // 
             this.dateOfBirthLabel.AutoSize = true;
             this.dateOfBirthLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.dateOfBirthLabel.Location = new System.Drawing.Point(17, 134);
+            this.dateOfBirthLabel.Location = new System.Drawing.Point(13, 126);
             this.dateOfBirthLabel.Name = "dateOfBirthLabel";
-            this.dateOfBirthLabel.Size = new System.Drawing.Size(95, 19);
+            this.dateOfBirthLabel.Size = new System.Drawing.Size(109, 21);
             this.dateOfBirthLabel.TabIndex = 3;
             this.dateOfBirthLabel.Text = "Date of birth";
             // 
@@ -285,9 +404,9 @@
             // 
             this.LastNameLabel.AutoSize = true;
             this.LastNameLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.LastNameLabel.Location = new System.Drawing.Point(17, 101);
+            this.LastNameLabel.Location = new System.Drawing.Point(13, 91);
             this.LastNameLabel.Name = "LastNameLabel";
-            this.LastNameLabel.Size = new System.Drawing.Size(80, 19);
+            this.LastNameLabel.Size = new System.Drawing.Size(91, 21);
             this.LastNameLabel.TabIndex = 2;
             this.LastNameLabel.Text = "Last name";
             // 
@@ -295,9 +414,9 @@
             // 
             this.firstNameLabel.AutoSize = true;
             this.firstNameLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.firstNameLabel.Location = new System.Drawing.Point(17, 68);
+            this.firstNameLabel.Location = new System.Drawing.Point(13, 58);
             this.firstNameLabel.Name = "firstNameLabel";
-            this.firstNameLabel.Size = new System.Drawing.Size(78, 19);
+            this.firstNameLabel.Size = new System.Drawing.Size(89, 21);
             this.firstNameLabel.TabIndex = 1;
             this.firstNameLabel.Text = "First name";
             // 
@@ -307,10 +426,21 @@
             this.addPersonText.ForeColor = System.Drawing.Color.White;
             this.addPersonText.Location = new System.Drawing.Point(120, 11);
             this.addPersonText.Name = "addPersonText";
-            this.addPersonText.Size = new System.Drawing.Size(351, 23);
+            this.addPersonText.Size = new System.Drawing.Size(351, 27);
             this.addPersonText.TabIndex = 0;
             this.addPersonText.Text = "This is where you can add a missing person";
             this.addPersonText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.textBox1.ForeColor = System.Drawing.Color.White;
+            this.textBox1.Location = new System.Drawing.Point(120, 360);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(351, 27);
+            this.textBox1.TabIndex = 26;
+            this.textBox1.Text = "Your contact information";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // FormFaceDetection
             // 
@@ -318,7 +448,6 @@
             this.ClientSize = new System.Drawing.Size(820, 538);
             this.Controls.Add(this.addPersonPanel);
             this.Controls.Add(this.homePanel);
-            this.Controls.Add(this.bottomPanel);
             this.Controls.Add(this.buttonsPanel);
             this.Controls.Add(this.scanPanel);
             this.Font = new System.Drawing.Font("Century Gothic", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
@@ -348,7 +477,6 @@
         private System.Windows.Forms.Button homeButton;
         private System.Windows.Forms.Panel homePanel;
         private System.Windows.Forms.TextBox homeText;
-        private System.Windows.Forms.Panel bottomPanel;
         private System.Windows.Forms.Panel scanPanel;
         public System.Windows.Forms.PictureBox scanPictureBox;
         private System.Windows.Forms.Panel logoPanel;
@@ -361,11 +489,24 @@
         private System.Windows.Forms.TextBox lastNameBox;
         private System.Windows.Forms.TextBox firstNameBox;
         private System.Windows.Forms.Label dateOfBirthLabel;
-        private System.Windows.Forms.Button confirmPersonButton;
+        private System.Windows.Forms.Button addMissingPersonButton;
         private System.Windows.Forms.TextBox additionalInfoBox;
         private System.Windows.Forms.DateTimePicker dateOfBirthPicker;
-        private System.Windows.Forms.PictureBox missingPersonPictureBox;
+        public System.Windows.Forms.PictureBox missingPersonPictureBox;
         private System.Windows.Forms.Button uploadButton;
+        private System.Windows.Forms.Label lastSeenOn;
+        private System.Windows.Forms.DateTimePicker lastSeenOnPicker;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox locationBox;
+        private System.Windows.Forms.TextBox contactEmailAddressBox;
+        private System.Windows.Forms.Label contactEmailAddressLabel;
+        private System.Windows.Forms.TextBox contactPhoneNumberBox;
+        private System.Windows.Forms.Label contactPhoneNumberLabel;
+        private System.Windows.Forms.TextBox contactLastNameBox;
+        private System.Windows.Forms.Label contactLastNameLabel;
+        private System.Windows.Forms.TextBox contactFirstNameBox;
+        private System.Windows.Forms.Label contactFirstNameLabel;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
