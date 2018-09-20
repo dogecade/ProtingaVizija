@@ -14,7 +14,7 @@ namespace WindowsForms
         /// Enables the input of the webcam
         /// Author: Deividas Brazenas
         /// </summary>
-        public static void EnableWebcam()
+        public static bool EnableWebcam()
         {
             try
             {
@@ -23,10 +23,26 @@ namespace WindowsForms
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+                return false;
+            }
+
+            try
+            {
+                if (!capture.IsOpened)
+                {
+                    throw new SystemException("Input camera was not found");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                var popup = new FormPopup();
+                popup.ShowDialog();
+                return false;
             }
 
             Application.Idle += ProcessFrame;
+            return true;
         }
 
         /// <summary>
@@ -57,7 +73,7 @@ namespace WindowsForms
             {
                 FaceDetection.FaceDetectionFromFrame(imageFrame); // Face detection
 
-                var form = Form.ActiveForm as FormFaceDetection;
+                var form = FormFaceDetection.Current;
 
                 form.scanPictureBox.Image = imageFrame.Bitmap;
             }

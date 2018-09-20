@@ -7,10 +7,12 @@ namespace WindowsForms
     public partial class FormFaceDetection : Form
     {
         private bool cameraEnabled = false;
+        public static FormFaceDetection Current { get; private set; }
 
         public FormFaceDetection()
         {
             InitializeComponent();
+            Current = this;
         }
 
         private void FormFaceDetection_Load(object sender, EventArgs e)
@@ -22,7 +24,7 @@ namespace WindowsForms
         /// Main buttons - switching through panels, exiting application
         /// Author: Tomas Drasutis
         /// </summary>
-        private void homeButton_Click(object sender, EventArgs e)
+        public void homeButton_Click(object sender, EventArgs e)
         {
             if (cameraEnabled)
             {
@@ -35,11 +37,15 @@ namespace WindowsForms
 
         private void scanButton_Click(object sender, EventArgs e)
         {
-            if (!cameraEnabled)
+            if (!cameraEnabled && WebcamInput.EnableWebcam())
             {
-                WebcamInput.EnableWebcam();
                 scanPanel.BringToFront();
                 cameraEnabled = true;
+            }
+
+            else
+            {
+                homePanel.BringToFront();
             }
         }
 

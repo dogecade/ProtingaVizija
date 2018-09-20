@@ -28,6 +28,7 @@
         /// </summary>
         protected void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFaceDetection));
             this.buttonsPanel = new System.Windows.Forms.Panel();
             this.logoPanel = new System.Windows.Forms.Panel();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
@@ -40,6 +41,7 @@
             this.scanPanel = new System.Windows.Forms.Panel();
             this.scanPictureBox = new System.Windows.Forms.PictureBox();
             this.addPersonPanel = new System.Windows.Forms.Panel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.contactEmailAddressBox = new System.Windows.Forms.TextBox();
             this.contactEmailAddressLabel = new System.Windows.Forms.Label();
             this.contactPhoneNumberBox = new System.Windows.Forms.TextBox();
@@ -64,7 +66,6 @@
             this.LastNameLabel = new System.Windows.Forms.Label();
             this.firstNameLabel = new System.Windows.Forms.Label();
             this.addPersonText = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonsPanel.SuspendLayout();
             this.logoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
@@ -175,14 +176,14 @@
             this.scanPanel.Controls.Add(this.scanPictureBox);
             this.scanPanel.Location = new System.Drawing.Point(206, 0);
             this.scanPanel.Name = "scanPanel";
-            this.scanPanel.Size = new System.Drawing.Size(602, 318);
+            this.scanPanel.Size = new System.Drawing.Size(602, 538);
             this.scanPanel.TabIndex = 2;
             // 
             // scanPictureBox
             // 
             this.scanPictureBox.Location = new System.Drawing.Point(1, 1);
             this.scanPictureBox.Name = "scanPictureBox";
-            this.scanPictureBox.Size = new System.Drawing.Size(596, 312);
+            this.scanPictureBox.Size = new System.Drawing.Size(602, 538);
             this.scanPictureBox.TabIndex = 0;
             this.scanPictureBox.TabStop = false;
             // 
@@ -218,6 +219,17 @@
             this.addPersonPanel.Name = "addPersonPanel";
             this.addPersonPanel.Size = new System.Drawing.Size(602, 538);
             this.addPersonPanel.TabIndex = 2;
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.textBox1.ForeColor = System.Drawing.Color.White;
+            this.textBox1.Location = new System.Drawing.Point(120, 360);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(351, 27);
+            this.textBox1.TabIndex = 26;
+            this.textBox1.Text = "Your contact information";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // contactEmailAddressBox
             // 
@@ -431,17 +443,6 @@
             this.addPersonText.Text = "This is where you can add a missing person";
             this.addPersonText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // textBox1
-            // 
-            this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.textBox1.ForeColor = System.Drawing.Color.White;
-            this.textBox1.Location = new System.Drawing.Point(120, 360);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(351, 27);
-            this.textBox1.TabIndex = 26;
-            this.textBox1.Text = "Your contact information";
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // FormFaceDetection
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(75)))));
@@ -452,6 +453,7 @@
             this.Controls.Add(this.scanPanel);
             this.Font = new System.Drawing.Font("Century Gothic", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormFaceDetection";
             this.Load += new System.EventHandler(this.FormFaceDetection_Load);
             this.buttonsPanel.ResumeLayout(false);
@@ -474,8 +476,7 @@
         private System.Windows.Forms.Button exitButton;
         private System.Windows.Forms.Button addPersonButton;
         private System.Windows.Forms.Button scanButton;
-        private System.Windows.Forms.Button homeButton;
-        private System.Windows.Forms.Panel homePanel;
+        public System.Windows.Forms.Panel homePanel;
         private System.Windows.Forms.TextBox homeText;
         private System.Windows.Forms.Panel scanPanel;
         public System.Windows.Forms.PictureBox scanPictureBox;
@@ -507,6 +508,7 @@
         private System.Windows.Forms.TextBox contactFirstNameBox;
         private System.Windows.Forms.Label contactFirstNameLabel;
         private System.Windows.Forms.TextBox textBox1;
+        internal System.Windows.Forms.Button homeButton;
     }
 }
 
