@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
@@ -9,7 +9,8 @@ namespace WindowsForms
     class WebcamInput
     {
         private static VideoCapture capture; // Takes video from camera as image frames
-
+        private static int frameCount = 0;
+        private static Task<string> analyzeTask;
         /// <summary>
         /// Enables the input of the webcam
         /// Author: Deividas Brazenas
@@ -71,11 +72,24 @@ namespace WindowsForms
         {
             using (var imageFrame = capture.QueryFrame().ToImage<Bgr, Byte>())
             {
-                FaceDetection.FaceDetectionFromFrame(imageFrame); // Face detection
-
                 var form = FormFaceDetection.Current;
-
                 form.scanPictureBox.Image = imageFrame.Bitmap;
+
+                frameCount++;
+
+                // Analyze every 15th frame
+                if (frameCount == 15)
+                {
+                    frameCount = 0;
+
+                    analyzeTask = Task.Run(() =>
+                    {
+                        return FaceRecognition.AnalyzeImage(imageFrame.Bitmap);
+                    });
+                    analyzeTask.Wait(100);
+
+                    // analyzeTask.Result - face properties json
+                }
             }
         }
     }
