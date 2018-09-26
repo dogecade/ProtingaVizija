@@ -165,7 +165,7 @@
             this.homeText.ForeColor = System.Drawing.Color.White;
             this.homeText.Location = new System.Drawing.Point(120, 11);
             this.homeText.Name = "homeText";
-            this.homeText.Size = new System.Drawing.Size(351, 27);
+            this.homeText.Size = new System.Drawing.Size(351, 23);
             this.homeText.TabIndex = 0;
             this.homeText.Text = "Main page";
             this.homeText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -226,7 +226,7 @@
             this.textBox1.ForeColor = System.Drawing.Color.White;
             this.textBox1.Location = new System.Drawing.Point(120, 360);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(351, 27);
+            this.textBox1.Size = new System.Drawing.Size(351, 23);
             this.textBox1.TabIndex = 26;
             this.textBox1.Text = "Your contact information";
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -235,7 +235,7 @@
             // 
             this.contactEmailAddressBox.Location = new System.Drawing.Point(120, 496);
             this.contactEmailAddressBox.Name = "contactEmailAddressBox";
-            this.contactEmailAddressBox.Size = new System.Drawing.Size(205, 27);
+            this.contactEmailAddressBox.Size = new System.Drawing.Size(205, 23);
             this.contactEmailAddressBox.TabIndex = 25;
             // 
             // contactEmailAddressLabel
@@ -244,7 +244,7 @@
             this.contactEmailAddressLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.contactEmailAddressLabel.Location = new System.Drawing.Point(13, 499);
             this.contactEmailAddressLabel.Name = "contactEmailAddressLabel";
-            this.contactEmailAddressLabel.Size = new System.Drawing.Size(115, 21);
+            this.contactEmailAddressLabel.Size = new System.Drawing.Size(103, 19);
             this.contactEmailAddressLabel.TabIndex = 24;
             this.contactEmailAddressLabel.Text = "Email address";
             // 
@@ -252,7 +252,7 @@
             // 
             this.contactPhoneNumberBox.Location = new System.Drawing.Point(120, 463);
             this.contactPhoneNumberBox.Name = "contactPhoneNumberBox";
-            this.contactPhoneNumberBox.Size = new System.Drawing.Size(205, 27);
+            this.contactPhoneNumberBox.Size = new System.Drawing.Size(205, 23);
             this.contactPhoneNumberBox.TabIndex = 23;
             // 
             // contactPhoneNumberLabel
@@ -261,7 +261,7 @@
             this.contactPhoneNumberLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.contactPhoneNumberLabel.Location = new System.Drawing.Point(13, 466);
             this.contactPhoneNumberLabel.Name = "contactPhoneNumberLabel";
-            this.contactPhoneNumberLabel.Size = new System.Drawing.Size(124, 21);
+            this.contactPhoneNumberLabel.Size = new System.Drawing.Size(111, 19);
             this.contactPhoneNumberLabel.TabIndex = 22;
             this.contactPhoneNumberLabel.Text = "Phone number";
             // 
@@ -269,7 +269,7 @@
             // 
             this.contactLastNameBox.Location = new System.Drawing.Point(120, 430);
             this.contactLastNameBox.Name = "contactLastNameBox";
-            this.contactLastNameBox.Size = new System.Drawing.Size(205, 27);
+            this.contactLastNameBox.Size = new System.Drawing.Size(205, 23);
             this.contactLastNameBox.TabIndex = 21;
             // 
             // contactLastNameLabel
@@ -278,7 +278,7 @@
             this.contactLastNameLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.contactLastNameLabel.Location = new System.Drawing.Point(13, 433);
             this.contactLastNameLabel.Name = "contactLastNameLabel";
-            this.contactLastNameLabel.Size = new System.Drawing.Size(91, 21);
+            this.contactLastNameLabel.Size = new System.Drawing.Size(80, 19);
             this.contactLastNameLabel.TabIndex = 20;
             this.contactLastNameLabel.Text = "Last name";
             // 
@@ -286,7 +286,7 @@
             // 
             this.contactFirstNameBox.Location = new System.Drawing.Point(120, 397);
             this.contactFirstNameBox.Name = "contactFirstNameBox";
-            this.contactFirstNameBox.Size = new System.Drawing.Size(205, 27);
+            this.contactFirstNameBox.Size = new System.Drawing.Size(205, 23);
             this.contactFirstNameBox.TabIndex = 19;
             // 
             // contactFirstNameLabel
@@ -295,7 +295,7 @@
             this.contactFirstNameLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.contactFirstNameLabel.Location = new System.Drawing.Point(13, 400);
             this.contactFirstNameLabel.Name = "contactFirstNameLabel";
-            this.contactFirstNameLabel.Size = new System.Drawing.Size(89, 21);
+            this.contactFirstNameLabel.Size = new System.Drawing.Size(78, 19);
             this.contactFirstNameLabel.TabIndex = 18;
             this.contactFirstNameLabel.Text = "First name";
             // 
@@ -305,7 +305,7 @@
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label1.Location = new System.Drawing.Point(13, 190);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(149, 21);
+            this.label1.Size = new System.Drawing.Size(132, 19);
             this.label1.TabIndex = 16;
             this.label1.Text = "Last seen location";
             // 
@@ -313,7 +313,7 @@
             // 
             this.locationBox.Location = new System.Drawing.Point(120, 187);
             this.locationBox.Name = "locationBox";
-            this.locationBox.Size = new System.Drawing.Size(205, 27);
+            this.locationBox.Size = new System.Drawing.Size(205, 23);
             this.locationBox.TabIndex = 15;
             // 
             // lastSeenOn
@@ -322,7 +322,7 @@
             this.lastSeenOn.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.lastSeenOn.Location = new System.Drawing.Point(13, 159);
             this.lastSeenOn.Name = "lastSeenOn";
-            this.lastSeenOn.Size = new System.Drawing.Size(105, 21);
+            this.lastSeenOn.Size = new System.Drawing.Size(93, 19);
             this.lastSeenOn.TabIndex = 14;
             this.lastSeenOn.Text = "Last seen on";
             // 
@@ -330,12 +330,12 @@
             // 
             this.lastSeenOnPicker.Location = new System.Drawing.Point(120, 154);
             this.lastSeenOnPicker.Name = "lastSeenOnPicker";
-            this.lastSeenOnPicker.Size = new System.Drawing.Size(205, 27);
+            this.lastSeenOnPicker.Size = new System.Drawing.Size(205, 23);
             this.lastSeenOnPicker.TabIndex = 13;
             // 
             // uploadButton
             // 
-            this.uploadButton.Location = new System.Drawing.Point(442, 159);
+            this.uploadButton.Location = new System.Drawing.Point(436, 305);
             this.uploadButton.Name = "uploadButton";
             this.uploadButton.Size = new System.Drawing.Size(75, 26);
             this.uploadButton.TabIndex = 12;
@@ -365,7 +365,7 @@
             // 
             this.dateOfBirthPicker.Location = new System.Drawing.Point(120, 121);
             this.dateOfBirthPicker.Name = "dateOfBirthPicker";
-            this.dateOfBirthPicker.Size = new System.Drawing.Size(205, 27);
+            this.dateOfBirthPicker.Size = new System.Drawing.Size(205, 23);
             this.dateOfBirthPicker.TabIndex = 10;
             // 
             // addMissingPersonButton
@@ -384,7 +384,7 @@
             this.adInfoLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.adInfoLabel.Location = new System.Drawing.Point(13, 250);
             this.adInfoLabel.Name = "adInfoLabel";
-            this.adInfoLabel.Size = new System.Drawing.Size(99, 42);
+            this.adInfoLabel.Size = new System.Drawing.Size(87, 38);
             this.adInfoLabel.TabIndex = 7;
             this.adInfoLabel.Text = "Additional \r\ninformation";
             // 
@@ -392,14 +392,14 @@
             // 
             this.lastNameBox.Location = new System.Drawing.Point(120, 88);
             this.lastNameBox.Name = "lastNameBox";
-            this.lastNameBox.Size = new System.Drawing.Size(205, 27);
+            this.lastNameBox.Size = new System.Drawing.Size(205, 23);
             this.lastNameBox.TabIndex = 5;
             // 
             // firstNameBox
             // 
             this.firstNameBox.Location = new System.Drawing.Point(120, 55);
             this.firstNameBox.Name = "firstNameBox";
-            this.firstNameBox.Size = new System.Drawing.Size(205, 27);
+            this.firstNameBox.Size = new System.Drawing.Size(205, 23);
             this.firstNameBox.TabIndex = 4;
             // 
             // dateOfBirthLabel
@@ -408,7 +408,7 @@
             this.dateOfBirthLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.dateOfBirthLabel.Location = new System.Drawing.Point(13, 126);
             this.dateOfBirthLabel.Name = "dateOfBirthLabel";
-            this.dateOfBirthLabel.Size = new System.Drawing.Size(109, 21);
+            this.dateOfBirthLabel.Size = new System.Drawing.Size(95, 19);
             this.dateOfBirthLabel.TabIndex = 3;
             this.dateOfBirthLabel.Text = "Date of birth";
             // 
@@ -418,7 +418,7 @@
             this.LastNameLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.LastNameLabel.Location = new System.Drawing.Point(13, 91);
             this.LastNameLabel.Name = "LastNameLabel";
-            this.LastNameLabel.Size = new System.Drawing.Size(91, 21);
+            this.LastNameLabel.Size = new System.Drawing.Size(80, 19);
             this.LastNameLabel.TabIndex = 2;
             this.LastNameLabel.Text = "Last name";
             // 
@@ -428,7 +428,7 @@
             this.firstNameLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.firstNameLabel.Location = new System.Drawing.Point(13, 58);
             this.firstNameLabel.Name = "firstNameLabel";
-            this.firstNameLabel.Size = new System.Drawing.Size(89, 21);
+            this.firstNameLabel.Size = new System.Drawing.Size(78, 19);
             this.firstNameLabel.TabIndex = 1;
             this.firstNameLabel.Text = "First name";
             // 
@@ -438,7 +438,7 @@
             this.addPersonText.ForeColor = System.Drawing.Color.White;
             this.addPersonText.Location = new System.Drawing.Point(120, 11);
             this.addPersonText.Name = "addPersonText";
-            this.addPersonText.Size = new System.Drawing.Size(351, 27);
+            this.addPersonText.Size = new System.Drawing.Size(351, 23);
             this.addPersonText.TabIndex = 0;
             this.addPersonText.Text = "This is where you can add a missing person";
             this.addPersonText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
