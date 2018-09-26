@@ -16,7 +16,6 @@ namespace WindowsForms
         {
             var form = Form.ActiveForm as FormFaceDetection;
             form.missingPersonPictureBox.ImageLocation = GetImagePath();
-            form.missingPersonPictureBox.BringToFront();
         }
 
         private static string GetImagePath()
