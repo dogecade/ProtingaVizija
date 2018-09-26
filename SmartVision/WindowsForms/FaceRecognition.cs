@@ -8,8 +8,8 @@ namespace WindowsForms
     class FaceRecognition
     {
         private const string url = "https://api-us.faceplusplus.com/facepp/v3/detect";
-        private const string attributes = "gender,age";
-        private const string landmark = "1";
+        private const string attributes = "gender,age"; // Returns gender and age attributes
+        private const string landmark = "2"; // Returns 106 face landmarks
 
         private static readonly HttpClient client = new HttpClient();
         /// <summary>
