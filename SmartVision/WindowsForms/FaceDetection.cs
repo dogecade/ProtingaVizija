@@ -51,16 +51,20 @@ namespace WindowsForms
             var grayFrame = image.Convert<Gray, Byte>();
             var faces = cascade.DetectMultiScale(grayFrame, 1.1, 10, Size.Empty);
 
-            if (faces.Length > 0)
+            switch (faces.Length)
             {
-                return true;
-            }
-            else
-            {
-                MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
+                case 0:
+                    MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
                    "Please try another one.");
-                return false;
+                    return false;
+                case 1:
+                    return true;
+                default:
+                    MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +
+                   "Please try another one.");
+                    return false;
             }
+                
         }
 
     }
