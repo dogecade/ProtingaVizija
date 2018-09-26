@@ -76,6 +76,11 @@ namespace WindowsForms
                 Bitmap missingPersonImage = new Bitmap(missingPersonPictureBox.Image);
                 MissingPerson missingPerson = new MissingPerson(firstNameBox.Text, lastNameBox.Text, additionalInfoBox.Text, locationBox.Text, dateOfBirthPicker.Value, lastSeenOnPicker.Value, missingPersonImage);
                 ContactPerson contactPerson = new ContactPerson(contactFirstNameBox.Text, contactLastNameBox.Text, contactPhoneNumberBox.Text, contactEmailAddressBox.Text);
+
+                if (FaceDetection.FaceDetectionFromPicture(missingPersonImage))
+                {
+                    //to put to database
+                }
             }
             catch (Exception exception)
             {
