@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContactPerson.cs" />
+    <Compile Include="AnalyzedFaces.cs" />
     <Compile Include="FaceRecognition.cs" />
     <Compile Include="FormPopup.cs">
       <SubType>Form</SubType>
