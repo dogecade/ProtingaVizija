@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Emgu.CV;
@@ -70,6 +71,7 @@ namespace WindowsForms
         /// </summary>
         private static void ProcessFrame(object sender, EventArgs e)
         {
+            FaceRecognition faceRecognition = new FaceRecognition();
             using (var imageFrame = capture.QueryFrame().ToImage<Bgr, Byte>())
             {
                 var form = FormFaceDetection.Current;
@@ -84,11 +86,11 @@ namespace WindowsForms
 
                     analyzeTask = Task.Run(() =>
                     {
-                        return FaceRecognition.AnalyzeImage(imageFrame.Bitmap);
+                        return faceRecognition.AnalyzeImage(imageFrame.Bitmap);
                     });
                     analyzeTask.Wait(100);
 
-                    // analyzeTask.Result - face properties json
+                    Debug.WriteLine(DateTime.Now + " " + analyzeTask.Result);
                 }
             }
         }
