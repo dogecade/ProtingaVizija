@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WindowsForms
 {
-    class FaceRecognition
+    class FaceRecognition : ICallApi
     {
         private const string url = "https://api-us.faceplusplus.com/facepp/v3/detect";
         private const string attributes = "gender,age"; // Returns gender and age attributes
@@ -17,13 +17,14 @@ namespace WindowsForms
         /// </summary>
         /// <param name="bitmap">Image to analyze</param>
         /// <returns>Properties of the faces spotted in image</returns>
-        public static string AnalyzeImage(Bitmap bitmap)
+        public string AnalyzeImage(Bitmap bitmap)
         {
             byte[] image = ImageToByte(bitmap);
             string analyzedFace;
             try
             {
-                analyzedFace = CallApi(image).Result;
+                FaceRecognition faceRecognition = new FaceRecognition();
+                analyzedFace = faceRecognition.CallApi(image).Result;
             }
             catch (Exception e)
             {
@@ -39,7 +40,7 @@ namespace WindowsForms
         /// <param name="image">Image converted to byte array</param>
         /// Author: Deividas Brazenas
         /// <returns>Analyzed face json</returns>
-        private static async Task<string> CallApi(byte[] image)
+        public async Task<string> CallApi(byte[] image)
         {
             try
             {
@@ -51,11 +52,11 @@ namespace WindowsForms
 
                 using (var formData = new MultipartFormDataContent())
                 {
-                    formData.Add(keyContent,"api_key" );
-                    formData.Add(secretContent,"api_secret");
-                    formData.Add(imageContent,"image_base64");
-                    formData.Add(landmarkContent,"return_landmark");
-                    formData.Add(attributesContent,"return_attributes");
+                    formData.Add(keyContent, "api_key");
+                    formData.Add(secretContent, "api_secret");
+                    formData.Add(imageContent, "image_base64");
+                    formData.Add(landmarkContent, "return_landmark");
+                    formData.Add(attributesContent, "return_attributes");
 
                     var response = await client.PostAsync(url, formData);
 
