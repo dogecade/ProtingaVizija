@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsForms.FaceAnalysis;
+using WindowsForms.FormControl;
 using Emgu.CV;
 using Emgu.CV.Structure;
 
