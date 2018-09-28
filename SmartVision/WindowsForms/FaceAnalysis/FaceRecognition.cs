@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace WindowsForms
+namespace WindowsForms.FaceAnalysis
 {
     class FaceRecognition : ICallApi
     {

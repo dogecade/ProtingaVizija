@@ -1,4 +1,4 @@
-﻿namespace WindowsForms
+﻿namespace WindowsForms.FormControl
 {
     partial class FormPopup
     {
