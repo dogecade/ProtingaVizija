@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace WindowsForms
+namespace WindowsForms.Persons
 {
     class MissingPerson : Person
     {

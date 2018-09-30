@@ -1,6 +1,8 @@
-﻿ using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-public struct LandmarkCoordinates
+namespace WindowsForms.FaceAnalysis
+{
+    public struct LandmarkCoordinates
     {
         public int y { get; set; }
         public int x { get; set; }
@@ -155,3 +157,4 @@ public struct LandmarkCoordinates
         public int time_used { get; set; }
         public IList<Face> faces { get; set; }
     }
+}

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace WindowsForms
+namespace WindowsForms.FormControl
 {
     public partial class FormPopup : Form
     {
