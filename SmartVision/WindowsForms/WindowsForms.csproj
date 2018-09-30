@@ -93,34 +93,34 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContactPerson.cs" />
-    <Compile Include="AnalyzedFaces.cs" />
-    <Compile Include="FaceRecognition.cs" />
-    <Compile Include="FormPopup.cs">
+    <Compile Include="Persons\ContactPerson.cs" />
+    <Compile Include="FaceAnalysis\AnalyzedFaces.cs" />
+    <Compile Include="FaceAnalysis\FaceRecognition.cs" />
+    <Compile Include="FormControl\FormPopup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPopup.Designer.cs">
+    <Compile Include="FormControl\FormPopup.Designer.cs">
       <DependentUpon>FormPopup.cs</DependentUpon>
     </Compile>
     <Compile Include="ICallApi.cs" />
-    <Compile Include="ImageUpload.cs" />
+    <Compile Include="FormControl\ImageUpload.cs" />
     <Compile Include="Keys.cs" />
-    <Compile Include="MissingPerson.cs" />
-    <Compile Include="FaceDetection.cs" />
-    <Compile Include="FormFaceDetection.cs">
+    <Compile Include="Persons\MissingPerson.cs" />
+    <Compile Include="FaceAnalysis\FaceDetection.cs" />
+    <Compile Include="FormControl\FormFaceDetection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormFaceDetection.Designer.cs">
+    <Compile Include="FormControl\FormFaceDetection.Designer.cs">
       <DependentUpon>FormFaceDetection.cs</DependentUpon>
     </Compile>
-    <Compile Include="Person.cs" />
+    <Compile Include="Persons\Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebcamInput.cs" />
-    <EmbeddedResource Include="FormFaceDetection.resx">
+    <EmbeddedResource Include="FormControl\FormFaceDetection.resx">
       <DependentUpon>FormFaceDetection.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPopup.resx">
+    <EmbeddedResource Include="FormControl\FormPopup.resx">
       <DependentUpon>FormPopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
