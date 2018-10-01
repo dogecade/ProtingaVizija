@@ -2,7 +2,7 @@
 
 namespace WindowsForms
 {
-    interface ICallApi
+    interface ICallRecognitionApi
     {
        Task<string> CallApi(byte[] image);
     }
