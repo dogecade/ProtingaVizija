@@ -93,8 +93,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FaceAnalysis\FaceSet.cs" />
+    <Compile Include="FaceAnalysis\JSON\FacesetDetails.cs" />
+    <Compile Include="FaceAnalysis\JSON\FoundFaces.cs" />
     <Compile Include="Persons\ContactPerson.cs" />
-    <Compile Include="FaceAnalysis\AnalyzedFaces.cs" />
+    <Compile Include="FaceAnalysis\JSON\AnalyzedFaces.cs" />
     <Compile Include="FaceAnalysis\FaceRecognition.cs" />
     <Compile Include="FormControl\FormPopup.cs">
       <SubType>Form</SubType>
@@ -102,7 +105,7 @@
     <Compile Include="FormControl\FormPopup.Designer.cs">
       <DependentUpon>FormPopup.cs</DependentUpon>
     </Compile>
-    <Compile Include="ICallApi.cs" />
+    <Compile Include="ICallRecognitionApi.cs" />
     <Compile Include="FormControl\ImageUpload.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="Persons\MissingPerson.cs" />

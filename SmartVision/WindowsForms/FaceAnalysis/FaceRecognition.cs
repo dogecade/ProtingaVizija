@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WindowsForms.FaceAnalysis
 {
-    class FaceRecognition : ICallApi
+    class FaceRecognition : ICallRecognitionApi
     {
         private const string url = "https://api-us.faceplusplus.com/facepp/v3/detect";
         private const string attributes = "gender,age"; // Returns gender and age attributes
@@ -46,7 +46,7 @@ namespace WindowsForms.FaceAnalysis
             {
                 HttpContent keyContent = new StringContent(Keys.apiKey);
                 HttpContent secretContent = new StringContent(Keys.apiSecret);
-                HttpContent imageContent = new StringContent(Convert.ToBase64String(image));
+                HttpContent imageContent = new ByteArrayContent(image,0,image.Length);
                 HttpContent landmarkContent = new StringContent(landmark);
                 HttpContent attributesContent = new StringContent(attributes);
 
@@ -54,7 +54,7 @@ namespace WindowsForms.FaceAnalysis
                 {
                     formData.Add(keyContent, "api_key");
                     formData.Add(secretContent, "api_secret");
-                    formData.Add(imageContent, "image_base64");
+                    formData.Add(imageContent, "image_file","picture.jpg");
                     formData.Add(landmarkContent, "return_landmark");
                     formData.Add(attributesContent, "return_attributes");
 
