@@ -99,12 +99,6 @@
     <Compile Include="Persons\ContactPerson.cs" />
     <Compile Include="FaceAnalysis\JSON\AnalyzedFaces.cs" />
     <Compile Include="FaceAnalysis\FaceRecognition.cs" />
-    <Compile Include="FormControl\FormPopup.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormControl\FormPopup.Designer.cs">
-      <DependentUpon>FormPopup.cs</DependentUpon>
-    </Compile>
     <Compile Include="ICallRecognitionApi.cs" />
     <Compile Include="FormControl\ImageUpload.cs" />
     <Compile Include="Keys.cs" />
@@ -122,9 +116,6 @@
     <Compile Include="WebcamInput.cs" />
     <EmbeddedResource Include="FormControl\FormFaceDetection.resx">
       <DependentUpon>FormFaceDetection.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormControl\FormPopup.resx">
-      <DependentUpon>FormPopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
