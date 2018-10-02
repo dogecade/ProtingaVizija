@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -76,8 +79,16 @@ namespace WindowsForms.FaceAnalysis
 
         private static byte[] ImageToByte(Bitmap img)
         {
-            ImageConverter converter = new ImageConverter();
-            return (byte[])converter.ConvertTo(img, typeof(byte[]));
-        }
+            MemoryStream stream = new MemoryStream();
+            try
+            {
+                img.Save(stream, ImageFormat.Bmp);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+            return stream.ToArray();
+            }
     }
 }

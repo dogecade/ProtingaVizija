@@ -6,14 +6,17 @@ using WindowsForms.FaceAnalysis;
 using WindowsForms.FormControl;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using System.Threading.Tasks.Dataflow;
+using System.Drawing;
 
 namespace WindowsForms
 {
     class WebcamInput
     {
+        private static readonly BufferBlock<Bitmap> buffer = new BufferBlock<Bitmap>();
         private static VideoCapture capture; // Takes video from camera as image frames
         private static int frameCount = 0;
-        private static Task<string> analyzeTask;
+        private static Task taskConsumer;
         /// <summary>
         /// Enables the input of the webcam
         /// Author: Deividas Brazenas
@@ -43,8 +46,9 @@ namespace WindowsForms
                 MessageBox.Show("Input camera was not found!");
                 return false;
             }
+            taskConsumer = Task.Run(() => ProcessFrameAsync());
+            Application.Idle += GetFrameAsync;
 
-            Application.Idle += ProcessFrame;
             return true;
         }
 
@@ -52,12 +56,14 @@ namespace WindowsForms
         /// Disables the input of the webcam
         /// Author: Deividas Brazenas
         /// </summary>
-        public static void DisableWebcam()
+        public static async void DisableWebcam()
         {
             try
             {
                 capture.Dispose();
-                Application.Idle -= ProcessFrame;
+                Application.Idle -= GetFrameAsync;
+                buffer.Complete();
+                await taskConsumer;
             }
             catch (Exception e)
             {
@@ -67,12 +73,11 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Processes the frame from webcam input
-        /// Author: Deividas Brazenas
+        /// Gets frame from input and adds to buffer.
+        /// Author: Arnas Danaitis
         /// </summary>
-        private static void ProcessFrame(object sender, EventArgs e)
+        private static async void GetFrameAsync(object sender, EventArgs e)
         {
-            FaceRecognition faceRecognition = new FaceRecognition();
             using (var imageFrame = capture.QueryFrame().ToImage<Bgr, Byte>())
             {
                 var form = FormFaceDetection.Current;
@@ -80,19 +85,28 @@ namespace WindowsForms
 
                 frameCount++;
 
-                // Analyze every 15th frame
+                // put up for analysis every 15th frame
                 if (frameCount == 15)
                 {
                     frameCount = 0;
-
-                    analyzeTask = Task.Run(() =>
-                    {
-                        return faceRecognition.AnalyzeImage(imageFrame.Bitmap);
-                    });
-                    analyzeTask.Wait(100);
-
-                    Debug.WriteLine(DateTime.Now + " " + analyzeTask.Result);
+                    await buffer.SendAsync(imageFrame.Bitmap);
+                    Debug.WriteLine("Adding frame to queue");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Processes frames from the buffer.
+        /// Author: Arnas Danaitis
+        /// </summary>
+        private static async void ProcessFrameAsync()
+        {
+            FaceRecognition faceRecognition = new FaceRecognition();
+            while (await buffer.OutputAvailableAsync())
+            {
+                Bitmap frameToProcess = await buffer.ReceiveAsync();
+                var result = faceRecognition.AnalyzeImage(frameToProcess);
+                Debug.WriteLine(DateTime.Now + " " + result);
             }
         }
     }
