@@ -17,7 +17,6 @@ namespace WindowsForms
         private static VideoCapture capture; // Takes video from camera as image frames
         private static int frameCount = 0;
         private static Task taskConsumer;
-       // private static Task<string> Task;
         /// <summary>
         /// Enables the input of the webcam
         /// Author: Deividas Brazenas
@@ -86,19 +85,12 @@ namespace WindowsForms
 
                 frameCount++;
 
-                // Analyze (=put up for analysis) every 15th frame
+                // put up for analysis every 15th frame
                 if (frameCount == 15)
                 {
                     frameCount = 0;
                     await buffer.SendAsync(imageFrame.Bitmap);
                     Debug.WriteLine("Adding frame to queue");
-                    /*analyzeTask = Task.Run(() =>
-                    {
-                        return faceRecognition.AnalyzeImage(imageFrame.Bitmap);
-                    });
-                    analyzeTask.Wait(100);
-                    */
-                    //Debug.WriteLine(DateTime.Now + " " + analyzeTask.Result);
                 }
             }
         }
