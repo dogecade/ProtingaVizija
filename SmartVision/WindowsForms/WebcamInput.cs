@@ -40,8 +40,7 @@ namespace WindowsForms
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                var popup = new FormPopup();
-                popup.ShowDialog();
+                MessageBox.Show("Input camera was not found!");
                 return false;
             }
 
