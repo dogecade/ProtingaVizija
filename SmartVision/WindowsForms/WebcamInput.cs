@@ -105,7 +105,7 @@ namespace WindowsForms
             while (await buffer.OutputAvailableAsync())
             {
                 Bitmap frameToProcess = await buffer.ReceiveAsync();
-                var result = faceRecognition.AnalyzeImage(frameToProcess);
+                var result = FaceRecognition.AnalyzeImage(frameToProcess);
                 Debug.WriteLine(DateTime.Now + " " + result);
             }
         }
