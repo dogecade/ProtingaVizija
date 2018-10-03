@@ -117,7 +117,7 @@ namespace UnitTests
                 }
             }
 
-            Assert.IsTrue(wasAdded, "Face was not removed from the face set");
+            Assert.IsTrue(wasRemoved, "Face was not removed from the face set");
 
         }
     }
