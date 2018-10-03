@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace WindowsForms.FaceAnalysis
 {
-    class FaceRecognition : ICallRecognitionApi
+    public class FaceRecognition : ICallRecognitionApi
     {
         private const string url = "https://api-us.faceplusplus.com/facepp/v3/detect";
         private const string attributes = "gender,age"; // Returns gender and age attributes
@@ -20,7 +20,7 @@ namespace WindowsForms.FaceAnalysis
         /// </summary>
         /// <param name="bitmap">Image to analyze</param>
         /// <returns>Properties of the faces spotted in image</returns>
-        public string AnalyzeImage(Bitmap bitmap)
+        public static string AnalyzeImage(Bitmap bitmap)
         {
             byte[] image = ImageToByte(bitmap);
             string analyzedFace;
@@ -49,7 +49,7 @@ namespace WindowsForms.FaceAnalysis
             {
                 HttpContent keyContent = new StringContent(Keys.apiKey);
                 HttpContent secretContent = new StringContent(Keys.apiSecret);
-                HttpContent imageContent = new ByteArrayContent(image,0,image.Length);
+                HttpContent imageContent = new StringContent(Convert.ToBase64String(image));
                 HttpContent landmarkContent = new StringContent(landmark);
                 HttpContent attributesContent = new StringContent(attributes);
 
@@ -57,15 +57,14 @@ namespace WindowsForms.FaceAnalysis
                 {
                     formData.Add(keyContent, "api_key");
                     formData.Add(secretContent, "api_secret");
-                    formData.Add(imageContent, "image_file","picture.jpg");
+                    formData.Add(imageContent, "image_base64");
                     formData.Add(landmarkContent, "return_landmark");
                     formData.Add(attributesContent, "return_attributes");
 
-                    var response = await client.PostAsync(url, formData);
-
-                    string responseString = await response.Content.ReadAsStringAsync();
-
-                    return responseString;
+                    using (var response = await client.PostAsync(url, formData))
+                    {
+                        return await response.Content.ReadAsStringAsync();
+                    }
                 }
             }
             catch (Exception e)
@@ -79,16 +78,21 @@ namespace WindowsForms.FaceAnalysis
 
         private static byte[] ImageToByte(Bitmap img)
         {
-            MemoryStream stream = new MemoryStream();
             try
             {
-                img.Save(stream, ImageFormat.Bmp);
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    img.Save(stream, ImageFormat.Bmp);
+                    img.Dispose();
+                    return stream.ToArray();
+                }
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e);
+                return null;
             }
-            return stream.ToArray();
-            }
+        }
+
     }
 }
