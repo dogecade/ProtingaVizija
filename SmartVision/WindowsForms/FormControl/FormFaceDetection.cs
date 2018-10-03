@@ -6,8 +6,9 @@ using WindowsForms.Persons;
 
 namespace WindowsForms.FormControl
 {
-    public partial class FormFaceDetection : Form
+    public partial class FormFaceDetection : System.Windows.Forms.Form
     {
+        private Color underButtonColor = Color.LightSteelBlue;
         private bool cameraEnabled = false;
         public static FormFaceDetection Current { get; private set; }
 
@@ -20,6 +21,7 @@ namespace WindowsForms.FormControl
         private void FormFaceDetection_Load(object sender, EventArgs e)
         {
             homePanel.BringToFront();
+            underHomePanel.BackColor = underButtonColor;
         }
 
         /// <summary>
@@ -35,10 +37,21 @@ namespace WindowsForms.FormControl
             }
 
             homePanel.BringToFront();
+
+            underHomePanel.BackColor = underButtonColor;
+            underScanPanel.BackColor = Color.Transparent;
+            underPersonPanel.BackColor = Color.Transparent;
+            underExitPanel.BackColor = Color.Transparent;
         }
 
         private void scanButton_Click(object sender, EventArgs e)
         {
+
+            underHomePanel.BackColor = Color.Transparent;
+            underScanPanel.BackColor = underButtonColor;
+            underPersonPanel.BackColor = Color.Transparent;
+            underExitPanel.BackColor = Color.Transparent;
+
             if (!cameraEnabled && WebcamInput.EnableWebcam())
             {
                 scanPanel.BringToFront();
@@ -60,6 +73,11 @@ namespace WindowsForms.FormControl
             }
 
             addPersonPanel.BringToFront();
+
+            underHomePanel.BackColor = Color.Transparent;
+            underScanPanel.BackColor = Color.Transparent;
+            underPersonPanel.BackColor = underButtonColor;
+            underExitPanel.BackColor = Color.Transparent;
         }
 
         private void exitButton_Click(object sender, EventArgs e)
