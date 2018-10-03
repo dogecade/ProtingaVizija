@@ -20,9 +20,8 @@ namespace WindowsForms.FaceAnalysis
         /// </summary>
         /// <param name="bitmap">Image to analyze</param>
         /// <returns>Properties of the faces spotted in image</returns>
-        public static string AnalyzeImage(Bitmap bitmap)
+        public static string AnalyzeImage(byte[] image)
         {
-            byte[] image = ImageToByte(bitmap);
             string analyzedFace;
             try
             {
@@ -82,7 +81,7 @@ namespace WindowsForms.FaceAnalysis
             }
         }
 
-        private static byte[] ImageToByte(Bitmap img)
+        public static byte[] ImageToByte(Bitmap img)
         {
             try
             {
