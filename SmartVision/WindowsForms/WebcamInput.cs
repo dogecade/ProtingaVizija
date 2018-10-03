@@ -13,7 +13,7 @@ namespace WindowsForms
 {
     class WebcamInput
     {
-        private static readonly BufferBlock<Bitmap> buffer = new BufferBlock<Bitmap>();
+        private static readonly BufferBlock<byte[]> buffer = new BufferBlock<byte[]>();
         private static VideoCapture capture; // Takes video from camera as image frames
         private static int frameCount = 0;
         private static Task taskConsumer;
@@ -89,7 +89,7 @@ namespace WindowsForms
                 if (frameCount == 15)
                 {
                     frameCount = 0;
-                    await buffer.SendAsync(imageFrame.Bitmap);
+                    await buffer.SendAsync(FaceRecognition.ImageToByte(imageFrame.Bitmap));
                     Debug.WriteLine("Adding frame to queue");
                 }
             }
@@ -104,7 +104,7 @@ namespace WindowsForms
             FaceRecognition faceRecognition = new FaceRecognition();
             while (await buffer.OutputAvailableAsync())
             {
-                Bitmap frameToProcess = await buffer.ReceiveAsync();
+                byte[] frameToProcess = await buffer.ReceiveAsync();
                 var result = FaceRecognition.AnalyzeImage(frameToProcess);
                 Debug.WriteLine(DateTime.Now + " " + result);
             }
