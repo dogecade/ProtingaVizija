@@ -45,35 +45,41 @@ namespace WindowsForms.FaceAnalysis
         /// <returns>Analyzed face json</returns>
         public async Task<string> CallApi(byte[] image)
         {
-            try
+            HttpContent keyContent = new StringContent(Keys.apiKey);
+            HttpContent secretContent = new StringContent(Keys.apiSecret);
+            HttpContent imageContent = new StringContent(Convert.ToBase64String(image));
+            HttpContent landmarkContent = new StringContent(landmark);
+            HttpContent attributesContent = new StringContent(attributes);
+
+            using (var formData = new MultipartFormDataContent())
             {
-                HttpContent keyContent = new StringContent(Keys.apiKey);
-                HttpContent secretContent = new StringContent(Keys.apiSecret);
-                HttpContent imageContent = new StringContent(Convert.ToBase64String(image));
-                HttpContent landmarkContent = new StringContent(landmark);
-                HttpContent attributesContent = new StringContent(attributes);
+                formData.Add(keyContent, "api_key");
+                formData.Add(secretContent, "api_secret");
+                formData.Add(imageContent, "image_base64");
+                formData.Add(landmarkContent, "return_landmark");
+                formData.Add(attributesContent, "return_attributes");
 
-                using (var formData = new MultipartFormDataContent())
+                try
                 {
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(imageContent, "image_base64");
-                    formData.Add(landmarkContent, "return_landmark");
-                    formData.Add(attributesContent, "return_attributes");
-
                     using (var response = await client.PostAsync(url, formData))
                     {
-                        return await response.Content.ReadAsStringAsync();
+                        string responseString = await response.Content.ReadAsStringAsync();
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return responseString;
+                        }
+
+                        throw new Exception(responseString);
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
 
-                return null;
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                    return null;
+                }
             }
-
         }
 
         private static byte[] ImageToByte(Bitmap img)
