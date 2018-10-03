@@ -13,7 +13,7 @@ using System.Drawing.Imaging;
 
 namespace WindowsForms
 {
-    class WebcamInput
+    public class WebcamInput
     {
         private static readonly BufferBlock<byte[]> buffer = new BufferBlock<byte[]>();
         private static VideoCapture capture; // Takes video from camera as image frames
@@ -118,7 +118,7 @@ namespace WindowsForms
         /// </summary>
         /// <param name="img">Image in bitmap form</param>
         /// <returns>Image in byte[]</returns>
-        private static byte[] ImageToByte(Bitmap img)
+        public static byte[] ImageToByte(Bitmap img)
         {
             try
             {

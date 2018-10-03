@@ -39,7 +39,7 @@ namespace UnitTests
         {
             // Analyze image
             Bitmap bitmap = new Bitmap("..\\..\\TestPictures\\1.jpg");
-            string analyzedImageJSON = FaceRecognition.AnalyzeImage(bitmap);
+            string analyzedImageJSON = FaceRecognition.AnalyzeImage(WebcamInput.ImageToByte(bitmap));
             var analyzedImage = JsonConvert.DeserializeObject<AnalyzedFaces>(analyzedImageJSON);
 
             // Verify it was analyzed correctly
@@ -74,7 +74,7 @@ namespace UnitTests
         {
             // Analyze image
             Bitmap bitmap = new Bitmap("..\\..\\TestPictures\\1.jpg");
-            string analyzedImageJSON = FaceRecognition.AnalyzeImage(bitmap);
+            string analyzedImageJSON = FaceRecognition.AnalyzeImage(WebcamInput.ImageToByte(bitmap));
             var analyzedImage = JsonConvert.DeserializeObject<AnalyzedFaces>(analyzedImageJSON);
 
             // Verify it was analyzed correctly
