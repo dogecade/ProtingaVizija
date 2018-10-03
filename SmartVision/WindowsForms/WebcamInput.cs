@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsForms.FaceAnalysis;
@@ -8,6 +9,7 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using System.Threading.Tasks.Dataflow;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace WindowsForms
 {
@@ -89,7 +91,7 @@ namespace WindowsForms
                 if (frameCount == 15)
                 {
                     frameCount = 0;
-                    await buffer.SendAsync(FaceRecognition.ImageToByte(imageFrame.Bitmap));
+                    await buffer.SendAsync(ImageToByte(imageFrame.Bitmap));
                     Debug.WriteLine("Adding frame to queue");
                 }
             }
@@ -107,6 +109,30 @@ namespace WindowsForms
                 byte[] frameToProcess = await buffer.ReceiveAsync();
                 var result = FaceRecognition.AnalyzeImage(frameToProcess);
                 Debug.WriteLine(DateTime.Now + " " + result);
+            }
+        }
+
+        /// <summary>
+        /// Converts bitmap to byte array
+        /// Author: Arnas Danaitis
+        /// </summary>
+        /// <param name="img">Image in bitmap form</param>
+        /// <returns>Image in byte[]</returns>
+        private static byte[] ImageToByte(Bitmap img)
+        {
+            try
+            {
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    img.Save(stream, ImageFormat.Bmp);
+                    img.Dispose();
+                    return stream.ToArray();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                return null;
             }
         }
     }
