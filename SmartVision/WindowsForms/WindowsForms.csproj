@@ -160,7 +160,6 @@
     <None Include="XML\if_Home_2125603 %281%29.png" />
     <None Include="images\if_Home_2125603 %281%29.png" />
     <Content Include="MetroFramework.txt" />
-    <None Include="dogologo.jpg" />
     <Content Include="License-LGPL.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
