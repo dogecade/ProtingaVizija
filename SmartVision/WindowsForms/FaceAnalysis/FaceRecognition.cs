@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -20,9 +18,8 @@ namespace WindowsForms.FaceAnalysis
         /// </summary>
         /// <param name="bitmap">Image to analyze</param>
         /// <returns>Properties of the faces spotted in image</returns>
-        public static string AnalyzeImage(Bitmap bitmap)
+        public static string AnalyzeImage(byte[] image)
         {
-            byte[] image = ImageToByte(bitmap);
             string analyzedFace;
             try
             {
@@ -79,24 +76,6 @@ namespace WindowsForms.FaceAnalysis
                     Debug.WriteLine(e);
                     return null;
                 }
-            }
-        }
-
-        private static byte[] ImageToByte(Bitmap img)
-        {
-            try
-            {
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    img.Save(stream, ImageFormat.Bmp);
-                    img.Dispose();
-                    return stream.ToArray();
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-                return null;
             }
         }
 
