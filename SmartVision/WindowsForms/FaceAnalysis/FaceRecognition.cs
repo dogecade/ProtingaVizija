@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace WindowsForms.FaceAnalysis
 {
-    class FaceRecognition : ICallRecognitionApi
+    public class FaceRecognition : ICallRecognitionApi
     {
         private const string url = "https://api-us.faceplusplus.com/facepp/v3/detect";
         private const string attributes = "gender,age"; // Returns gender and age attributes
@@ -20,9 +18,8 @@ namespace WindowsForms.FaceAnalysis
         /// </summary>
         /// <param name="bitmap">Image to analyze</param>
         /// <returns>Properties of the faces spotted in image</returns>
-        public string AnalyzeImage(Bitmap bitmap)
+        public static string AnalyzeImage(byte[] image)
         {
-            byte[] image = ImageToByte(bitmap);
             string analyzedFace;
             try
             {
@@ -45,50 +42,42 @@ namespace WindowsForms.FaceAnalysis
         /// <returns>Analyzed face json</returns>
         public async Task<string> CallApi(byte[] image)
         {
-            try
+            HttpContent keyContent = new StringContent(Keys.apiKey);
+            HttpContent secretContent = new StringContent(Keys.apiSecret);
+            HttpContent imageContent = new StringContent(Convert.ToBase64String(image));
+            HttpContent landmarkContent = new StringContent(landmark);
+            HttpContent attributesContent = new StringContent(attributes);
+
+            using (var formData = new MultipartFormDataContent())
             {
-                HttpContent keyContent = new StringContent(Keys.apiKey);
-                HttpContent secretContent = new StringContent(Keys.apiSecret);
-                HttpContent imageContent = new ByteArrayContent(image,0,image.Length);
-                HttpContent landmarkContent = new StringContent(landmark);
-                HttpContent attributesContent = new StringContent(attributes);
+                formData.Add(keyContent, "api_key");
+                formData.Add(secretContent, "api_secret");
+                formData.Add(imageContent, "image_base64");
+                formData.Add(landmarkContent, "return_landmark");
+                formData.Add(attributesContent, "return_attributes");
 
-                using (var formData = new MultipartFormDataContent())
+                try
                 {
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(imageContent, "image_file","picture.jpg");
-                    formData.Add(landmarkContent, "return_landmark");
-                    formData.Add(attributesContent, "return_attributes");
+                    using (var response = await client.PostAsync(url, formData))
+                    {
+                        string responseString = await response.Content.ReadAsStringAsync();
 
-                    var response = await client.PostAsync(url, formData);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return responseString;
+                        }
 
-                    string responseString = await response.Content.ReadAsStringAsync();
+                        throw new Exception(responseString);
+                    }
+                }
 
-                    return responseString;
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                    return null;
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-
-                return null;
-            }
-
         }
 
-        private static byte[] ImageToByte(Bitmap img)
-        {
-            MemoryStream stream = new MemoryStream();
-            try
-            {
-                img.Save(stream, ImageFormat.Bmp);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-            }
-            return stream.ToArray();
-            }
     }
 }
