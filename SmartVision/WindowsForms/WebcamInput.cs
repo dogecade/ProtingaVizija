@@ -15,7 +15,8 @@ namespace WindowsForms
 {
     public class WebcamInput
     {
-        private static readonly BufferBlock<byte[]> buffer = new BufferBlock<byte[]>();
+        private const int BUFFER_LIMIT = 10000;
+        private static readonly BufferBlock<byte[]> buffer = new BufferBlock<byte[]>(new DataflowBlockOptions {BoundedCapacity = BUFFER_LIMIT});
         private static VideoCapture capture; // Takes video from camera as image frames
         private static int frameCount = 0;
         private static Task taskConsumer;
@@ -107,8 +108,17 @@ namespace WindowsForms
             while (await buffer.OutputAvailableAsync())
             {
                 byte[] frameToProcess = await buffer.ReceiveAsync();
-                var result = FaceRecognition.AnalyzeImage(frameToProcess);
-                Debug.WriteLine(DateTime.Now + " " + result);
+                if (buffer.Count >= BUFFER_LIMIT * 0.9)
+                {
+                    Debug.WriteLine("Buffer size within 10% of limit, skipping processing.");
+                    Debug.WriteLine(buffer.Count.ToString() + ">=" + (BUFFER_LIMIT * 0.9).ToString());
+                }
+                else
+                {
+                    Debug.WriteLine("Starting processing of frame. Remaining frames: " + buffer.Count.ToString());
+                    var result = FaceRecognition.AnalyzeImage(frameToProcess);
+                    Debug.WriteLine(DateTime.Now + " " + result);
+                }
             }
         }
 
