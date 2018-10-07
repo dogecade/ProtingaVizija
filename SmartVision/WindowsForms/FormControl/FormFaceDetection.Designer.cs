@@ -29,16 +29,6 @@
         protected void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFaceDetection));
-            this.buttonsPanel = new System.Windows.Forms.Panel();
-            this.underExitPanel = new System.Windows.Forms.Panel();
-            this.underPersonPanel = new System.Windows.Forms.Panel();
-            this.underScanPanel = new System.Windows.Forms.Panel();
-            this.underHomePanel = new System.Windows.Forms.Panel();
-            this.logoPictureBox = new System.Windows.Forms.PictureBox();
-            this.exitButton = new System.Windows.Forms.Button();
-            this.addPersonButton = new System.Windows.Forms.Button();
-            this.scanButton = new System.Windows.Forms.Button();
-            this.homeButton = new System.Windows.Forms.Button();
             this.homePanel = new System.Windows.Forms.Panel();
             this.dangerousLabelThree = new System.Windows.Forms.Label();
             this.dangerousPersonThree = new System.Windows.Forms.PictureBox();
@@ -83,8 +73,16 @@
             this.LastNameLabel = new System.Windows.Forms.Label();
             this.firstNameLabel = new System.Windows.Forms.Label();
             this.addPersonLabel = new System.Windows.Forms.Label();
-            this.buttonsPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
+            this.homeButton = new System.Windows.Forms.Button();
+            this.scanButton = new System.Windows.Forms.Button();
+            this.addPersonButton = new System.Windows.Forms.Button();
+            this.exitButton = new System.Windows.Forms.Button();
+            this.logoPictureBox = new System.Windows.Forms.PictureBox();
+            this.underHomePanel = new System.Windows.Forms.Panel();
+            this.underScanPanel = new System.Windows.Forms.Panel();
+            this.underPersonPanel = new System.Windows.Forms.Panel();
+            this.underExitPanel = new System.Windows.Forms.Panel();
+            this.buttonsPanel = new System.Windows.Forms.Panel();
             this.homePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dangerousPersonThree)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dangerousPersonTwo)).BeginInit();
@@ -96,141 +94,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.scanPictureBox)).BeginInit();
             this.addPersonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.missingPersonPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
+            this.buttonsPanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // buttonsPanel
-            // 
-            this.buttonsPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonsPanel.BackColor = System.Drawing.Color.Transparent;
-            this.buttonsPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.buttonsPanel.Controls.Add(this.underExitPanel);
-            this.buttonsPanel.Controls.Add(this.underPersonPanel);
-            this.buttonsPanel.Controls.Add(this.underScanPanel);
-            this.buttonsPanel.Controls.Add(this.underHomePanel);
-            this.buttonsPanel.Controls.Add(this.logoPictureBox);
-            this.buttonsPanel.Controls.Add(this.exitButton);
-            this.buttonsPanel.Controls.Add(this.addPersonButton);
-            this.buttonsPanel.Controls.Add(this.scanButton);
-            this.buttonsPanel.Controls.Add(this.homeButton);
-            this.buttonsPanel.Location = new System.Drawing.Point(1, 31);
-            this.buttonsPanel.Name = "buttonsPanel";
-            this.buttonsPanel.Size = new System.Drawing.Size(1077, 129);
-            this.buttonsPanel.TabIndex = 0;
-            // 
-            // underExitPanel
-            // 
-            this.underExitPanel.BackColor = System.Drawing.Color.Transparent;
-            this.underExitPanel.Location = new System.Drawing.Point(783, 107);
-            this.underExitPanel.Name = "underExitPanel";
-            this.underExitPanel.Size = new System.Drawing.Size(194, 10);
-            this.underExitPanel.TabIndex = 4;
-            // 
-            // underPersonPanel
-            // 
-            this.underPersonPanel.BackColor = System.Drawing.Color.Transparent;
-            this.underPersonPanel.Location = new System.Drawing.Point(583, 107);
-            this.underPersonPanel.Name = "underPersonPanel";
-            this.underPersonPanel.Size = new System.Drawing.Size(194, 10);
-            this.underPersonPanel.TabIndex = 3;
-            // 
-            // underScanPanel
-            // 
-            this.underScanPanel.BackColor = System.Drawing.Color.Transparent;
-            this.underScanPanel.Location = new System.Drawing.Point(383, 107);
-            this.underScanPanel.Name = "underScanPanel";
-            this.underScanPanel.Size = new System.Drawing.Size(194, 10);
-            this.underScanPanel.TabIndex = 3;
-            // 
-            // underHomePanel
-            // 
-            this.underHomePanel.BackColor = System.Drawing.Color.Transparent;
-            this.underHomePanel.Location = new System.Drawing.Point(183, 107);
-            this.underHomePanel.Name = "underHomePanel";
-            this.underHomePanel.Size = new System.Drawing.Size(194, 10);
-            this.underHomePanel.TabIndex = 2;
-            // 
-            // logoPictureBox
-            // 
-            this.logoPictureBox.BackColor = System.Drawing.Color.Transparent;
-            this.logoPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("logoPictureBox.Image")));
-            this.logoPictureBox.Location = new System.Drawing.Point(24, 0);
-            this.logoPictureBox.Name = "logoPictureBox";
-            this.logoPictureBox.Size = new System.Drawing.Size(153, 117);
-            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.logoPictureBox.TabIndex = 0;
-            this.logoPictureBox.TabStop = false;
-            // 
-            // exitButton
-            // 
-            this.exitButton.BackColor = System.Drawing.Color.NavajoWhite;
-            this.exitButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("exitButton.BackgroundImage")));
-            this.exitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.exitButton.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
-            this.exitButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.exitButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.exitButton.Location = new System.Drawing.Point(783, 14);
-            this.exitButton.Name = "exitButton";
-            this.exitButton.Size = new System.Drawing.Size(194, 91);
-            this.exitButton.TabIndex = 3;
-            this.exitButton.Text = "Exit";
-            this.exitButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.exitButton.UseVisualStyleBackColor = false;
-            this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
-            // 
-            // addPersonButton
-            // 
-            this.addPersonButton.BackColor = System.Drawing.Color.NavajoWhite;
-            this.addPersonButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("addPersonButton.BackgroundImage")));
-            this.addPersonButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.addPersonButton.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
-            this.addPersonButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.addPersonButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.addPersonButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.addPersonButton.Location = new System.Drawing.Point(583, 14);
-            this.addPersonButton.Name = "addPersonButton";
-            this.addPersonButton.Size = new System.Drawing.Size(194, 91);
-            this.addPersonButton.TabIndex = 2;
-            this.addPersonButton.Text = "Add a missing person";
-            this.addPersonButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.addPersonButton.UseVisualStyleBackColor = false;
-            this.addPersonButton.Click += new System.EventHandler(this.addPersonButton_Click);
-            // 
-            // scanButton
-            // 
-            this.scanButton.BackColor = System.Drawing.Color.NavajoWhite;
-            this.scanButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("scanButton.BackgroundImage")));
-            this.scanButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.scanButton.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
-            this.scanButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.scanButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.scanButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.scanButton.Location = new System.Drawing.Point(383, 14);
-            this.scanButton.Name = "scanButton";
-            this.scanButton.Size = new System.Drawing.Size(194, 91);
-            this.scanButton.TabIndex = 1;
-            this.scanButton.Text = "Scan";
-            this.scanButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.scanButton.UseVisualStyleBackColor = false;
-            this.scanButton.Click += new System.EventHandler(this.scanButton_Click);
-            // 
-            // homeButton
-            // 
-            this.homeButton.BackColor = System.Drawing.Color.NavajoWhite;
-            this.homeButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("homeButton.BackgroundImage")));
-            this.homeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.homeButton.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
-            this.homeButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.homeButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.homeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.homeButton.Location = new System.Drawing.Point(183, 14);
-            this.homeButton.Name = "homeButton";
-            this.homeButton.Size = new System.Drawing.Size(194, 91);
-            this.homeButton.TabIndex = 0;
-            this.homeButton.Text = "Home";
-            this.homeButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.homeButton.UseVisualStyleBackColor = false;
-            this.homeButton.Click += new System.EventHandler(this.homeButton_Click);
             // 
             // homePanel
             // 
@@ -877,9 +743,159 @@
             this.addPersonLabel.Text = "This is where you can add a missing person";
             this.addPersonLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // homeButton
+            // 
+            this.homeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.homeButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.homeButton.BackColor = System.Drawing.Color.NavajoWhite;
+            this.homeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.homeButton.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
+            this.homeButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.homeButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.homeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.homeButton.Image = ((System.Drawing.Image)(resources.GetObject("homeButton.Image")));
+            this.homeButton.Location = new System.Drawing.Point(183, 14);
+            this.homeButton.Name = "homeButton";
+            this.homeButton.Size = new System.Drawing.Size(194, 91);
+            this.homeButton.TabIndex = 0;
+            this.homeButton.Text = "Home";
+            this.homeButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.homeButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.homeButton.UseVisualStyleBackColor = false;
+            this.homeButton.Click += new System.EventHandler(this.homeButton_Click);
+            // 
+            // scanButton
+            // 
+            this.scanButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.scanButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.scanButton.BackColor = System.Drawing.Color.NavajoWhite;
+            this.scanButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.scanButton.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
+            this.scanButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.scanButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.scanButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.scanButton.Image = ((System.Drawing.Image)(resources.GetObject("scanButton.Image")));
+            this.scanButton.Location = new System.Drawing.Point(383, 14);
+            this.scanButton.Name = "scanButton";
+            this.scanButton.Size = new System.Drawing.Size(194, 91);
+            this.scanButton.TabIndex = 1;
+            this.scanButton.Text = "Scan";
+            this.scanButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.scanButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.scanButton.UseVisualStyleBackColor = false;
+            this.scanButton.Click += new System.EventHandler(this.scanButton_Click);
+            // 
+            // addPersonButton
+            // 
+            this.addPersonButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.addPersonButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.addPersonButton.BackColor = System.Drawing.Color.NavajoWhite;
+            this.addPersonButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.addPersonButton.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
+            this.addPersonButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.addPersonButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.addPersonButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.addPersonButton.Image = ((System.Drawing.Image)(resources.GetObject("addPersonButton.Image")));
+            this.addPersonButton.Location = new System.Drawing.Point(583, 14);
+            this.addPersonButton.Name = "addPersonButton";
+            this.addPersonButton.Size = new System.Drawing.Size(194, 91);
+            this.addPersonButton.TabIndex = 2;
+            this.addPersonButton.Text = "Add a missing person";
+            this.addPersonButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.addPersonButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.addPersonButton.UseVisualStyleBackColor = false;
+            this.addPersonButton.Click += new System.EventHandler(this.addPersonButton_Click);
+            // 
+            // exitButton
+            // 
+            this.exitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.exitButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.exitButton.BackColor = System.Drawing.Color.NavajoWhite;
+            this.exitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.exitButton.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
+            this.exitButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.exitButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.exitButton.Image = ((System.Drawing.Image)(resources.GetObject("exitButton.Image")));
+            this.exitButton.Location = new System.Drawing.Point(783, 14);
+            this.exitButton.Name = "exitButton";
+            this.exitButton.Size = new System.Drawing.Size(194, 91);
+            this.exitButton.TabIndex = 3;
+            this.exitButton.Text = "Exit";
+            this.exitButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.exitButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.exitButton.UseVisualStyleBackColor = false;
+            this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
+            // 
+            // logoPictureBox
+            // 
+            this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.logoPictureBox.BackColor = System.Drawing.Color.Transparent;
+            this.logoPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("logoPictureBox.Image")));
+            this.logoPictureBox.Location = new System.Drawing.Point(24, 0);
+            this.logoPictureBox.Name = "logoPictureBox";
+            this.logoPictureBox.Size = new System.Drawing.Size(153, 117);
+            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.logoPictureBox.TabIndex = 0;
+            this.logoPictureBox.TabStop = false;
+            // 
+            // underHomePanel
+            // 
+            this.underHomePanel.BackColor = System.Drawing.Color.Transparent;
+            this.underHomePanel.Location = new System.Drawing.Point(183, 107);
+            this.underHomePanel.Name = "underHomePanel";
+            this.underHomePanel.Size = new System.Drawing.Size(194, 10);
+            this.underHomePanel.TabIndex = 2;
+            // 
+            // underScanPanel
+            // 
+            this.underScanPanel.BackColor = System.Drawing.Color.Transparent;
+            this.underScanPanel.Location = new System.Drawing.Point(383, 107);
+            this.underScanPanel.Name = "underScanPanel";
+            this.underScanPanel.Size = new System.Drawing.Size(194, 10);
+            this.underScanPanel.TabIndex = 3;
+            // 
+            // underPersonPanel
+            // 
+            this.underPersonPanel.BackColor = System.Drawing.Color.Transparent;
+            this.underPersonPanel.Location = new System.Drawing.Point(583, 107);
+            this.underPersonPanel.Name = "underPersonPanel";
+            this.underPersonPanel.Size = new System.Drawing.Size(194, 10);
+            this.underPersonPanel.TabIndex = 3;
+            // 
+            // underExitPanel
+            // 
+            this.underExitPanel.BackColor = System.Drawing.Color.Transparent;
+            this.underExitPanel.Location = new System.Drawing.Point(783, 107);
+            this.underExitPanel.Name = "underExitPanel";
+            this.underExitPanel.Size = new System.Drawing.Size(194, 10);
+            this.underExitPanel.TabIndex = 4;
+            // 
+            // buttonsPanel
+            // 
+            this.buttonsPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonsPanel.BackColor = System.Drawing.Color.Transparent;
+            this.buttonsPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.buttonsPanel.Controls.Add(this.underExitPanel);
+            this.buttonsPanel.Controls.Add(this.underPersonPanel);
+            this.buttonsPanel.Controls.Add(this.underScanPanel);
+            this.buttonsPanel.Controls.Add(this.underHomePanel);
+            this.buttonsPanel.Controls.Add(this.logoPictureBox);
+            this.buttonsPanel.Controls.Add(this.exitButton);
+            this.buttonsPanel.Controls.Add(this.addPersonButton);
+            this.buttonsPanel.Controls.Add(this.scanButton);
+            this.buttonsPanel.Controls.Add(this.homeButton);
+            this.buttonsPanel.Location = new System.Drawing.Point(1, 31);
+            this.buttonsPanel.Name = "buttonsPanel";
+            this.buttonsPanel.Size = new System.Drawing.Size(1077, 129);
+            this.buttonsPanel.TabIndex = 0;
+            // 
             // FormFaceDetection
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScroll = true;
+            this.AutoScrollMinSize = new System.Drawing.Size(800, 600);
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -895,8 +911,6 @@
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.TransparencyKey = System.Drawing.Color.DeepSkyBlue;
             this.Load += new System.EventHandler(this.FormFaceDetection_Load);
-            this.buttonsPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
             this.homePanel.ResumeLayout(false);
             this.homePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dangerousPersonThree)).EndInit();
@@ -910,23 +924,19 @@
             this.addPersonPanel.ResumeLayout(false);
             this.addPersonPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.missingPersonPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
+            this.buttonsPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel buttonsPanel;
-        private System.Windows.Forms.Button exitButton;
-        private System.Windows.Forms.Button addPersonButton;
-        private System.Windows.Forms.Button scanButton;
         public System.Windows.Forms.Panel homePanel;
         private System.Windows.Forms.Label homeLabel;
         private System.Windows.Forms.Panel scanPanel;
         public System.Windows.Forms.PictureBox scanPictureBox;
         private System.Windows.Forms.Panel addPersonPanel;
         private System.Windows.Forms.Label addPersonLabel;
-        private System.Windows.Forms.PictureBox logoPictureBox;
         private System.Windows.Forms.Label firstNameLabel;
         private System.Windows.Forms.Label LastNameLabel;
         private System.Windows.Forms.Label adInfoLabel;
@@ -951,11 +961,6 @@
         private MetroFramework.Controls.MetroTextBox contactFirstNameBox;
         private System.Windows.Forms.Label contactFirstNameLabel;
         private System.Windows.Forms.Label contactLabel;
-        internal System.Windows.Forms.Button homeButton;
-        private System.Windows.Forms.Panel underExitPanel;
-        private System.Windows.Forms.Panel underPersonPanel;
-        private System.Windows.Forms.Panel underScanPanel;
-        private System.Windows.Forms.Panel underHomePanel;
         private System.Windows.Forms.Label dangerousLabelTwo;
         private System.Windows.Forms.Label dangerousLabelOne;
         private System.Windows.Forms.Label missingLabelThree;
@@ -970,6 +975,16 @@
         private System.Windows.Forms.PictureBox missingPersonOne;
         private System.Windows.Forms.Label dangerousLabelThree;
         private System.Windows.Forms.PictureBox dangerousPersonThree;
+        internal System.Windows.Forms.Button homeButton;
+        private System.Windows.Forms.Button scanButton;
+        private System.Windows.Forms.Button addPersonButton;
+        private System.Windows.Forms.Button exitButton;
+        private System.Windows.Forms.PictureBox logoPictureBox;
+        private System.Windows.Forms.Panel underHomePanel;
+        private System.Windows.Forms.Panel underScanPanel;
+        private System.Windows.Forms.Panel underPersonPanel;
+        private System.Windows.Forms.Panel underExitPanel;
+        private System.Windows.Forms.Panel buttonsPanel;
     }
 }
 
