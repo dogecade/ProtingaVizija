@@ -119,7 +119,7 @@
             this.homePanel.Controls.Add(this.missingPersonTwo);
             this.homePanel.Controls.Add(this.missingPersonOne);
             this.homePanel.Controls.Add(this.homeLabel);
-            this.homePanel.Location = new System.Drawing.Point(206, 192);
+            this.homePanel.Location = new System.Drawing.Point(205, 204);
             this.homePanel.Name = "homePanel";
             this.homePanel.Size = new System.Drawing.Size(673, 574);
             this.homePanel.TabIndex = 1;
@@ -285,7 +285,7 @@
             this.scanPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.scanPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.scanPanel.Controls.Add(this.scanPictureBox);
-            this.scanPanel.Location = new System.Drawing.Point(206, 192);
+            this.scanPanel.Location = new System.Drawing.Point(205, 204);
             this.scanPanel.Name = "scanPanel";
             this.scanPanel.Size = new System.Drawing.Size(673, 574);
             this.scanPanel.TabIndex = 2;
@@ -329,7 +329,7 @@
             this.addPersonPanel.Controls.Add(this.LastNameLabel);
             this.addPersonPanel.Controls.Add(this.firstNameLabel);
             this.addPersonPanel.Controls.Add(this.addPersonLabel);
-            this.addPersonPanel.Location = new System.Drawing.Point(206, 192);
+            this.addPersonPanel.Location = new System.Drawing.Point(205, 204);
             this.addPersonPanel.Name = "addPersonPanel";
             this.addPersonPanel.Size = new System.Drawing.Size(673, 574);
             this.addPersonPanel.TabIndex = 2;
@@ -885,7 +885,7 @@
             this.buttonsPanel.Controls.Add(this.addPersonButton);
             this.buttonsPanel.Controls.Add(this.scanButton);
             this.buttonsPanel.Controls.Add(this.homeButton);
-            this.buttonsPanel.Location = new System.Drawing.Point(1, 31);
+            this.buttonsPanel.Location = new System.Drawing.Point(0, 43);
             this.buttonsPanel.Name = "buttonsPanel";
             this.buttonsPanel.Size = new System.Drawing.Size(1077, 129);
             this.buttonsPanel.TabIndex = 0;

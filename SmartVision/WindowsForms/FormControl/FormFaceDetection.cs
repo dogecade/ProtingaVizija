@@ -59,10 +59,6 @@ namespace WindowsForms.FormControl
                 cameraEnabled = true;
             }
 
-            else
-            {
-                homePanel.BringToFront();
-            }
         }
 
         private void addPersonButton_Click(object sender, EventArgs e)
