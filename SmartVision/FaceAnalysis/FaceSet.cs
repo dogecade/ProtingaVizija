@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace WindowsForms.FaceAnalysis
+namespace FaceAnalysis
 {
     public class Faceset
     {

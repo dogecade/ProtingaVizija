@@ -1,6 +1,6 @@
-﻿namespace WindowsForms.Persons
+﻿namespace FaceAnalysis.Persons
 {
-    class ContactPerson : Person
+    public class ContactPerson : Person
     {
         private string phoneNumber;
         private string emailAddress;

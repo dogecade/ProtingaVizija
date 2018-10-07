@@ -1,6 +1,6 @@
-﻿namespace WindowsForms.Persons
+﻿namespace FaceAnalysis.Persons
 {
-    class Person
+    public class Person
     {
         protected string firstName;
         protected string lastName;
