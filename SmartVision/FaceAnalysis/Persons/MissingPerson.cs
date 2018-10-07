@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 
-namespace WindowsForms.Persons
+namespace FaceAnalysis.Persons
 {
-    class MissingPerson : Person
+    public class MissingPerson : Person
     {
         private string description;
         private string lastSeenLocation;
