@@ -66,10 +66,8 @@ namespace WindowsForms
         {
             try
             {
-                //cameraOn = false;
                 capture.Dispose();
                 Application.Idle -= GetFrameAsync;
-                buffer.Complete();
                 tokenSource.Cancel();
             }
             catch (Exception e)
