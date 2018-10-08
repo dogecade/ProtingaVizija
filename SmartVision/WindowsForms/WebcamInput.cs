@@ -9,11 +9,14 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using System.Threading.Tasks.Dataflow;
 using FaceAnalysis;
+using System.Threading;
 
 namespace WindowsForms
 {
     public class WebcamInput
     {
+        private static CancellationTokenSource tokenSource = new CancellationTokenSource();
+        private static CancellationToken token = tokenSource.Token;
         private static readonly BroadcastBlock<byte[]> buffer = new BroadcastBlock<byte[]>(item => item);
         private static VideoCapture capture; // Takes video from camera as image frames
         private static Task taskConsumer;
@@ -48,7 +51,6 @@ namespace WindowsForms
             }
             taskConsumer = Task.Run(() => ProcessFrameAsync());
             Application.Idle += GetFrameAsync;
-
             return true;
         }
 
@@ -56,14 +58,15 @@ namespace WindowsForms
         /// Disables the input of the webcam
         /// Author: Deividas Brazenas
         /// </summary>
-        public static async void DisableWebcam()
+        public static void DisableWebcam()
         {
             try
             {
+                //cameraOn = false;
                 capture.Dispose();
                 Application.Idle -= GetFrameAsync;
                 buffer.Complete();
-                await taskConsumer;
+                tokenSource.Cancel();
             }
             catch (Exception e)
             {
@@ -82,7 +85,6 @@ namespace WindowsForms
             {
                 var form = FormFaceDetection.Current;
                 form.scanPictureBox.Image = imageFrame.Bitmap;
-
                 await buffer.SendAsync(FaceRecognition.ImageToByte(imageFrame.Bitmap));
             }
         }
@@ -96,6 +98,8 @@ namespace WindowsForms
             FaceRecognition faceRecognition = new FaceRecognition();
             while (await buffer.OutputAvailableAsync())
             {
+                if (token.IsCancellationRequested)
+                    break;
                 byte[] frameToProcess = await buffer.ReceiveAsync();
                 Debug.WriteLine("Starting processing of frame");
                 var result = FaceRecognition.AnalyzeImage(frameToProcess);
