@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace WindowsForms.FaceAnalysis
+namespace FaceAnalysis
 {
-    public class FaceRecognition : ICallRecognitionApi
+    public class FaceRecognition
     {
         private const string url = "https://api-us.faceplusplus.com/facepp/v3/detect";
         private const string attributes = "gender,age"; // Returns gender and age attributes
@@ -79,5 +81,28 @@ namespace WindowsForms.FaceAnalysis
             }
         }
 
+        /// <summary>
+        /// Converts bitmap to byte array
+        /// Author: Arnas Danaitis
+        /// </summary>
+        /// <param name="img">Image in bitmap form</param>
+        /// <returns>Image in byte[]</returns>
+        public static byte[] ImageToByte(Bitmap img)
+        {
+            try
+            {
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    img.Save(stream, ImageFormat.Bmp);
+                    img.Dispose();
+                    return stream.ToArray();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                return null;
+            }
+        }
     }
 }

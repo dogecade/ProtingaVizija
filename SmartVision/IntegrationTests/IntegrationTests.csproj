@@ -94,9 +94,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WindowsForms\WindowsForms.csproj">
-      <Project>{90ba7247-373c-49e3-a9b5-90828bbc8be9}</Project>
-      <Name>WindowsForms</Name>
+    <ProjectReference Include="..\FaceAnalysis\FaceAnalysis.csproj">
+      <Project>{c9dd5eb7-25cd-4f3a-901a-0f20a7f8479d}</Project>
+      <Name>FaceAnalysis</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

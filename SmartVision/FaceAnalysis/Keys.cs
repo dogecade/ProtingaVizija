@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FaceAnalysis
+{
+    class Keys
+    {
+        public const string apiKey = "12345";
+        public const string apiSecret = "54321";
+    }
+}
