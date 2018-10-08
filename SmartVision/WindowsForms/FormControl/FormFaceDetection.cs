@@ -3,7 +3,8 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using WindowsForms.FaceAnalysis;
-using WindowsForms.Persons;
+using FaceAnalysis;
+using FaceAnalysis.Persons;
 
 namespace WindowsForms.FormControl
 {

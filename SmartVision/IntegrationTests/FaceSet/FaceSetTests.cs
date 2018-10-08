@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using WindowsForms;
 using WindowsForms.FaceAnalysis;
 using WindowsForms.FaceAnalysis.JSON;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FaceAnalysis;
 using Newtonsoft.Json;
 
 namespace UnitTests
@@ -39,7 +39,7 @@ namespace UnitTests
         {
             // Analyze image
             Bitmap bitmap = new Bitmap("..\\..\\TestPictures\\1.jpg");
-            string analyzedImageJSON = FaceRecognition.AnalyzeImage(WebcamInput.ImageToByte(bitmap));
+            string analyzedImageJSON = FaceRecognition.AnalyzeImage(FaceAnalysis.FaceRecognition.ImageToByte(bitmap));
             var analyzedImage = JsonConvert.DeserializeObject<AnalyzedFaces>(analyzedImageJSON);
 
             // Verify it was analyzed correctly
@@ -74,7 +74,7 @@ namespace UnitTests
         {
             // Analyze image
             Bitmap bitmap = new Bitmap("..\\..\\TestPictures\\1.jpg");
-            string analyzedImageJSON = FaceRecognition.AnalyzeImage(WebcamInput.ImageToByte(bitmap));
+            string analyzedImageJSON = FaceRecognition.AnalyzeImage(FaceRecognition.ImageToByte(bitmap));
             var analyzedImage = JsonConvert.DeserializeObject<AnalyzedFaces>(analyzedImageJSON);
 
             // Verify it was analyzed correctly
