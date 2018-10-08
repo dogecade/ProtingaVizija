@@ -10,11 +10,15 @@ using Emgu.CV.Structure;
 using System.Threading.Tasks.Dataflow;
 using FaceAnalysis;
 using System.Threading;
+using System.Drawing;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace WindowsForms
 {
     public class WebcamInput
     {
+        private static List<Rectangle> faceRectangles = new List<Rectangle>();
         private static CancellationTokenSource tokenSource = new CancellationTokenSource();
         private static CancellationToken token = tokenSource.Token;
         private static readonly BroadcastBlock<byte[]> buffer = new BroadcastBlock<byte[]>(item => item);
@@ -85,8 +89,11 @@ namespace WindowsForms
             {
                 var form = FormFaceDetection.Current;
                 form.scanPictureBox.Image = imageFrame.Bitmap;
+                foreach (Rectangle face in faceRectangles)
+                    imageFrame.Draw(face, new Bgr(Color.Red), 1);
                 await buffer.SendAsync(FaceRecognition.ImageToByte(imageFrame.Bitmap));
             }
+
         }
 
         /// <summary>
@@ -102,8 +109,11 @@ namespace WindowsForms
                     break;
                 byte[] frameToProcess = await buffer.ReceiveAsync();
                 Debug.WriteLine("Starting processing of frame");
-                var result = FaceRecognition.AnalyzeImage(frameToProcess);
-                Debug.WriteLine(DateTime.Now + " " + result);
+                var result = JsonConvert.DeserializeObject<AnalyzedFaces>(FaceRecognition.AnalyzeImage(frameToProcess));
+                Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
+                faceRectangles.Clear();
+                foreach (Face face in result.faces)
+                    faceRectangles.Add(face.face_rectangle);
             }
         }
     }
