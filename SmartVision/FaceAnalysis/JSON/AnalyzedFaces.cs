@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 
 namespace WindowsForms.FaceAnalysis
 {
@@ -134,12 +135,17 @@ namespace WindowsForms.FaceAnalysis
         public Age age { get; set; }
     }
 
-    public struct FaceRectangle
+    public class FaceRectangle
     {
-        public int width { get; set; }
-        public int top { get; set; }
-        public int left { get; set; }
-        public int height { get; set; }
+        public int Width { get; set; }
+        public int Top { get; set; }
+        public int Left { get; set; }
+        public int Height { get; set; }
+
+        public static implicit operator Rectangle(FaceRectangle r)
+        {
+            return new Rectangle(r.Left, r.Top, r.Width, r.Height);
+        }
     }
 
     public struct Face
