@@ -24,9 +24,11 @@ namespace WindowsForms
         private static readonly BroadcastBlock<byte[]> buffer = new BroadcastBlock<byte[]>(item => item);
         private static VideoCapture capture; // Takes video from camera as image frames
         private static Task taskConsumer;
+        private static HttpClientWrapper httpClientWrapper = new HttpClientWrapper();
+        private static FaceApiCalls faceApiCalls = new FaceApiCalls(httpClientWrapper);
+
         /// <summary>
         /// Enables the input of the webcam
-        /// Author: Deividas Brazenas
         /// </summary>
         public static bool EnableWebcam()
         {
@@ -60,7 +62,6 @@ namespace WindowsForms
 
         /// <summary>
         /// Disables the input of the webcam
-        /// Author: Deividas Brazenas
         /// </summary>
         public static void DisableWebcam()
         {
@@ -89,7 +90,7 @@ namespace WindowsForms
                 form.scanPictureBox.Image = imageFrame.Bitmap;
                 foreach (Rectangle face in faceRectangles)
                     imageFrame.Draw(face, new Bgr(Color.Red), 1);
-                await buffer.SendAsync(FaceRecognition.ImageToByte(imageFrame.Bitmap));
+                await buffer.SendAsync(HelperMethods.ImageToByte(imageFrame.Bitmap));
             }
 
         }
@@ -100,7 +101,6 @@ namespace WindowsForms
         /// </summary>
         private static async void ProcessFrameAsync()
         {
-            FaceRecognition faceRecognition = new FaceRecognition();
             while (await buffer.OutputAvailableAsync())
             {
                 if (token.IsCancellationRequested)
@@ -109,7 +109,7 @@ namespace WindowsForms
                 Debug.WriteLine("Starting processing of frame");
                 try
                 {
-                    var result = JsonConvert.DeserializeObject<AnalyzedFaces>(FaceRecognition.AnalyzeImage(frameToProcess));
+                    var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(faceApiCalls.AnalyzeFrame(frameToProcess).Result);
                     Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
                     faceRectangles.Clear();
                     foreach (Face face in result.faces)
