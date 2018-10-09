@@ -109,7 +109,7 @@ namespace WindowsForms
                 Debug.WriteLine("Starting processing of frame");
                 try
                 {
-                    var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(faceApiCalls.AnalyzeImage(frameToProcess).Result);
+                    var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(faceApiCalls.AnalyzeFrame(frameToProcess).Result);
                     Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
                     faceRectangles.Clear();
                     foreach (Face face in result.faces)

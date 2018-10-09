@@ -11,25 +11,24 @@ namespace UnitTests
     [TestClass]
     public class FaceSetTests
     {
-        private static string _faceSetToken;
-        private static FaceApiCalls fs;
+        private static string faceSetToken;
+        private static HttpClientWrapper httpClientWrapper = new HttpClientWrapper();
+        private static FaceApiCalls faceApiCalls = new FaceApiCalls(httpClientWrapper);
 
         [ClassInitialize()]
         public static void ClassInit(TestContext context)
         {
             string guid = Guid.NewGuid().ToString();
             string faceSetName = "FaceSet-" + guid;
-            var newFaceSetJSON = FaceApiCalls.CreateNewFaceset(faceSetName).Result;
+            var newFaceSetJSON = faceApiCalls.CreateNewFaceset(faceSetName).Result;
 
             // Create a new face set
             var faceSetJson = JsonConvert.DeserializeObject<CreateFaceSetJSON>(newFaceSetJSON);
-            _faceSetToken = faceSetJson.faceset_token;
+            faceSetToken = faceSetJson.faceset_token;
 
             // Verify it was created successfully
             Assert.AreEqual(0, faceSetJson.face_count, "There should be no faces in the new face set");
             Assert.AreEqual(0, faceSetJson.face_added, "There should be no faces added to the new face set");
-
-            fs = new FaceApiCalls(_faceSetToken);
         }
 
         [TestMethod]
@@ -39,7 +38,7 @@ namespace UnitTests
         {
             // Analyze image
             Bitmap bitmap = new Bitmap("..\\..\\TestPictures\\1.jpg");
-            string analyzedImageJSON = FaceRecognition.AnalyzeImage(FaceAnalysis.FaceRecognition.ImageToByte(bitmap));
+            string analyzedImageJSON = faceApiCalls.AnalyzeFrame(HelperMethods.ImageToByte(bitmap)).Result;
             var analyzedImage = JsonConvert.DeserializeObject<FrameAnalysisJSON>(analyzedImageJSON);
 
             // Verify it was analyzed correctly
@@ -48,10 +47,10 @@ namespace UnitTests
             string faceToken = analyzedImage.faces[0].face_token;
 
             // Add image to face set
-            var addedFaceJSON = fs.AddFace(faceToken).Result;
+            var addedFaceJSON = faceApiCalls.AddFaceToFaceset(faceSetToken, faceToken).Result;
 
             // Verify it was added
-            var faceSetDetailsJSON = fs.GetDetail().Result;
+            var faceSetDetailsJSON = faceApiCalls.GetFacesetDetail(faceSetToken).Result;
             var faceSetDetails = JsonConvert.DeserializeObject<FacesetDetails>(faceSetDetailsJSON);
 
             bool wasAdded = false;
@@ -74,7 +73,7 @@ namespace UnitTests
         {
             // Analyze image
             Bitmap bitmap = new Bitmap("..\\..\\TestPictures\\1.jpg");
-            string analyzedImageJSON = FaceRecognition.AnalyzeImage(FaceRecognition.ImageToByte(bitmap));
+            string analyzedImageJSON = faceApiCalls.AnalyzeFrame(HelperMethods.ImageToByte(bitmap)).Result;
             var analyzedImage = JsonConvert.DeserializeObject<FrameAnalysisJSON>(analyzedImageJSON);
 
             // Verify it was analyzed correctly
@@ -83,10 +82,10 @@ namespace UnitTests
             string faceToken = analyzedImage.faces[0].face_token;
 
             // Add image to face set
-            var addedFaceJSON = fs.AddFace(faceToken).Result;
+            var addedFaceJSON = faceApiCalls.AddFaceToFaceset(faceSetToken, faceToken).Result;
 
             // Verify it was added
-            var faceSetDetailsJSON = fs.GetDetail().Result;
+            var faceSetDetailsJSON = faceApiCalls.GetFacesetDetail(faceSetToken).Result;
             var faceSetDetails = JsonConvert.DeserializeObject<FacesetDetails>(faceSetDetailsJSON);
 
             bool wasAdded = false;
@@ -102,9 +101,9 @@ namespace UnitTests
             Assert.IsTrue(wasAdded, "Face was not added to the face set");
 
             // Remove face from the face set
-            var removedFaceJSON = fs.RemoveFace(faceToken).Result;
+            var removedFaceJSON = faceApiCalls.RemoveFaceFromFaceset(faceSetToken,faceToken).Result;
 
-            faceSetDetailsJSON = fs.GetDetail().Result;
+            faceSetDetailsJSON = faceApiCalls.GetFacesetDetail(faceSetToken).Result;
             faceSetDetails = JsonConvert.DeserializeObject<FacesetDetails>(faceSetDetailsJSON);
 
             bool wasRemoved = true;
