@@ -107,11 +107,18 @@ namespace WindowsForms
                     break;
                 byte[] frameToProcess = await buffer.ReceiveAsync();
                 Debug.WriteLine("Starting processing of frame");
-                var result = JsonConvert.DeserializeObject<AnalyzedFaces>(FaceRecognition.AnalyzeImage(frameToProcess));
-                Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
-                faceRectangles.Clear();
-                foreach (Face face in result.faces)
-                    faceRectangles.Add(face.face_rectangle);
+                try
+                {
+                    var result = JsonConvert.DeserializeObject<AnalyzedFaces>(FaceRecognition.AnalyzeImage(frameToProcess));
+                    Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
+                    faceRectangles.Clear();
+                    foreach (Face face in result.faces)
+                        faceRectangles.Add(face.face_rectangle);
+                }
+                catch (ArgumentNullException)
+                {
+                    Debug.WriteLine("Invalid response received from API");
+                }
             }
         }
     }
