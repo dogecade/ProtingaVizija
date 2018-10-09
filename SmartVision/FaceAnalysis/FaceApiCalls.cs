@@ -5,22 +5,69 @@ using System.Threading.Tasks;
 
 namespace FaceAnalysis
 {
-    public class Faceset
+    public class FaceApiCalls
     {
-        private static string createUrl = "https://api-us.faceplusplus.com/facepp/v3/faceset/create";
-        private static string addUrl = "https://api-us.faceplusplus.com/facepp/v3/faceset/async/addface";
-        private static string searchUrl = "https://api-us.faceplusplus.com/facepp/v3/search";
-        private static string removeUrl = "https://api-us.faceplusplus.com/facepp/v3/faceset/removeface";
-        private static string getDetailUrl = "https://api-us.faceplusplus.com/facepp/v3/faceset/getdetail";
+        private const string rootUrl = "https://api-us.faceplusplus.com/facepp/v3/";
+        private readonly string detectUrl = rootUrl + "detect";
+        private readonly string createUrl = rootUrl + "faceset/create";
+        private readonly string addUrl = rootUrl + "faceset/addface";
+        private readonly string searchUrl = rootUrl + "search";
+        private readonly string removeUrl = rootUrl + "faceset/removeface";
+        private readonly string getDetailUrl = rootUrl + "faceset/getdetail";
 
-        private static readonly HttpClient client = new HttpClient();
-        private string facesetToken;
+        private readonly HttpClientWrapper httpClientWrapper;
 
-        public Faceset(string facesetToken)
+        public FaceApiCalls(HttpClientWrapper httpClientWrapper)
         {
-            this.facesetToken = facesetToken;
+            this.httpClientWrapper = httpClientWrapper;
         }
-        public static async Task<string> CreateNewFaceset(string facesetName)
+
+        /// <summary>
+        /// Calls frame analyze API
+        /// </summary>
+        /// <param name="image">Image in byte array format</param>
+        /// <returns>FrameAnalysisJSON</returns>
+        public async Task<string> AnalyzeFrame(byte[] image)
+        {
+            HttpContent keyContent = new StringContent(Keys.apiKey);
+            HttpContent secretContent = new StringContent(Keys.apiSecret);
+            HttpContent imageContent = new StringContent(Convert.ToBase64String(image));
+
+            try
+            {
+                using (var formData = new MultipartFormDataContent())
+                {
+                    formData.Add(keyContent, "api_key");
+                    formData.Add(secretContent, "api_secret");
+                    formData.Add(imageContent, "image_base64");
+
+                    using (var response = await httpClientWrapper.PostAsync(detectUrl, formData))
+                    {
+                        string responseString = httpClientWrapper.ReadStringAsync(response).Result;
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return responseString;
+                        }
+
+                        throw new Exception(responseString);
+                    }
+                }
+            }
+
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new faceset
+        /// </summary>
+        /// <param name="facesetName">Name of the faceset</param>
+        /// <returns>CreateFacesetJSON</returns>
+        public async Task<string> CreateNewFaceset(string facesetName)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
@@ -34,9 +81,9 @@ namespace FaceAnalysis
                     formData.Add(secretContent, "api_secret");
                     formData.Add(facesetNameContent, "display_name");
 
-                    using (var response = await client.PostAsync(createUrl, formData))
+                    using (var response = await httpClientWrapper.PostAsync(createUrl, formData))
                     {
-                        string responseString = await response.Content.ReadAsStringAsync();
+                        string responseString = httpClientWrapper.ReadStringAsync(response).Result;
 
                         if (response.IsSuccessStatusCode)
                         {
@@ -54,8 +101,13 @@ namespace FaceAnalysis
                 return null;
             }
         }
-
-        public async Task<string> AddFace(string faceToken)
+        /// <summary>
+        /// Adds face to the faceset
+        /// </summary>
+        /// <param name="facesetToken">Faceset token</param>
+        /// <param name="faceToken">Face token</param>
+        /// <returns>AddFaceJSON</returns>
+        public async Task<string> AddFaceToFaceset(string facesetToken, string faceToken)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
@@ -71,9 +123,9 @@ namespace FaceAnalysis
                     formData.Add(facesetTokenContent, "faceset_token");
                     formData.Add(faceTokenContent, "face_tokens");
 
-                    using (var response = await client.PostAsync(addUrl, formData).ConfigureAwait(false))
+                    using (var response = await httpClientWrapper.PostAsync(addUrl, formData))
                     {
-                        string responseString = await response.Content.ReadAsStringAsync();
+                        string responseString = httpClientWrapper.ReadStringAsync(response).Result;
 
                         if (response.IsSuccessStatusCode)
                         {
@@ -92,7 +144,13 @@ namespace FaceAnalysis
             }
         }
 
-        public async Task<string> RemoveFace(string faceToken)
+        /// <summary>
+        /// Removes face from the faceset
+        /// </summary>
+        /// <param name="facesetToken">Faceset token</param>
+        /// <param name="faceToken">Facetoken</param>
+        /// <returns>RemoveFaceJSON</returns>
+        public async Task<string> RemoveFaceFromFaceset(string facesetToken, string faceToken)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
@@ -108,9 +166,9 @@ namespace FaceAnalysis
                     formData.Add(facesetTokenContent, "faceset_token");
                     formData.Add(faceTokenContent, "face_tokens");
 
-                    using (var response = await client.PostAsync(removeUrl, formData))
+                    using (var response = await httpClientWrapper.PostAsync(removeUrl, formData))
                     {
-                        string responseString = await response.Content.ReadAsStringAsync();
+                        string responseString = httpClientWrapper.ReadStringAsync(response).Result;
 
                         if (response.IsSuccessStatusCode)
                         {
@@ -129,7 +187,13 @@ namespace FaceAnalysis
             }
         }
 
-        public async Task<string> SearchFaces(string faceToken)
+        /// <summary>
+        /// Searches for the face in the faceset
+        /// </summary>
+        /// <param name="facesetToken">Faceset token</param>
+        /// <param name="faceToken">Face token</param>
+        /// <returns>FoundFacesJSON</returns>
+        public async Task<string> SearchFaceInFaceset(string facesetToken, string faceToken)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
@@ -145,9 +209,9 @@ namespace FaceAnalysis
                     formData.Add(faceTokenContent, "face_token");
                     formData.Add(facesetTokenContent, "faceset_token");
 
-                    using (var response = await client.PostAsync(searchUrl, formData))
+                    using (var response = await httpClientWrapper.PostAsync(searchUrl, formData))
                     {
-                        string responseString = await response.Content.ReadAsStringAsync();
+                        string responseString = httpClientWrapper.ReadStringAsync(response).Result;
 
                         if (response.IsSuccessStatusCode)
                         {
@@ -158,6 +222,7 @@ namespace FaceAnalysis
                     }
                 }
             }
+
             catch (Exception e)
             {
                 Debug.WriteLine(e);
@@ -165,11 +230,16 @@ namespace FaceAnalysis
             }
         }
 
-        public async Task<string> GetDetail()
+        /// <summary>
+        /// Returns details of the faceset
+        /// </summary>
+        /// <param name="facesetToken">Faceset token</param>
+        /// <returns>FacesetDetailsJSON</returns>
+        public async Task<string> GetFacesetDetail(string facesetToken)
         {
-                HttpContent keyContent = new StringContent(Keys.apiKey);
-                HttpContent secretContent = new StringContent(Keys.apiSecret);
-                HttpContent facesetTokenContent = new StringContent(facesetToken);
+            HttpContent keyContent = new StringContent(Keys.apiKey);
+            HttpContent secretContent = new StringContent(Keys.apiSecret);
+            HttpContent facesetTokenContent = new StringContent(facesetToken);
 
             try
             {
@@ -179,9 +249,9 @@ namespace FaceAnalysis
                     formData.Add(secretContent, "api_secret");
                     formData.Add(facesetTokenContent, "faceset_token");
 
-                    using (var response = await client.PostAsync(getDetailUrl, formData))
+                    using (var response = await httpClientWrapper.PostAsync(getDetailUrl, formData))
                     {
-                        string responseString = await response.Content.ReadAsStringAsync();
+                        string responseString = httpClientWrapper.ReadStringAsync(response).Result;
 
                         if (response.IsSuccessStatusCode)
                         {
@@ -192,6 +262,7 @@ namespace FaceAnalysis
                     }
                 }
             }
+
             catch (Exception e)
             {
                 Debug.WriteLine(e);
