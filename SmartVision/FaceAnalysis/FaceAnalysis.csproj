@@ -73,12 +73,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FaceRecognition.cs" />
-    <Compile Include="FaceSet.cs" />
-    <Compile Include="JSON\AnalyzedFaces.cs" />
+    <Compile Include="FaceApiCalls.cs" />
+    <Compile Include="HelperMethods.cs" />
+    <Compile Include="HttpClientWrapper.cs" />
+    <Compile Include="JSON\AddFaceJSON.cs" />
+    <Compile Include="JSON\FrameAnalysisJSON.cs" />
     <Compile Include="JSON\CreateFaceSetJSON.cs" />
-    <Compile Include="JSON\FacesetDetails.cs" />
-    <Compile Include="JSON\FoundFaces.cs" />
+    <Compile Include="JSON\FacesetDetailsJSON.cs" />
+    <Compile Include="JSON\FoundFacesJSON.cs" />
+    <Compile Include="JSON\RemoveFaceJSON.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="Persons\ContactPerson.cs" />
     <Compile Include="Persons\MissingPerson.cs" />
