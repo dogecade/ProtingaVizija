@@ -87,7 +87,7 @@ namespace WindowsForms.FormControl
         /// Gets information about the missing person
         /// Author: Tomas Drasutis
         /// </summary>
-        private void addMissingPersonButton_Click(object sender, EventArgs e)
+        private async void addMissingPersonButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -132,9 +132,20 @@ namespace WindowsForms.FormControl
                 MissingPerson missingPerson = new MissingPerson(firstNameBox.Text, lastNameBox.Text, additionalInfoBox.Text, locationBox.Text, dateOfBirthPicker.Value, lastSeenOnPicker.Value, missingPersonImage);
                 ContactPerson contactPerson = new ContactPerson(contactFirstNameBox.Text, contactLastNameBox.Text, contactPhoneNumberBox.Text, contactEmailAddressBox.Text);
 
-                if (FaceDetection.FaceDetectionFromPicture(missingPersonImage))
+                switch (await HelperMethods.NumberOfFaces(missingPersonImage))
                 {
-                    //to put to database
+                    case 0:
+                        MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
+                                        "Please try another one.");
+                        break;
+                    case 1:
+                        MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +
+                                        "Please try another one.");
+                        break;
+                    default:
+                        //add to db here.
+                        MessageBox.Show("Face should be added to DB here.");
+                        break;
                 }
             }
             catch (Exception exception)
@@ -162,7 +173,6 @@ namespace WindowsForms.FormControl
             try
             {
                 WebcamInput.DisableWebcam();
-                FaceDetection.DisableFaceDetection();
             }
             catch (Exception exception)
             {

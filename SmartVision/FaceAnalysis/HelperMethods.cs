@@ -3,6 +3,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using WindowsForms.FaceAnalysis;
 
 namespace FaceAnalysis
 {
@@ -29,6 +32,29 @@ namespace FaceAnalysis
                 Debug.WriteLine(e);
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Makes an API call for image analysis.
+        /// Returns just the number of faces (for cases where this is all that is needed)
+        /// </summary>
+        /// <param name="img">Image in bitmap form</param>
+        /// <returns>Number of faces in image</returns>
+        /// 
+        public static async Task<int> NumberOfFaces(Bitmap img)
+        {
+            FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
+            int faceCount;
+            try
+            {
+                faceCount = JsonConvert.DeserializeObject<FrameAnalysisJSON>(await faceApiCalls.AnalyzeFrame(ImageToByte(img))).faces.Count;
+            }
+            catch (ArgumentNullException)
+            {
+                Debug.WriteLine("Invalid API response");
+                faceCount = 0;
+            }
+            return faceCount;
         }
     }
 }

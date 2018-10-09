@@ -179,7 +179,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FaceDetection.cs" />
     <Compile Include="FormControl\ImageUpload.cs" />
     <Compile Include="FormControl\FormFaceDetection.cs">
       <SubType>Form</SubType>
