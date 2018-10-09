@@ -2,7 +2,7 @@
 
 namespace WindowsForms.FaceAnalysis
 {
-    public struct FacesetDetails
+    public struct FacesetDetailsJSON
     {
         public string faceset_token { get; set; }
         public string tags { get; set; }
