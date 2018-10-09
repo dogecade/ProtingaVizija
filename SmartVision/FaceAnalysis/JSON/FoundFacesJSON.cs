@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace WindowsForms.FaceAnalysis
 {
-    public struct FoundFaces
+    public struct FoundFacesJSON
     {
         public string request_id { get; set; }
         public int time_used { get; set; }

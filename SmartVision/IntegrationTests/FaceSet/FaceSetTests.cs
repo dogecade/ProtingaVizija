@@ -12,24 +12,24 @@ namespace UnitTests
     public class FaceSetTests
     {
         private static string _faceSetToken;
-        private static Faceset fs;
+        private static FaceApiCalls fs;
 
         [ClassInitialize()]
         public static void ClassInit(TestContext context)
         {
             string guid = Guid.NewGuid().ToString();
             string faceSetName = "FaceSet-" + guid;
-            var newFaceSetJSON = Faceset.CreateNewFaceset(faceSetName).Result;
+            var newFaceSetJSON = FaceApiCalls.CreateNewFaceset(faceSetName).Result;
 
             // Create a new face set
-            var faceSetJson = JsonConvert.DeserializeObject<CreateFaceSetJSON>(newFaceSetJSON);
+            var faceSetJson = JsonConvert.DeserializeObject<CreateFacesetJSON>(newFaceSetJSON);
             _faceSetToken = faceSetJson.faceset_token;
 
             // Verify it was created successfully
             Assert.AreEqual(0, faceSetJson.face_count, "There should be no faces in the new face set");
             Assert.AreEqual(0, faceSetJson.face_added, "There should be no faces added to the new face set");
 
-            fs = new Faceset(_faceSetToken);
+            fs = new FaceApiCalls(_faceSetToken);
         }
 
         [TestMethod]
@@ -40,7 +40,7 @@ namespace UnitTests
             // Analyze image
             Bitmap bitmap = new Bitmap("..\\..\\TestPictures\\1.jpg");
             string analyzedImageJSON = FaceRecognition.AnalyzeImage(FaceAnalysis.FaceRecognition.ImageToByte(bitmap));
-            var analyzedImage = JsonConvert.DeserializeObject<AnalyzedFaces>(analyzedImageJSON);
+            var analyzedImage = JsonConvert.DeserializeObject<FrameAnalysisJSON>(analyzedImageJSON);
 
             // Verify it was analyzed correctly
             Assert.AreEqual(1, analyzedImage.faces.Count, "There should be exactly one face in the analyzed image");
@@ -52,7 +52,7 @@ namespace UnitTests
 
             // Verify it was added
             var faceSetDetailsJSON = fs.GetDetail().Result;
-            var faceSetDetails = JsonConvert.DeserializeObject<FacesetDetails>(faceSetDetailsJSON);
+            var faceSetDetails = JsonConvert.DeserializeObject<FacesetDetailsJSON>(faceSetDetailsJSON);
 
             bool wasAdded = false;
 
@@ -75,7 +75,7 @@ namespace UnitTests
             // Analyze image
             Bitmap bitmap = new Bitmap("..\\..\\TestPictures\\1.jpg");
             string analyzedImageJSON = FaceRecognition.AnalyzeImage(FaceRecognition.ImageToByte(bitmap));
-            var analyzedImage = JsonConvert.DeserializeObject<AnalyzedFaces>(analyzedImageJSON);
+            var analyzedImage = JsonConvert.DeserializeObject<FrameAnalysisJSON>(analyzedImageJSON);
 
             // Verify it was analyzed correctly
             Assert.AreEqual(1, analyzedImage.faces.Count, "There should be exactly one face in the analyzed image");
@@ -87,7 +87,7 @@ namespace UnitTests
 
             // Verify it was added
             var faceSetDetailsJSON = fs.GetDetail().Result;
-            var faceSetDetails = JsonConvert.DeserializeObject<FacesetDetails>(faceSetDetailsJSON);
+            var faceSetDetails = JsonConvert.DeserializeObject<FacesetDetailsJSON>(faceSetDetailsJSON);
 
             bool wasAdded = false;
 
@@ -105,7 +105,7 @@ namespace UnitTests
             var removedFaceJSON = fs.RemoveFace(faceToken).Result;
 
             faceSetDetailsJSON = fs.GetDetail().Result;
-            faceSetDetails = JsonConvert.DeserializeObject<FacesetDetails>(faceSetDetailsJSON);
+            faceSetDetails = JsonConvert.DeserializeObject<FacesetDetailsJSON>(faceSetDetailsJSON);
 
             bool wasRemoved = true;
 

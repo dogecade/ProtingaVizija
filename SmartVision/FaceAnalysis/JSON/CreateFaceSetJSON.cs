@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WindowsForms.FaceAnalysis.JSON
 {
-    public class CreateFaceSetJSON
+    public class CreateFacesetJSON
     {
         public string faceset_token { get; set; }
         public int time_used { get; set; }
