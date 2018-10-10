@@ -24,8 +24,7 @@ namespace WindowsForms
         private static readonly BroadcastBlock<byte[]> buffer = new BroadcastBlock<byte[]>(item => item);
         private static VideoCapture capture; // Takes video from camera as image frames
         private static Task taskConsumer;
-        private static HttpClientWrapper httpClientWrapper = new HttpClientWrapper();
-        private static FaceApiCalls faceApiCalls = new FaceApiCalls(httpClientWrapper);
+        private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
 
         /// <summary>
         /// Enables the input of the webcam
