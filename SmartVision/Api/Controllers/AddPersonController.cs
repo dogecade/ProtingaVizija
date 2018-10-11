@@ -6,8 +6,9 @@ using System.Web.Mvc;
 
 namespace Api.Controllers
 {
-    public class HomeController : Controller
+    public class AddPersonController : Controller
     {
+        // GET: AddPerson
         public ActionResult Index()
         {
             ViewBag.Title = "Smart Vision";
