@@ -18,13 +18,14 @@ namespace FaceAnalysis
         /// <returns>Image in byte[]</returns>
         public static byte[] ImageToByte(Bitmap img)
         {
+            byte[] array = null;
             try
             {
                 using (MemoryStream stream = new MemoryStream())
                 {
                     img.Save(stream, ImageFormat.Bmp);
                     img.Dispose();
-                    return stream.ToArray();
+                    array = stream.ToArray();
                 }
             }
             catch (Exception e)
@@ -32,6 +33,7 @@ namespace FaceAnalysis
                 Debug.WriteLine(e);
                 return null;
             }
+            return array;
         }
 
         /// <summary>
