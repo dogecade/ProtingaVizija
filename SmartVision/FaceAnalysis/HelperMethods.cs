@@ -58,5 +58,22 @@ namespace FaceAnalysis
             }
             return faceCount;
         }
+
+        /// <summary>
+        /// Processes a bitmap so that it is (more likely to be) accepted by API.
+        /// Previous version of image is disposed.
+        /// </summary>
+        /// <param name="img">Image in bitmap form</param>
+        /// <returns>Number of faces in image</returns>
+        public static Bitmap ProcessImage(Bitmap img)
+        {
+            Bitmap imgClone = new Bitmap(img.Width, img.Height, PixelFormat.Format24bppRgb);
+            using (Graphics gr = Graphics.FromImage(imgClone))
+            {
+                gr.DrawImage(img, new Rectangle(0, 0, imgClone.Width, imgClone.Height));
+            }
+            img.Dispose();
+            return imgClone;
+        }
     }
 }

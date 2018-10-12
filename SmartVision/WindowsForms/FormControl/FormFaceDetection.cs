@@ -92,43 +92,43 @@ namespace WindowsForms.FormControl
             try
             {
                 // Verify that properties are valid
-                if(!Regex.IsMatch(firstNameBox.Text,@"^[a-zA-Z]+$") || firstNameBox.Text.Equals(""))
+                if (!Regex.IsMatch(firstNameBox.Text, @"^[a-zA-Z]+$") || firstNameBox.Text.Equals(""))
                 {
                     MessageBox.Show("Missing person First name should contain only letters and cannot be empty!");
                     return;
                 }
 
-                if(!Regex.IsMatch(lastNameBox.Text,@"^[a-zA-Z]+$") || lastNameBox.Text.Equals(""))
+                if (!Regex.IsMatch(lastNameBox.Text, @"^[a-zA-Z]+$") || lastNameBox.Text.Equals(""))
                 {
                     MessageBox.Show("Missing person Last name should contain only letters and cannot be empty!");
                     return;
                 }
 
-                if(!Regex.IsMatch(contactFirstNameBox.Text,@"^[a-zA-Z]+$") || contactFirstNameBox.Text.Equals(""))
+                if (!Regex.IsMatch(contactFirstNameBox.Text, @"^[a-zA-Z]+$") || contactFirstNameBox.Text.Equals(""))
                 {
                     MessageBox.Show("Contact person First name should contain only letters and cannot be empty!");
                     return;
                 }
 
-                if(!Regex.IsMatch(contactLastNameBox.Text,@"^[a-zA-Z]+$") || contactLastNameBox.Text.Equals(""))
+                if (!Regex.IsMatch(contactLastNameBox.Text, @"^[a-zA-Z]+$") || contactLastNameBox.Text.Equals(""))
                 {
                     MessageBox.Show("Contact person Last name should contain only letters and cannot be empty!");
                     return;
                 }
 
-                if(!Regex.IsMatch(contactPhoneNumberBox.Text,@"^[+][0-9]+$") || contactPhoneNumberBox.Text.Equals(""))
+                if (!Regex.IsMatch(contactPhoneNumberBox.Text, @"^[+][0-9]+$") || contactPhoneNumberBox.Text.Equals(""))
                 {
                     MessageBox.Show("Contact person Phone number should be in a valid format(+[Country code]00...00) and cannot be empty!");
                     return;
                 }
 
-                if(!Regex.IsMatch(contactEmailAddressBox.Text,@"^([\w\.]+)@([\w]+)((\.(\w){2,3})+)$") || contactEmailAddressBox.Text.Equals(""))
+                if (!Regex.IsMatch(contactEmailAddressBox.Text, @"^([\w\.]+)@([\w]+)((\.(\w){2,3})+)$") || contactEmailAddressBox.Text.Equals(""))
                 {
                     MessageBox.Show("Contact person Email address should be in a valid format (foo@bar.baz) and cannot be empty!");
                     return;
                 }
 
-                Bitmap missingPersonImage = new Bitmap(missingPersonPictureBox.Image);
+                Bitmap missingPersonImage = HelperMethods.ProcessImage(new Bitmap(missingPersonPictureBox.Image));
                 MissingPerson missingPerson = new MissingPerson(firstNameBox.Text, lastNameBox.Text, additionalInfoBox.Text, locationBox.Text, dateOfBirthPicker.Value, lastSeenOnPicker.Value, missingPersonImage);
                 ContactPerson contactPerson = new ContactPerson(contactFirstNameBox.Text, contactLastNameBox.Text, contactPhoneNumberBox.Text, contactEmailAddressBox.Text);
 
@@ -139,12 +139,12 @@ namespace WindowsForms.FormControl
                                         "Please try another one.");
                         break;
                     case 1:
-                        MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +
-                                        "Please try another one.");
-                        break;
-                    default:
                         //add to db here.
                         MessageBox.Show("Face should be added to DB here.");
+                        break;
+                    default:
+                        MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +
+                                        "Please try another one.");
                         break;
                 }
             }
