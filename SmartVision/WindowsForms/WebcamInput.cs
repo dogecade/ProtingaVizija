@@ -84,19 +84,17 @@ namespace WindowsForms
         /// </summary>
         private static async void GetFrameAsync(object sender, EventArgs e)
         {
-            using (var imageFrame = capture.QueryFrame().ToImage<Bgr, Byte>().Clone())
+            var imageFrame = capture.QueryFrame().ToImage<Bgr, Byte>().Clone();
+            FormFaceDetection.Current.scanPictureBox.Image = imageFrame.Bitmap;
+            lock (faceRectangles)
             {
-                FormFaceDetection.Current.scanPictureBox.Image = imageFrame.Bitmap;
-                lock (faceRectangles)
-                {
-                    foreach (Rectangle face in faceRectangles)
-                        imageFrame.Draw(face, new Bgr(Color.Red), 1);
-                }
-                if (lastImage != null)
-                    lastImage.Dispose();
-                lastImage = imageFrame;
-                await buffer.SendAsync(HelperMethods.ImageToByte(imageFrame.Bitmap));
+                foreach (Rectangle face in faceRectangles)
+                    imageFrame.Draw(face, new Bgr(Color.Red), 1);
             }
+            if (lastImage != null)
+                lastImage.Dispose();
+            lastImage = imageFrame;
+            await buffer.SendAsync(HelperMethods.ImageToByte(imageFrame.Bitmap));
         }
 
         /// <summary>
