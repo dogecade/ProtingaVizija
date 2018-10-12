@@ -41,7 +41,7 @@ namespace FaceAnalysis
         /// Returns just the number of faces (for cases where this is all that is needed)
         /// </summary>
         /// <param name="img">Image in bitmap form</param>
-        /// <returns>Number of faces in image</returns>
+        /// <returns>Number of faces in image, -1 if error occured</returns>
         /// 
         public static async Task<int> NumberOfFaces(Bitmap img)
         {
@@ -54,7 +54,7 @@ namespace FaceAnalysis
             catch (ArgumentNullException)
             {
                 Debug.WriteLine("Invalid API response");
-                faceCount = 0;
+                return -1;
             }
             return faceCount;
         }
@@ -62,15 +62,22 @@ namespace FaceAnalysis
         /// <summary>
         /// Processes a bitmap so that it is (more likely to be) accepted by API.
         /// Previous version of image is disposed.
+        /// Might need refinement in the future (higher res might be better than better quality in some cases)
+        /// Works for now
         /// </summary>
         /// <param name="img">Image in bitmap form</param>
         /// <returns>Number of faces in image</returns>
         public static Bitmap ProcessImage(Bitmap img)
         {
-            Bitmap imgClone = new Bitmap(img.Width, img.Height, PixelFormat.Format24bppRgb);
+            const int MAX_SIZE = 1000;
+            var ratio = Math.Min((double)MAX_SIZE / img.Width, (double)MAX_SIZE / img.Height);
+            var newWidth = (int)(img.Width * ratio);
+            var newHeight = (int)(img.Height * ratio);
+
+            Bitmap imgClone = new Bitmap(newWidth, newHeight, PixelFormat.Format24bppRgb);
             using (Graphics gr = Graphics.FromImage(imgClone))
             {
-                gr.DrawImage(img, new Rectangle(0, 0, imgClone.Width, imgClone.Height));
+                gr.DrawImage(img, 0, 0, imgClone.Width, imgClone.Height);
             }
             img.Dispose();
             return imgClone;

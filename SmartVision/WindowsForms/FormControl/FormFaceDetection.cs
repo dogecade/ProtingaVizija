@@ -134,6 +134,9 @@ namespace WindowsForms.FormControl
 
                 switch (await HelperMethods.NumberOfFaces(missingPersonImage))
                 {
+                    case -1:
+                        MessageBox.Show("An error occured while analysing the image, please try again later");
+                        break;
                     case 0:
                         MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
                                         "Please try another one.");
