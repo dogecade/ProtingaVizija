@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsForms.FaceAnalysis;
@@ -20,7 +19,6 @@ namespace WindowsForms
     {
         private static List<Rectangle> faceRectangles = new List<Rectangle>();
         private static CancellationTokenSource tokenSource = new CancellationTokenSource();
-        private static CancellationToken token = tokenSource.Token;
         private static readonly BroadcastBlock<byte[]> buffer = new BroadcastBlock<byte[]>(item => item);
         private static VideoCapture capture; // Takes video from camera as image frames
         private static Task taskConsumer;
@@ -54,6 +52,11 @@ namespace WindowsForms
                 Console.WriteLine(e);
                 MessageBox.Show("Input camera was not found!");
                 return false;
+            }
+            if (tokenSource.IsCancellationRequested)
+            {
+                tokenSource.Dispose();
+                tokenSource = new CancellationTokenSource();
             }
             taskConsumer = Task.Run(() => ProcessFrameAsync());
             Application.Idle += GetFrameAsync;
@@ -103,10 +106,14 @@ namespace WindowsForms
         /// </summary>
         private static async void ProcessFrameAsync()
         {
-            while (await buffer.OutputAvailableAsync())
+            while (await buffer.OutputAvailableAsync())     
             {
-                if (token.IsCancellationRequested)
+                if (tokenSource.IsCancellationRequested)
+                {
+                    lock(faceRectangles)
+                        faceRectangles.Clear();
                     break;
+                }
                 byte[] frameToProcess = await buffer.ReceiveAsync();
                 Debug.WriteLine("Starting processing of frame");
                 try
