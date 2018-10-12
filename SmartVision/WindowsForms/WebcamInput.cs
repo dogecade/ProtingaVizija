@@ -25,6 +25,7 @@ namespace WindowsForms
         private static VideoCapture capture; // Takes video from camera as image frames
         private static Task taskConsumer;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
+        private static Image<Bgr, Byte> lastImage;
 
         /// <summary>
         /// Enables the input of the webcam
@@ -83,15 +84,19 @@ namespace WindowsForms
         /// </summary>
         private static async void GetFrameAsync(object sender, EventArgs e)
         {
-            using (var imageFrame = capture.QueryFrame().ToImage<Bgr, Byte>())
+            using (var imageFrame = capture.QueryFrame().ToImage<Bgr, Byte>().Clone())
             {
-                var form = FormFaceDetection.Current;
-                form.scanPictureBox.Image = imageFrame.Bitmap;
-                foreach (Rectangle face in faceRectangles)
-                    imageFrame.Draw(face, new Bgr(Color.Red), 1);
+                FormFaceDetection.Current.scanPictureBox.Image = imageFrame.Bitmap;
+                lock (faceRectangles)
+                {
+                    foreach (Rectangle face in faceRectangles)
+                        imageFrame.Draw(face, new Bgr(Color.Red), 1);
+                }
+                if (lastImage != null)
+                    lastImage.Dispose();
+                lastImage = imageFrame;
                 await buffer.SendAsync(HelperMethods.ImageToByte(imageFrame.Bitmap));
             }
-
         }
 
         /// <summary>
@@ -110,9 +115,12 @@ namespace WindowsForms
                 {
                     var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(faceApiCalls.AnalyzeFrame(frameToProcess).Result);
                     Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
-                    faceRectangles.Clear();
-                    foreach (Face face in result.faces)
-                        faceRectangles.Add(face.face_rectangle);
+                    lock(faceRectangles)
+                    {
+                        faceRectangles.Clear();
+                        foreach (Face face in result.faces)
+                            faceRectangles.Add(face.face_rectangle);
+                    }
                 }
                 catch (ArgumentNullException)
                 {
