@@ -31,12 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFaceDetection));
             this.homePanel = new System.Windows.Forms.Panel();
+            this.youCanHelpLabel = new System.Windows.Forms.Label();
             this.missingPeopleDataGrid = new System.Windows.Forms.DataGridView();
-            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.firstNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lastNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.phoneNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.emailAddressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contactPersonsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pstop2018DataSet = new WindowsForms.pstop2018DataSet();
             this.label3 = new System.Windows.Forms.Label();
@@ -80,7 +76,15 @@
             this.underExitPanel = new System.Windows.Forms.Panel();
             this.buttonsPanel = new System.Windows.Forms.Panel();
             this.contactPersonsTableAdapter = new WindowsForms.pstop2018DataSetTableAdapters.ContactPersonsTableAdapter();
-            this.youCanHelpLabel = new System.Windows.Forms.Label();
+            this.pstop2018DataSet1 = new WindowsForms.pstop2018DataSet1();
+            this.missingPersonsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.missingPersonsTableAdapter = new WindowsForms.pstop2018DataSet1TableAdapters.MissingPersonsTableAdapter();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.firstNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lastNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lastSeenDateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lastSeenLocationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.additionalInformationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.homePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.missingPeopleDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.contactPersonsBindingSource)).BeginInit();
@@ -91,6 +95,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.missingPersonPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.buttonsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pstop2018DataSet1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.missingPersonsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // homePanel
@@ -108,6 +114,16 @@
             this.homePanel.Size = new System.Drawing.Size(673, 574);
             this.homePanel.TabIndex = 1;
             // 
+            // youCanHelpLabel
+            // 
+            this.youCanHelpLabel.AutoSize = true;
+            this.youCanHelpLabel.Font = new System.Drawing.Font("Century Gothic", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
+            this.youCanHelpLabel.Location = new System.Drawing.Point(151, 518);
+            this.youCanHelpLabel.Name = "youCanHelpLabel";
+            this.youCanHelpLabel.Size = new System.Drawing.Size(382, 34);
+            this.youCanHelpLabel.TabIndex = 9;
+            this.youCanHelpLabel.Text = "You can help us find them!";
+            // 
             // missingPeopleDataGrid
             // 
             this.missingPeopleDataGrid.AllowUserToAddRows = false;
@@ -122,9 +138,10 @@
             this.idDataGridViewTextBoxColumn,
             this.firstNameDataGridViewTextBoxColumn,
             this.lastNameDataGridViewTextBoxColumn,
-            this.phoneNumberDataGridViewTextBoxColumn,
-            this.emailAddressDataGridViewTextBoxColumn});
-            this.missingPeopleDataGrid.DataSource = this.contactPersonsBindingSource;
+            this.lastSeenDateDataGridViewTextBoxColumn,
+            this.lastSeenLocationDataGridViewTextBoxColumn,
+            this.additionalInformationDataGridViewTextBoxColumn});
+            this.missingPeopleDataGrid.DataSource = this.missingPersonsBindingSource;
             this.missingPeopleDataGrid.Location = new System.Drawing.Point(74, 126);
             this.missingPeopleDataGrid.Name = "missingPeopleDataGrid";
             this.missingPeopleDataGrid.ReadOnly = true;
@@ -132,46 +149,6 @@
             this.missingPeopleDataGrid.Size = new System.Drawing.Size(544, 370);
             this.missingPeopleDataGrid.TabIndex = 8;
             this.missingPeopleDataGrid.TabStop = false;
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            this.idDataGridViewTextBoxColumn.HeaderText = "Id";
-            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            this.idDataGridViewTextBoxColumn.ReadOnly = true;
-            this.idDataGridViewTextBoxColumn.Width = 51;
-            // 
-            // firstNameDataGridViewTextBoxColumn
-            // 
-            this.firstNameDataGridViewTextBoxColumn.DataPropertyName = "firstName";
-            this.firstNameDataGridViewTextBoxColumn.HeaderText = "firstName";
-            this.firstNameDataGridViewTextBoxColumn.Name = "firstNameDataGridViewTextBoxColumn";
-            this.firstNameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.firstNameDataGridViewTextBoxColumn.Width = 101;
-            // 
-            // lastNameDataGridViewTextBoxColumn
-            // 
-            this.lastNameDataGridViewTextBoxColumn.DataPropertyName = "lastName";
-            this.lastNameDataGridViewTextBoxColumn.HeaderText = "lastName";
-            this.lastNameDataGridViewTextBoxColumn.Name = "lastNameDataGridViewTextBoxColumn";
-            this.lastNameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.lastNameDataGridViewTextBoxColumn.Width = 103;
-            // 
-            // phoneNumberDataGridViewTextBoxColumn
-            // 
-            this.phoneNumberDataGridViewTextBoxColumn.DataPropertyName = "phoneNumber";
-            this.phoneNumberDataGridViewTextBoxColumn.HeaderText = "phoneNumber";
-            this.phoneNumberDataGridViewTextBoxColumn.Name = "phoneNumberDataGridViewTextBoxColumn";
-            this.phoneNumberDataGridViewTextBoxColumn.ReadOnly = true;
-            this.phoneNumberDataGridViewTextBoxColumn.Width = 139;
-            // 
-            // emailAddressDataGridViewTextBoxColumn
-            // 
-            this.emailAddressDataGridViewTextBoxColumn.DataPropertyName = "emailAddress";
-            this.emailAddressDataGridViewTextBoxColumn.HeaderText = "emailAddress";
-            this.emailAddressDataGridViewTextBoxColumn.Name = "emailAddressDataGridViewTextBoxColumn";
-            this.emailAddressDataGridViewTextBoxColumn.ReadOnly = true;
-            this.emailAddressDataGridViewTextBoxColumn.Width = 128;
             // 
             // contactPersonsBindingSource
             // 
@@ -820,15 +797,67 @@
             // 
             this.contactPersonsTableAdapter.ClearBeforeFill = true;
             // 
-            // youCanHelpLabel
+            // pstop2018DataSet1
             // 
-            this.youCanHelpLabel.AutoSize = true;
-            this.youCanHelpLabel.Font = new System.Drawing.Font("Century Gothic", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
-            this.youCanHelpLabel.Location = new System.Drawing.Point(151, 518);
-            this.youCanHelpLabel.Name = "youCanHelpLabel";
-            this.youCanHelpLabel.Size = new System.Drawing.Size(382, 34);
-            this.youCanHelpLabel.TabIndex = 9;
-            this.youCanHelpLabel.Text = "You can help us find them!";
+            this.pstop2018DataSet1.DataSetName = "pstop2018DataSet1";
+            this.pstop2018DataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // missingPersonsBindingSource
+            // 
+            this.missingPersonsBindingSource.DataMember = "MissingPersons";
+            this.missingPersonsBindingSource.DataSource = this.pstop2018DataSet1;
+            // 
+            // missingPersonsTableAdapter
+            // 
+            this.missingPersonsTableAdapter.ClearBeforeFill = true;
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.idDataGridViewTextBoxColumn.HeaderText = "Id";
+            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.ReadOnly = true;
+            this.idDataGridViewTextBoxColumn.Width = 51;
+            // 
+            // firstNameDataGridViewTextBoxColumn
+            // 
+            this.firstNameDataGridViewTextBoxColumn.DataPropertyName = "firstName";
+            this.firstNameDataGridViewTextBoxColumn.HeaderText = "firstName";
+            this.firstNameDataGridViewTextBoxColumn.Name = "firstNameDataGridViewTextBoxColumn";
+            this.firstNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.firstNameDataGridViewTextBoxColumn.Width = 101;
+            // 
+            // lastNameDataGridViewTextBoxColumn
+            // 
+            this.lastNameDataGridViewTextBoxColumn.DataPropertyName = "lastName";
+            this.lastNameDataGridViewTextBoxColumn.HeaderText = "lastName";
+            this.lastNameDataGridViewTextBoxColumn.Name = "lastNameDataGridViewTextBoxColumn";
+            this.lastNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.lastNameDataGridViewTextBoxColumn.Width = 103;
+            // 
+            // lastSeenDateDataGridViewTextBoxColumn
+            // 
+            this.lastSeenDateDataGridViewTextBoxColumn.DataPropertyName = "lastSeenDate";
+            this.lastSeenDateDataGridViewTextBoxColumn.HeaderText = "lastSeenDate";
+            this.lastSeenDateDataGridViewTextBoxColumn.Name = "lastSeenDateDataGridViewTextBoxColumn";
+            this.lastSeenDateDataGridViewTextBoxColumn.ReadOnly = true;
+            this.lastSeenDateDataGridViewTextBoxColumn.Width = 129;
+            // 
+            // lastSeenLocationDataGridViewTextBoxColumn
+            // 
+            this.lastSeenLocationDataGridViewTextBoxColumn.DataPropertyName = "lastSeenLocation";
+            this.lastSeenLocationDataGridViewTextBoxColumn.HeaderText = "lastSeenLocation";
+            this.lastSeenLocationDataGridViewTextBoxColumn.Name = "lastSeenLocationDataGridViewTextBoxColumn";
+            this.lastSeenLocationDataGridViewTextBoxColumn.ReadOnly = true;
+            this.lastSeenLocationDataGridViewTextBoxColumn.Width = 155;
+            // 
+            // additionalInformationDataGridViewTextBoxColumn
+            // 
+            this.additionalInformationDataGridViewTextBoxColumn.DataPropertyName = "Additional_Information";
+            this.additionalInformationDataGridViewTextBoxColumn.HeaderText = "Additional_Information";
+            this.additionalInformationDataGridViewTextBoxColumn.Name = "additionalInformationDataGridViewTextBoxColumn";
+            this.additionalInformationDataGridViewTextBoxColumn.ReadOnly = true;
+            this.additionalInformationDataGridViewTextBoxColumn.Width = 194;
             // 
             // FormFaceDetection
             // 
@@ -863,6 +892,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.missingPersonPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
             this.buttonsPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pstop2018DataSet1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.missingPersonsBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -913,12 +944,16 @@
         private pstop2018DataSet pstop2018DataSet;
         private System.Windows.Forms.BindingSource contactPersonsBindingSource;
         private pstop2018DataSetTableAdapters.ContactPersonsTableAdapter contactPersonsTableAdapter;
+        private System.Windows.Forms.Label youCanHelpLabel;
+        private pstop2018DataSet1 pstop2018DataSet1;
+        private System.Windows.Forms.BindingSource missingPersonsBindingSource;
+        private pstop2018DataSet1TableAdapters.MissingPersonsTableAdapter missingPersonsTableAdapter;
         private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn firstNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn lastNameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn phoneNumberDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn emailAddressDataGridViewTextBoxColumn;
-        private System.Windows.Forms.Label youCanHelpLabel;
+        private System.Windows.Forms.DataGridViewTextBoxColumn lastSeenDateDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn lastSeenLocationDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn additionalInformationDataGridViewTextBoxColumn;
     }
 }
 

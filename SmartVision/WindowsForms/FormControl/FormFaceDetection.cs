@@ -22,6 +22,8 @@ namespace WindowsForms.FormControl
 
         private void FormFaceDetection_Load(object sender, EventArgs e)
         {
+            // TODO: This line of code loads data into the 'pstop2018DataSet1.MissingPersons' table. You can move, or remove it, as needed.
+            this.missingPersonsTableAdapter.Fill(this.pstop2018DataSet1.MissingPersons);
             // TODO: This line of code loads data into the 'pstop2018DataSet.ContactPersons' table. You can move, or remove it, as needed.
             this.contactPersonsTableAdapter.Fill(this.pstop2018DataSet.ContactPersons);
             homePanel.BringToFront();
