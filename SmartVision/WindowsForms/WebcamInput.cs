@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsForms.FaceAnalysis;
@@ -20,11 +19,11 @@ namespace WindowsForms
     {
         private static List<Rectangle> faceRectangles = new List<Rectangle>();
         private static CancellationTokenSource tokenSource = new CancellationTokenSource();
-        private static CancellationToken token = tokenSource.Token;
         private static readonly BroadcastBlock<byte[]> buffer = new BroadcastBlock<byte[]>(item => item);
         private static VideoCapture capture; // Takes video from camera as image frames
         private static Task taskConsumer;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
+        private static Image<Bgr, Byte> lastImage;
 
         /// <summary>
         /// Enables the input of the webcam
@@ -53,6 +52,11 @@ namespace WindowsForms
                 Console.WriteLine(e);
                 MessageBox.Show("Input camera was not found!");
                 return false;
+            }
+            if (tokenSource.IsCancellationRequested)
+            {
+                tokenSource.Dispose();
+                tokenSource = new CancellationTokenSource();
             }
             taskConsumer = Task.Run(() => ProcessFrameAsync());
             Application.Idle += GetFrameAsync;
@@ -83,15 +87,17 @@ namespace WindowsForms
         /// </summary>
         private static async void GetFrameAsync(object sender, EventArgs e)
         {
-            using (var imageFrame = capture.QueryFrame().ToImage<Bgr, Byte>())
+            var imageFrame = capture.QueryFrame().ToImage<Bgr, Byte>().Clone();
+            FormFaceDetection.Current.scanPictureBox.Image = imageFrame.Bitmap;
+            lock (faceRectangles)
             {
-                var form = FormFaceDetection.Current;
-                form.scanPictureBox.Image = imageFrame.Bitmap;
                 foreach (Rectangle face in faceRectangles)
                     imageFrame.Draw(face, new Bgr(Color.Red), 1);
-                await buffer.SendAsync(HelperMethods.ImageToByte(imageFrame.Bitmap));
             }
-
+            if (lastImage != null)
+                lastImage.Dispose();
+            lastImage = imageFrame;
+            await buffer.SendAsync(HelperMethods.ImageToByte(imageFrame.Bitmap));
         }
 
         /// <summary>
@@ -100,19 +106,26 @@ namespace WindowsForms
         /// </summary>
         private static async void ProcessFrameAsync()
         {
-            while (await buffer.OutputAvailableAsync())
+            while (await buffer.OutputAvailableAsync())     
             {
-                if (token.IsCancellationRequested)
+                if (tokenSource.IsCancellationRequested)
+                {
+                    lock(faceRectangles)
+                        faceRectangles.Clear();
                     break;
+                }
                 byte[] frameToProcess = await buffer.ReceiveAsync();
                 Debug.WriteLine("Starting processing of frame");
                 try
                 {
                     var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(faceApiCalls.AnalyzeFrame(frameToProcess).Result);
                     Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
-                    faceRectangles.Clear();
-                    foreach (Face face in result.faces)
-                        faceRectangles.Add(face.face_rectangle);
+                    lock(faceRectangles)
+                    {
+                        faceRectangles.Clear();
+                        foreach (Face face in result.faces)
+                            faceRectangles.Add(face.face_rectangle);
+                    }
                 }
                 catch (ArgumentNullException)
                 {
