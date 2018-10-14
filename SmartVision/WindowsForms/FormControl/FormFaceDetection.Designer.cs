@@ -28,22 +28,18 @@
         /// </summary>
         protected void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFaceDetection));
             this.homePanel = new System.Windows.Forms.Panel();
-            this.dangerousLabelThree = new System.Windows.Forms.Label();
-            this.dangerousPersonThree = new System.Windows.Forms.PictureBox();
-            this.dangerousLabelTwo = new System.Windows.Forms.Label();
-            this.dangerousLabelOne = new System.Windows.Forms.Label();
-            this.missingLabelThree = new System.Windows.Forms.Label();
-            this.missingLabelTwo = new System.Windows.Forms.Label();
-            this.missingLabelOne = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.missingPeopleDataGrid = new System.Windows.Forms.DataGridView();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.firstNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lastNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.phoneNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.emailAddressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contactPersonsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.pstop2018DataSet = new WindowsForms.pstop2018DataSet();
             this.label3 = new System.Windows.Forms.Label();
-            this.dangerousPersonTwo = new System.Windows.Forms.PictureBox();
-            this.dangerousPersonOne = new System.Windows.Forms.PictureBox();
-            this.missingPersonThree = new System.Windows.Forms.PictureBox();
-            this.missingPersonTwo = new System.Windows.Forms.PictureBox();
-            this.missingPersonOne = new System.Windows.Forms.PictureBox();
             this.homeLabel = new System.Windows.Forms.Label();
             this.scanPanel = new System.Windows.Forms.Panel();
             this.scanPictureBox = new System.Windows.Forms.PictureBox();
@@ -83,13 +79,12 @@
             this.underPersonPanel = new System.Windows.Forms.Panel();
             this.underExitPanel = new System.Windows.Forms.Panel();
             this.buttonsPanel = new System.Windows.Forms.Panel();
+            this.contactPersonsTableAdapter = new WindowsForms.pstop2018DataSetTableAdapters.ContactPersonsTableAdapter();
+            this.youCanHelpLabel = new System.Windows.Forms.Label();
             this.homePanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dangerousPersonThree)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dangerousPersonTwo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dangerousPersonOne)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.missingPersonThree)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.missingPersonTwo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.missingPersonOne)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.missingPeopleDataGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.contactPersonsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pstop2018DataSet)).BeginInit();
             this.scanPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scanPictureBox)).BeginInit();
             this.addPersonPanel.SuspendLayout();
@@ -104,101 +99,89 @@
             this.homePanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.homePanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.homePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.homePanel.Controls.Add(this.dangerousLabelThree);
-            this.homePanel.Controls.Add(this.dangerousPersonThree);
-            this.homePanel.Controls.Add(this.dangerousLabelTwo);
-            this.homePanel.Controls.Add(this.dangerousLabelOne);
-            this.homePanel.Controls.Add(this.missingLabelThree);
-            this.homePanel.Controls.Add(this.missingLabelTwo);
-            this.homePanel.Controls.Add(this.missingLabelOne);
-            this.homePanel.Controls.Add(this.label2);
+            this.homePanel.Controls.Add(this.youCanHelpLabel);
+            this.homePanel.Controls.Add(this.missingPeopleDataGrid);
             this.homePanel.Controls.Add(this.label3);
-            this.homePanel.Controls.Add(this.dangerousPersonTwo);
-            this.homePanel.Controls.Add(this.dangerousPersonOne);
-            this.homePanel.Controls.Add(this.missingPersonThree);
-            this.homePanel.Controls.Add(this.missingPersonTwo);
-            this.homePanel.Controls.Add(this.missingPersonOne);
             this.homePanel.Controls.Add(this.homeLabel);
             this.homePanel.Location = new System.Drawing.Point(205, 204);
             this.homePanel.Name = "homePanel";
             this.homePanel.Size = new System.Drawing.Size(673, 574);
             this.homePanel.TabIndex = 1;
             // 
-            // dangerousLabelThree
+            // missingPeopleDataGrid
             // 
-            this.dangerousLabelThree.AutoSize = true;
-            this.dangerousLabelThree.Location = new System.Drawing.Point(465, 518);
-            this.dangerousLabelThree.Name = "dangerousLabelThree";
-            this.dangerousLabelThree.Size = new System.Drawing.Size(91, 19);
-            this.dangerousLabelThree.TabIndex = 15;
-            this.dangerousLabelThree.Text = "Doge Bread";
+            this.missingPeopleDataGrid.AllowUserToAddRows = false;
+            this.missingPeopleDataGrid.AllowUserToDeleteRows = false;
+            this.missingPeopleDataGrid.AllowUserToResizeColumns = false;
+            this.missingPeopleDataGrid.AllowUserToResizeRows = false;
+            this.missingPeopleDataGrid.AutoGenerateColumns = false;
+            this.missingPeopleDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.missingPeopleDataGrid.BackgroundColor = System.Drawing.Color.NavajoWhite;
+            this.missingPeopleDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.missingPeopleDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.idDataGridViewTextBoxColumn,
+            this.firstNameDataGridViewTextBoxColumn,
+            this.lastNameDataGridViewTextBoxColumn,
+            this.phoneNumberDataGridViewTextBoxColumn,
+            this.emailAddressDataGridViewTextBoxColumn});
+            this.missingPeopleDataGrid.DataSource = this.contactPersonsBindingSource;
+            this.missingPeopleDataGrid.Location = new System.Drawing.Point(74, 126);
+            this.missingPeopleDataGrid.Name = "missingPeopleDataGrid";
+            this.missingPeopleDataGrid.ReadOnly = true;
+            this.missingPeopleDataGrid.RowTemplate.Height = 24;
+            this.missingPeopleDataGrid.Size = new System.Drawing.Size(544, 370);
+            this.missingPeopleDataGrid.TabIndex = 8;
+            this.missingPeopleDataGrid.TabStop = false;
             // 
-            // dangerousPersonThree
+            // idDataGridViewTextBoxColumn
             // 
-            this.dangerousPersonThree.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("dangerousPersonThree.BackgroundImage")));
-            this.dangerousPersonThree.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.dangerousPersonThree.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.dangerousPersonThree.ErrorImage = null;
-            this.dangerousPersonThree.Location = new System.Drawing.Point(469, 363);
-            this.dangerousPersonThree.Name = "dangerousPersonThree";
-            this.dangerousPersonThree.Size = new System.Drawing.Size(136, 142);
-            this.dangerousPersonThree.TabIndex = 14;
-            this.dangerousPersonThree.TabStop = false;
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.idDataGridViewTextBoxColumn.HeaderText = "Id";
+            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.ReadOnly = true;
+            this.idDataGridViewTextBoxColumn.Width = 51;
             // 
-            // dangerousLabelTwo
+            // firstNameDataGridViewTextBoxColumn
             // 
-            this.dangerousLabelTwo.AutoSize = true;
-            this.dangerousLabelTwo.Location = new System.Drawing.Point(264, 518);
-            this.dangerousLabelTwo.Name = "dangerousLabelTwo";
-            this.dangerousLabelTwo.Size = new System.Drawing.Size(106, 19);
-            this.dangerousLabelTwo.TabIndex = 13;
-            this.dangerousLabelTwo.Text = "Tomas Drasutis";
+            this.firstNameDataGridViewTextBoxColumn.DataPropertyName = "firstName";
+            this.firstNameDataGridViewTextBoxColumn.HeaderText = "firstName";
+            this.firstNameDataGridViewTextBoxColumn.Name = "firstNameDataGridViewTextBoxColumn";
+            this.firstNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.firstNameDataGridViewTextBoxColumn.Width = 101;
             // 
-            // dangerousLabelOne
+            // lastNameDataGridViewTextBoxColumn
             // 
-            this.dangerousLabelOne.AutoSize = true;
-            this.dangerousLabelOne.Location = new System.Drawing.Point(70, 518);
-            this.dangerousLabelOne.Name = "dangerousLabelOne";
-            this.dangerousLabelOne.Size = new System.Drawing.Size(132, 19);
-            this.dangerousLabelOne.TabIndex = 12;
-            this.dangerousLabelOne.Text = "Deividas Brazenas";
+            this.lastNameDataGridViewTextBoxColumn.DataPropertyName = "lastName";
+            this.lastNameDataGridViewTextBoxColumn.HeaderText = "lastName";
+            this.lastNameDataGridViewTextBoxColumn.Name = "lastNameDataGridViewTextBoxColumn";
+            this.lastNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.lastNameDataGridViewTextBoxColumn.Width = 103;
             // 
-            // missingLabelThree
+            // phoneNumberDataGridViewTextBoxColumn
             // 
-            this.missingLabelThree.AutoSize = true;
-            this.missingLabelThree.Location = new System.Drawing.Point(465, 261);
-            this.missingLabelThree.Name = "missingLabelThree";
-            this.missingLabelThree.Size = new System.Drawing.Size(118, 19);
-            this.missingLabelThree.TabIndex = 11;
-            this.missingLabelThree.Text = "Tomas Vilcinskas";
+            this.phoneNumberDataGridViewTextBoxColumn.DataPropertyName = "phoneNumber";
+            this.phoneNumberDataGridViewTextBoxColumn.HeaderText = "phoneNumber";
+            this.phoneNumberDataGridViewTextBoxColumn.Name = "phoneNumberDataGridViewTextBoxColumn";
+            this.phoneNumberDataGridViewTextBoxColumn.ReadOnly = true;
+            this.phoneNumberDataGridViewTextBoxColumn.Width = 139;
             // 
-            // missingLabelTwo
+            // emailAddressDataGridViewTextBoxColumn
             // 
-            this.missingLabelTwo.AutoSize = true;
-            this.missingLabelTwo.Location = new System.Drawing.Point(266, 261);
-            this.missingLabelTwo.Name = "missingLabelTwo";
-            this.missingLabelTwo.Size = new System.Drawing.Size(114, 38);
-            this.missingLabelTwo.TabIndex = 10;
-            this.missingLabelTwo.Text = "Jonas\r\nChairutdinovas";
+            this.emailAddressDataGridViewTextBoxColumn.DataPropertyName = "emailAddress";
+            this.emailAddressDataGridViewTextBoxColumn.HeaderText = "emailAddress";
+            this.emailAddressDataGridViewTextBoxColumn.Name = "emailAddressDataGridViewTextBoxColumn";
+            this.emailAddressDataGridViewTextBoxColumn.ReadOnly = true;
+            this.emailAddressDataGridViewTextBoxColumn.Width = 128;
             // 
-            // missingLabelOne
+            // contactPersonsBindingSource
             // 
-            this.missingLabelOne.AutoSize = true;
-            this.missingLabelOne.Location = new System.Drawing.Point(74, 261);
-            this.missingLabelOne.Name = "missingLabelOne";
-            this.missingLabelOne.Size = new System.Drawing.Size(105, 19);
-            this.missingLabelOne.TabIndex = 9;
-            this.missingLabelOne.Text = "Arnas Danaitis";
+            this.contactPersonsBindingSource.DataMember = "ContactPersons";
+            this.contactPersonsBindingSource.DataSource = this.pstop2018DataSet;
             // 
-            // label2
+            // pstop2018DataSet
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
-            this.label2.Location = new System.Drawing.Point(70, 327);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(236, 23);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "Missing and dangerous:";
+            this.pstop2018DataSet.DataSetName = "pstop2018DataSet";
+            this.pstop2018DataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // label3
             // 
@@ -206,67 +189,9 @@
             this.label3.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
             this.label3.Location = new System.Drawing.Point(70, 62);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(316, 23);
+            this.label3.Size = new System.Drawing.Size(253, 23);
             this.label3.TabIndex = 7;
-            this.label3.Text = "Missing and of high importance:";
-            // 
-            // dangerousPersonTwo
-            // 
-            this.dangerousPersonTwo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("dangerousPersonTwo.BackgroundImage")));
-            this.dangerousPersonTwo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.dangerousPersonTwo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.dangerousPersonTwo.ErrorImage = null;
-            this.dangerousPersonTwo.Location = new System.Drawing.Point(268, 363);
-            this.dangerousPersonTwo.Name = "dangerousPersonTwo";
-            this.dangerousPersonTwo.Size = new System.Drawing.Size(136, 142);
-            this.dangerousPersonTwo.TabIndex = 5;
-            this.dangerousPersonTwo.TabStop = false;
-            // 
-            // dangerousPersonOne
-            // 
-            this.dangerousPersonOne.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("dangerousPersonOne.BackgroundImage")));
-            this.dangerousPersonOne.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.dangerousPersonOne.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.dangerousPersonOne.ErrorImage = null;
-            this.dangerousPersonOne.Location = new System.Drawing.Point(74, 363);
-            this.dangerousPersonOne.Name = "dangerousPersonOne";
-            this.dangerousPersonOne.Size = new System.Drawing.Size(136, 142);
-            this.dangerousPersonOne.TabIndex = 4;
-            this.dangerousPersonOne.TabStop = false;
-            // 
-            // missingPersonThree
-            // 
-            this.missingPersonThree.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("missingPersonThree.BackgroundImage")));
-            this.missingPersonThree.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.missingPersonThree.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.missingPersonThree.Location = new System.Drawing.Point(469, 98);
-            this.missingPersonThree.Name = "missingPersonThree";
-            this.missingPersonThree.Size = new System.Drawing.Size(136, 142);
-            this.missingPersonThree.TabIndex = 3;
-            this.missingPersonThree.TabStop = false;
-            // 
-            // missingPersonTwo
-            // 
-            this.missingPersonTwo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("missingPersonTwo.BackgroundImage")));
-            this.missingPersonTwo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.missingPersonTwo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.missingPersonTwo.Location = new System.Drawing.Point(268, 98);
-            this.missingPersonTwo.Name = "missingPersonTwo";
-            this.missingPersonTwo.Size = new System.Drawing.Size(136, 142);
-            this.missingPersonTwo.TabIndex = 2;
-            this.missingPersonTwo.TabStop = false;
-            // 
-            // missingPersonOne
-            // 
-            this.missingPersonOne.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("missingPersonOne.BackgroundImage")));
-            this.missingPersonOne.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.missingPersonOne.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.missingPersonOne.ErrorImage = null;
-            this.missingPersonOne.Location = new System.Drawing.Point(74, 97);
-            this.missingPersonOne.Name = "missingPersonOne";
-            this.missingPersonOne.Size = new System.Drawing.Size(136, 142);
-            this.missingPersonOne.TabIndex = 1;
-            this.missingPersonOne.TabStop = false;
+            this.label3.Text = "Currently missing people:";
             // 
             // homeLabel
             // 
@@ -567,7 +492,7 @@
             // 
             this.uploadButton.Location = new System.Drawing.Point(501, 308);
             this.uploadButton.Name = "uploadButton";
-            this.uploadButton.Size = new System.Drawing.Size(75, 26);
+            this.uploadButton.Size = new System.Drawing.Size(84, 26);
             this.uploadButton.TabIndex = 12;
             this.uploadButton.Text = "Upload";
             this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
@@ -605,6 +530,7 @@
             // 
             // missingPersonPictureBox
             // 
+            this.missingPersonPictureBox.BackColor = System.Drawing.Color.NavajoWhite;
             this.missingPersonPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.missingPersonPictureBox.Location = new System.Drawing.Point(445, 71);
             this.missingPersonPictureBox.Name = "missingPersonPictureBox";
@@ -890,6 +816,20 @@
             this.buttonsPanel.Size = new System.Drawing.Size(1077, 129);
             this.buttonsPanel.TabIndex = 0;
             // 
+            // contactPersonsTableAdapter
+            // 
+            this.contactPersonsTableAdapter.ClearBeforeFill = true;
+            // 
+            // youCanHelpLabel
+            // 
+            this.youCanHelpLabel.AutoSize = true;
+            this.youCanHelpLabel.Font = new System.Drawing.Font("Century Gothic", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
+            this.youCanHelpLabel.Location = new System.Drawing.Point(151, 518);
+            this.youCanHelpLabel.Name = "youCanHelpLabel";
+            this.youCanHelpLabel.Size = new System.Drawing.Size(382, 34);
+            this.youCanHelpLabel.TabIndex = 9;
+            this.youCanHelpLabel.Text = "You can help us find them!";
+            // 
             // FormFaceDetection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -901,9 +841,9 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1078, 790);
             this.Controls.Add(this.homePanel);
-            this.Controls.Add(this.addPersonPanel);
             this.Controls.Add(this.scanPanel);
             this.Controls.Add(this.buttonsPanel);
+            this.Controls.Add(this.addPersonPanel);
             this.Font = new System.Drawing.Font("Century Gothic", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -913,12 +853,9 @@
             this.Load += new System.EventHandler(this.FormFaceDetection_Load);
             this.homePanel.ResumeLayout(false);
             this.homePanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dangerousPersonThree)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dangerousPersonTwo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dangerousPersonOne)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.missingPersonThree)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.missingPersonTwo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.missingPersonOne)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.missingPeopleDataGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.contactPersonsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pstop2018DataSet)).EndInit();
             this.scanPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.scanPictureBox)).EndInit();
             this.addPersonPanel.ResumeLayout(false);
@@ -961,20 +898,7 @@
         private MetroFramework.Controls.MetroTextBox contactFirstNameBox;
         private System.Windows.Forms.Label contactFirstNameLabel;
         private System.Windows.Forms.Label contactLabel;
-        private System.Windows.Forms.Label dangerousLabelTwo;
-        private System.Windows.Forms.Label dangerousLabelOne;
-        private System.Windows.Forms.Label missingLabelThree;
-        private System.Windows.Forms.Label missingLabelTwo;
-        private System.Windows.Forms.Label missingLabelOne;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.PictureBox dangerousPersonTwo;
-        private System.Windows.Forms.PictureBox dangerousPersonOne;
-        private System.Windows.Forms.PictureBox missingPersonThree;
-        private System.Windows.Forms.PictureBox missingPersonTwo;
-        private System.Windows.Forms.PictureBox missingPersonOne;
-        private System.Windows.Forms.Label dangerousLabelThree;
-        private System.Windows.Forms.PictureBox dangerousPersonThree;
         internal System.Windows.Forms.Button homeButton;
         private System.Windows.Forms.Button scanButton;
         private System.Windows.Forms.Button addPersonButton;
@@ -985,6 +909,16 @@
         private System.Windows.Forms.Panel underPersonPanel;
         private System.Windows.Forms.Panel underExitPanel;
         private System.Windows.Forms.Panel buttonsPanel;
+        private System.Windows.Forms.DataGridView missingPeopleDataGrid;
+        private pstop2018DataSet pstop2018DataSet;
+        private System.Windows.Forms.BindingSource contactPersonsBindingSource;
+        private pstop2018DataSetTableAdapters.ContactPersonsTableAdapter contactPersonsTableAdapter;
+        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn firstNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn lastNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn phoneNumberDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn emailAddressDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Label youCanHelpLabel;
     }
 }
 
