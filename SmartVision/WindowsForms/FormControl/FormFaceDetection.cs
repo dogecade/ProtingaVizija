@@ -22,6 +22,8 @@ namespace WindowsForms.FormControl
 
         private void FormFaceDetection_Load(object sender, EventArgs e)
         {
+            // TODO: This line of code loads data into the 'pstop2018DataSet.ContactPersons' table. You can move, or remove it, as needed.
+            this.contactPersonsTableAdapter.Fill(this.pstop2018DataSet.ContactPersons);
             homePanel.BringToFront();
             underHomePanel.BackColor = underButtonColor;
         }
@@ -182,6 +184,19 @@ namespace WindowsForms.FormControl
                 Console.WriteLine(exception);
                 throw;
             }
+        }
+
+        private void fillByToolStripButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.contactPersonsTableAdapter.FillBy(this.pstop2018DataSet.ContactPersons);
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
+
         }
     }
 }
