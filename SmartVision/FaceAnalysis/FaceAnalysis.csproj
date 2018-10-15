@@ -79,7 +79,7 @@
     <Compile Include="IHttpClientWrapper.cs" />
     <Compile Include="JSON\AddFaceJSON.cs" />
     <Compile Include="JSON\FrameAnalysisJSON.cs" />
-    <Compile Include="JSON\CreateFaceSetJSON.cs" />
+    <Compile Include="JSON\CreateFacesetJSON.cs" />
     <Compile Include="JSON\FacesetDetailsJSON.cs" />
     <Compile Include="JSON\FoundFacesJSON.cs" />
     <Compile Include="JSON\RemoveFaceJSON.cs" />

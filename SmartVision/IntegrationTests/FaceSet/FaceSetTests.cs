@@ -1,123 +1,125 @@
-﻿using System;
+﻿using FaceAnalysis;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using Newtonsoft.Json;
+using System;
 using System.Drawing;
+using System.Net.Http;
 using WindowsForms.FaceAnalysis;
 using WindowsForms.FaceAnalysis.JSON;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FaceAnalysis;
-using Newtonsoft.Json;
+using FaceAnalysis.JSON;
 
 namespace UnitTests
 {
     [TestClass]
     public class FaceSetTests
     {
-        private static string faceSetToken;
-        private static HttpClientWrapper httpClientWrapper = new HttpClientWrapper();
-        private static FaceApiCalls faceApiCalls = new FaceApiCalls(httpClientWrapper);
-
-        [ClassInitialize()]
-        public static void ClassInit(TestContext context)
+        [TestMethod]
+        public void FaceSetMock_AnalyzeFrame_Succeeds()
         {
-            string guid = Guid.NewGuid().ToString();
-            string faceSetName = "FaceSet-" + guid;
-            var newFaceSetJSON = faceApiCalls.CreateNewFaceset(faceSetName).Result;
+            string expectedAnalysisString =
+                "{\"image_id\": \"MtRxWCniGhYNjFZrYbCnjQ==\", \"request_id\": \"1539602847,247870b7-df20-469d-923f-8ecd2e19322c\", \"time_used\": 225, \"faces\": [{\"face_rectangle\": {\"width\": 166, \"top\": 181, \"left\": 215, \"height\": 166}, \"face_token\": \"72db29773b14f18a2a82b4281df2c2f4\"}]}";
 
-            // Create a new face set
-            var faceSetJson = JsonConvert.DeserializeObject<CreateFaceSetJSON>(newFaceSetJSON);
-            faceSetToken = faceSetJson.faceset_token;
+            var expectedAnalysisObject = JsonConvert.DeserializeObject<FrameAnalysisJSON>(expectedAnalysisString);
 
-            // Verify it was created successfully
-            Assert.AreEqual(0, faceSetJson.face_count, "There should be no faces in the new face set");
-            Assert.AreEqual(0, faceSetJson.face_added, "There should be no faces added to the new face set");
+            var mock = new Mock<IHttpClientWrapper>();
+
+            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
+                .Returns(expectedAnalysisString);
+
+            var actualFacesetObject = JsonConvert.DeserializeObject<FrameAnalysisJSON>(mock.Object.Post(null, null));
+
+            Assert.IsTrue(expectedAnalysisObject.Equals(actualFacesetObject), "Mock call to frame analyze api was not succesfull");
         }
 
         [TestMethod]
-        [Description("Tests, whether the face is added to the face set")]
-        [TestProperty("Test Author: ", "Deividas Brazenas")]
-        public void FaceSet_AddPictureToFaceSet_Succeeds()
+        public void FaceSetMock_CreateFaceSet_Succeeds()
         {
-            // Analyze image
-            Bitmap bitmap = new Bitmap("..\\..\\TestPictures\\1.jpg");
-            string analyzedImageJSON = faceApiCalls.AnalyzeFrame(HelperMethods.ImageToByte(bitmap)).Result;
-            var analyzedImage = JsonConvert.DeserializeObject<FrameAnalysisJSON>(analyzedImageJSON);
+            string expectedFacesetString =
+                "{\"faceset_token\": \"6192dcd46df652215295f41be478565c\", \"time_used\": 137, \"face_count\": 0, \"face_added\": 0, \"request_id\": \"1539602878,1d610383-d92a-4222-8868-1095c7e99654\", \"outer_id\": \"\", \"failure_detail\": []}";
 
-            // Verify it was analyzed correctly
-            Assert.AreEqual(1, analyzedImage.faces.Count, "There should be exactly one face in the analyzed image");
+            var expectedFacesetObject = JsonConvert.DeserializeObject<CreateFacesetJSON>(expectedFacesetString);
 
-            string faceToken = analyzedImage.faces[0].face_token;
+            var mock = new Mock<IHttpClientWrapper>();
 
-            // Add image to face set
-            var addedFaceJSON = faceApiCalls.AddFaceToFaceset(faceSetToken, faceToken).Result;
+            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
+                .Returns(expectedFacesetString);
 
-            // Verify it was added
-            var faceSetDetailsJSON = faceApiCalls.GetFacesetDetail(faceSetToken).Result;
-            var faceSetDetails = JsonConvert.DeserializeObject<FacesetDetails>(faceSetDetailsJSON);
+            var actualFacesetObject = JsonConvert.DeserializeObject<CreateFacesetJSON>(mock.Object.Post(null, null));
 
-            bool wasAdded = false;
-
-            foreach (var token in faceSetDetails.face_tokens)
-            {
-                if (token.Equals(faceToken))
-                {
-                    wasAdded = true;
-                }
-            }
-
-            Assert.IsTrue(wasAdded, "Face was not added to the face set");
+            Assert.IsTrue(expectedFacesetObject.Equals(actualFacesetObject), "Mock call to faceset create api was not succesfull");
         }
 
         [TestMethod]
-        [Description("Tests, whether the face is removed from the face set")]
-        [TestProperty("Test Author: ", "Deividas Brazenas")]
-        public void FaceSet_RemovePictureFaceSet_Succeeds()
+        public void FaceSetMock_GetFacesetDetails_Succeeds()
         {
-            // Analyze image
-            Bitmap bitmap = new Bitmap("..\\..\\TestPictures\\1.jpg");
-            string analyzedImageJSON = faceApiCalls.AnalyzeFrame(HelperMethods.ImageToByte(bitmap)).Result;
-            var analyzedImage = JsonConvert.DeserializeObject<FrameAnalysisJSON>(analyzedImageJSON);
+            string expectedDetailsString =
+                "{\"faceset_token\": \"ebe47a655e523eb2dda3655222e276a6\", \"tags\": \"\", \"time_used\": 99, \"user_data\": \"\", \"display_name\": \"newset\", \"face_tokens\": [\"d800cb1da95a278a487d15a4604c3388\"], \"face_count\": 1, \"request_id\": \"1539613552,d394fe5c-68bd-438f-b1f2-ae9d0de4798d\", \"outer_id\": \"\"}";
 
-            // Verify it was analyzed correctly
-            Assert.AreEqual(1, analyzedImage.faces.Count, "There should be exactly one face in the analyzed image");
+            var expectedDetailsObject = JsonConvert.DeserializeObject<FacesetDetailsJSON>(expectedDetailsString);
 
-            string faceToken = analyzedImage.faces[0].face_token;
+            var mock = new Mock<IHttpClientWrapper>();
 
-            // Add image to face set
-            var addedFaceJSON = faceApiCalls.AddFaceToFaceset(faceSetToken, faceToken).Result;
+            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
+                .Returns(expectedDetailsString);
 
-            // Verify it was added
-            var faceSetDetailsJSON = faceApiCalls.GetFacesetDetail(faceSetToken).Result;
-            var faceSetDetails = JsonConvert.DeserializeObject<FacesetDetails>(faceSetDetailsJSON);
+            var actualDetailsObject = JsonConvert.DeserializeObject<FacesetDetailsJSON>(mock.Object.Post(null, null));
 
-            bool wasAdded = false;
+            Assert.IsTrue(expectedDetailsObject.Equals(actualDetailsObject), "Mock call to faceset details api was not succesfull");
+        }
 
-            foreach (var token in faceSetDetails.face_tokens)
-            {
-                if (token.Equals(faceToken))
-                {
-                    wasAdded = true;
-                }
-            }
+        [TestMethod]
+        public void FaceSetMock_AddFaceToFaceset_Succeeds()
+        {
+            string expectedAddString =
+                "{\"faceset_token\": \"6192dcd46df652215295f41be478565c\", \"time_used\": 664, \"face_count\": 1, \"face_added\": 1, \"request_id\": \"1539602904,1954bd8b-eae9-4abf-9809-ff89fe17a1b2\", \"outer_id\": \"\", \"failure_detail\": []}";
 
-            Assert.IsTrue(wasAdded, "Face was not added to the face set");
+            var expectedAddObject = JsonConvert.DeserializeObject<AddFaceJSON>(expectedAddString);
 
-            // Remove face from the face set
-            var removedFaceJSON = faceApiCalls.RemoveFaceFromFaceset(faceSetToken,faceToken).Result;
+            var mock = new Mock<IHttpClientWrapper>();
 
-            faceSetDetailsJSON = faceApiCalls.GetFacesetDetail(faceSetToken).Result;
-            faceSetDetails = JsonConvert.DeserializeObject<FacesetDetails>(faceSetDetailsJSON);
+            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
+                .Returns(expectedAddString);
 
-            bool wasRemoved = true;
+            var actualAddObject = JsonConvert.DeserializeObject<AddFaceJSON>(mock.Object.Post(null, null));
 
-            foreach (var token in faceSetDetails.face_tokens)
-            {
-                if (token.Equals(faceToken))
-                {
-                    wasRemoved = false;
-                }
-            }
+            Assert.IsTrue(expectedAddObject.Equals(actualAddObject), "Mock call to add to faceset api was not succesfull");
+        }
 
-            Assert.IsTrue(wasRemoved, "Face was not removed from the face set");
+        [TestMethod]
+        public void FaceSetMock_RemoveFaceFromFaceset_Succeeds()
+        {
+            string expectedRemoveString =
+                "{\"faceset_token\": \"e8ef78938a6268823c6202931f96afa9\", \"face_removed\": 1, \"time_used\": 181, \"face_count\": 0, \"request_id\": \"1539602962,6ac7d66a-a6d4-4980-b83f-508fe5339d39\", \"outer_id\": \"\", \"failure_detail\": []}";
 
+            var expectedRemoveObject = JsonConvert.DeserializeObject<RemoveFaceJSON>(expectedRemoveString);
+
+            var mock = new Mock<IHttpClientWrapper>();
+
+            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
+                .Returns(expectedRemoveString);
+
+            var actualRemoveObject = JsonConvert.DeserializeObject<RemoveFaceJSON>(mock.Object.Post(null, null));
+
+            Assert.IsTrue(expectedRemoveObject.Equals(actualRemoveObject), "Mock call to face remove api was not succesfull");
+        }
+
+        [TestMethod]
+        public void FaceSetMock_SearchFaceInFaceset_Succeeds()
+        {
+            string expectedSearchString =
+                "{\"request_id\": \"1539613554,ff92162a-c7ab-43b2-8f63-b6928ee8aa2f\", \"time_used\": 462, \"thresholds\": {\"1e-3\": 62.327, \"1e-5\": 73.975, \"1e-4\": 69.101}, \"results\": [{\"confidence\": 97.105, \"user_id\": \"\", \"face_token\": \"d800cb1da95a278a487d15a4604c3388\"}]}";
+
+            var expectedSearchObject = JsonConvert.DeserializeObject<FoundFacesJSON>(expectedSearchString);
+
+            var mock = new Mock<IHttpClientWrapper>();
+
+            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
+                .Returns(expectedSearchString);
+
+            var actualSearchObject = JsonConvert.DeserializeObject<FoundFacesJSON>(mock.Object.Post(null, null));
+
+            Assert.IsTrue(expectedSearchObject.Equals(actualSearchObject), "Mock call to search api was not succesfull");
         }
     }
 }
