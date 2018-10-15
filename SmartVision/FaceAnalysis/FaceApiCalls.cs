@@ -33,32 +33,13 @@ namespace FaceAnalysis
             HttpContent secretContent = new StringContent(Keys.apiSecret);
             HttpContent imageContent = new StringContent(Convert.ToBase64String(image));
 
-            try
+            using (var formData = new MultipartFormDataContent())
             {
-                using (var formData = new MultipartFormDataContent())
-                {
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(imageContent, "image_base64");
+                formData.Add(keyContent, "api_key");
+                formData.Add(secretContent, "api_secret");
+                formData.Add(imageContent, "image_base64");
 
-                    using (var response = await httpClientWrapper.PostAsync(detectUrl, formData))
-                    {
-                        string responseString = httpClientWrapper.ReadStringAsync(response).Result;
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            return responseString;
-                        }
-
-                        throw new Exception(responseString);
-                    }
-                }
-            }
-
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-                return null;
+                return httpClientWrapper.Post(detectUrl, formData);
             }
         }
 
@@ -66,41 +47,23 @@ namespace FaceAnalysis
         /// Creates a new faceset
         /// </summary>
         /// <param name="facesetName">Name of the faceset</param>
-        /// <returns>CreateFacesetJSON</returns>
+        /// <returns>CreateFaceSetJSON</returns>
         public async Task<string> CreateNewFaceset(string facesetName)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
             HttpContent facesetNameContent = new StringContent(facesetName);
 
-            try
+            using (var formData = new MultipartFormDataContent())
             {
-                using (var formData = new MultipartFormDataContent())
-                {
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(facesetNameContent, "display_name");
+                formData.Add(keyContent, "api_key");
+                formData.Add(secretContent, "api_secret");
+                formData.Add(facesetNameContent, "display_name");
 
-                    using (var response = await httpClientWrapper.PostAsync(createUrl, formData))
-                    {
-                        string responseString = httpClientWrapper.ReadStringAsync(response).Result;
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            return responseString;
-                        }
-
-                        throw new Exception(responseString);
-                    }
-                }
-            }
-
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-                return null;
+                return httpClientWrapper.Post(createUrl, formData);
             }
         }
+
         /// <summary>
         /// Adds face to the faceset
         /// </summary>
@@ -114,33 +77,14 @@ namespace FaceAnalysis
             HttpContent facesetTokenContent = new StringContent(facesetToken);
             HttpContent faceTokenContent = new StringContent(faceToken);
 
-            try
+            using (var formData = new MultipartFormDataContent())
             {
-                using (var formData = new MultipartFormDataContent())
-                {
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(facesetTokenContent, "faceset_token");
-                    formData.Add(faceTokenContent, "face_tokens");
+                formData.Add(keyContent, "api_key");
+                formData.Add(secretContent, "api_secret");
+                formData.Add(facesetTokenContent, "faceset_token");
+                formData.Add(faceTokenContent, "face_tokens");
 
-                    using (var response = await httpClientWrapper.PostAsync(addUrl, formData))
-                    {
-                        string responseString = httpClientWrapper.ReadStringAsync(response).Result;
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            return responseString;
-                        }
-
-                        throw new Exception(responseString);
-                    }
-                }
-            }
-
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-                return null;
+                return httpClientWrapper.Post(addUrl, formData);
             }
         }
 
@@ -157,33 +101,14 @@ namespace FaceAnalysis
             HttpContent facesetTokenContent = new StringContent(facesetToken);
             HttpContent faceTokenContent = new StringContent(faceToken);
 
-            try
+            using (var formData = new MultipartFormDataContent())
             {
-                using (var formData = new MultipartFormDataContent())
-                {
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(facesetTokenContent, "faceset_token");
-                    formData.Add(faceTokenContent, "face_tokens");
+                formData.Add(keyContent, "api_key");
+                formData.Add(secretContent, "api_secret");
+                formData.Add(facesetTokenContent, "faceset_token");
+                formData.Add(faceTokenContent, "face_tokens");
 
-                    using (var response = await httpClientWrapper.PostAsync(removeUrl, formData))
-                    {
-                        string responseString = httpClientWrapper.ReadStringAsync(response).Result;
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            return responseString;
-                        }
-
-                        throw new Exception(responseString);
-                    }
-                }
-            }
-
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-                return null;
+                return httpClientWrapper.Post(removeUrl, formData);
             }
         }
 
@@ -200,33 +125,14 @@ namespace FaceAnalysis
             HttpContent faceTokenContent = new StringContent(faceToken);
             HttpContent facesetTokenContent = new StringContent(facesetToken);
 
-            try
+            using (var formData = new MultipartFormDataContent())
             {
-                using (var formData = new MultipartFormDataContent())
-                {
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(faceTokenContent, "face_token");
-                    formData.Add(facesetTokenContent, "faceset_token");
+                formData.Add(keyContent, "api_key");
+                formData.Add(secretContent, "api_secret");
+                formData.Add(faceTokenContent, "face_token");
+                formData.Add(facesetTokenContent, "faceset_token");
 
-                    using (var response = await httpClientWrapper.PostAsync(searchUrl, formData))
-                    {
-                        string responseString = httpClientWrapper.ReadStringAsync(response).Result;
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            return responseString;
-                        }
-
-                        throw new Exception(responseString);
-                    }
-                }
-            }
-
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-                return null;
+                return httpClientWrapper.Post(searchUrl, formData);
             }
         }
 
@@ -241,32 +147,13 @@ namespace FaceAnalysis
             HttpContent secretContent = new StringContent(Keys.apiSecret);
             HttpContent facesetTokenContent = new StringContent(facesetToken);
 
-            try
+            using (var formData = new MultipartFormDataContent())
             {
-                using (var formData = new MultipartFormDataContent())
-                {
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(facesetTokenContent, "faceset_token");
+                formData.Add(keyContent, "api_key");
+                formData.Add(secretContent, "api_secret");
+                formData.Add(facesetTokenContent, "faceset_token");
 
-                    using (var response = await httpClientWrapper.PostAsync(getDetailUrl, formData))
-                    {
-                        string responseString = httpClientWrapper.ReadStringAsync(response).Result;
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            return responseString;
-                        }
-
-                        throw new Exception(responseString);
-                    }
-                }
-            }
-
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-                return null;
+                return httpClientWrapper.Post(getDetailUrl, formData);
             }
         }
     }

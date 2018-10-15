@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace WindowsForms.FaceAnalysis
@@ -9,6 +10,19 @@ namespace WindowsForms.FaceAnalysis
         public string request_id { get; set; }
         public int time_used { get; set; }
         public IList<Face> faces { get; set; }
+
+        public override bool Equals(Object obj)
+        {
+            if (obj == null)
+                return false;
+
+            FrameAnalysisJSON objectToCompare = (FrameAnalysisJSON)obj;
+
+            return (image_id.Equals(objectToCompare.image_id)) &&
+                   (request_id.Equals(objectToCompare.request_id)) &&
+                   (time_used == objectToCompare.time_used) &&
+                   (faces.Count == objectToCompare.faces.Count);
+        }
     }
 
     public class FaceRectangle
