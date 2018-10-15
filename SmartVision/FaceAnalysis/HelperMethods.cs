@@ -23,7 +23,7 @@ namespace FaceAnalysis
             {
                 using (MemoryStream stream = new MemoryStream())
                 {
-                    img.Save(stream, ImageFormat.Bmp);
+                    img.Save(stream, ImageFormat.Jpeg);
                     img.Dispose();
                     array = stream.ToArray();
                 }
@@ -66,7 +66,7 @@ namespace FaceAnalysis
         /// Works for now
         /// </summary>
         /// <param name="img">Image in bitmap form</param>
-        /// <returns>Number of faces in image</returns>
+        /// <returns>Processed image in bitmap form</returns>
         public static Bitmap ProcessImage(Bitmap img)
         {
             const int MAX_SIZE = 1000;

@@ -81,7 +81,8 @@ namespace WindowsForms
         {          
             try
             {
-                var imageFrame = capture.QueryFrame().ToImage<Bgr, Byte>().Clone();
+                var imageFrame = capture.QueryFrame().ToImage<Bgr, byte>().Clone();
+                imageFrame.Bitmap = HelperMethods.ProcessImage(imageFrame.Bitmap);
                 FormFaceDetection.Current.scanPictureBox.Image = imageFrame.Bitmap;
                 lock (faceRectangles)
                 {
