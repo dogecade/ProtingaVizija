@@ -10,6 +10,8 @@ namespace WindowsForms.FormControl
 {
     public partial class FormFaceDetection : System.Windows.Forms.Form
     {
+        private const string enabledButtonText = "Enable scan";
+        private const string disabledButtonText = "Disable scan";
         private Color underButtonColor = Color.LightSteelBlue;
         private bool cameraEnabled = false;
         public static FormFaceDetection Current { get; private set; }
@@ -22,10 +24,15 @@ namespace WindowsForms.FormControl
 
         private void FormFaceDetection_Load(object sender, EventArgs e)
         {
-            // TODO: This line of code loads data into the 'pstop2018DataSet1.MissingPersons' table. You can move, or remove it, as needed.
-            this.missingPersonsTableAdapter.Fill(this.pstop2018DataSet1.MissingPersons);
-            // TODO: This line of code loads data into the 'pstop2018DataSet.ContactPersons' table. You can move, or remove it, as needed.
-            this.contactPersonsTableAdapter.Fill(this.pstop2018DataSet.ContactPersons);
+            try
+            {
+                this.missingPersonsTableAdapter.Fill(this.pstop2018DataSet1.MissingPersons);
+                this.contactPersonsTableAdapter.Fill(this.pstop2018DataSet.ContactPersons);
+            }
+            catch (System.Data.SqlClient.SqlException)
+            {
+                MessageBox.Show("Failed to establish database connection");
+            }
             homePanel.BringToFront();
             underHomePanel.BackColor = underButtonColor;
         }
@@ -36,11 +43,7 @@ namespace WindowsForms.FormControl
         /// </summary>
         public void homeButton_Click(object sender, EventArgs e)
         {
-            if (cameraEnabled)
-            {
-                WebcamInput.DisableWebcam();
-                cameraEnabled = false;
-            }
+            disableScanPanel();
 
             homePanel.BringToFront();
 
@@ -58,21 +61,13 @@ namespace WindowsForms.FormControl
             underPersonPanel.BackColor = Color.Transparent;
             underExitPanel.BackColor = Color.Transparent;
 
-            if (!cameraEnabled && WebcamInput.EnableWebcam())
-            {
-                scanPanel.BringToFront();
-                cameraEnabled = true;
-            }
+            scanPanel.BringToFront();
 
         }
 
         private void addPersonButton_Click(object sender, EventArgs e)
         {
-            if (cameraEnabled)
-            {
-                WebcamInput.DisableWebcam();
-                cameraEnabled = false;
-            }
+            disableScanPanel();
 
             addPersonPanel.BringToFront();
 
@@ -200,5 +195,43 @@ namespace WindowsForms.FormControl
             }
 
         }
+        
+        private void useWebcamPragueBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (useWebcamPragueBox.Checked)
+                cameraUrlBox.Enabled = false;
+            else
+                cameraUrlBox.Enabled = true;
+        }
+
+        private void cameraUrlBox_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+        
+        private void activateScanButton_Click(object sender, EventArgs e)
+        {
+            if (!cameraEnabled)
+            {
+                cameraEnabled =
+                    useWebcamPragueBox.Checked ? WebcamInput.EnableWebcam() : WebcamInput.EnableWebcam(cameraUrlBox.Text);
+            }
+            else
+                disableScanPanel();
+            activateScanButton.Text = cameraEnabled ? disabledButtonText : enabledButtonText;
+        }
+
+        private void disableScanPanel()
+        {
+            if (cameraEnabled)
+            {
+                WebcamInput.DisableWebcam();
+                Current.scanPictureBox.Image = null;
+                cameraEnabled = false;
+                activateScanButton.Text = enabledButtonText;
+            }
+        }
+
+
     }
 }
