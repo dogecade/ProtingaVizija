@@ -1,71 +1,30 @@
-﻿<h1 class="panel-title">Add A Missing Person</h1>
+﻿@using Api.Models
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
-<div class="container">
-    <h3>Information about the person</h3>
-    <div class="row centered-form">
-
-        <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
-            <div class="panel panel-default">
-
-                <div class="panel-body">
-                    <form role="form">
-                        <div class="row">
-                            <div class="col-xs-6 col-sm-6 col-md-6">
-                                <div class="form-group">
-                                    <input type="text" name="first_name" id="first_name" class="form-control input-sm floatlabel" required="required" placeholder="First Name">
-                                </div>
-                            </div>
-                            <div class="col-xs-6 col-sm-6 col-md-6">
-                                <div class="form-group">
-                                    <input type="text" name="last_name" id="last_name" class="form-control input-sm" required="required" placeholder="Last Name">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" name="date_of_birth" id="date_of_birth" class="form-control input-sm" required="required" placeholder="Date of Birth">
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" name="last_seen_on" id="last_seen_on" class="form-control input-sm" placeholder="Last seen on">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="last_seen_location" id="last_seen_location" class="form-control input-sm" placeholder="Last Seen Location">
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" id="additional_information" rows="3" placeholder="Additional Information"></textarea>
-                        </div>
-
-                        <h3 class="panel-title">Contact Information</h3>
-
-                        <div class="row">
-                            <div class="col-xs-6 col-sm-6 col-md-6">
-                                <div class="form-group">
-                                    <input type="text" name="contact_first_name" id="contact_first_name" class="form-control input-sm floatlabel" required="required" placeholder="First Name">
-                                </div>
-                            </div>
-                            <div class="col-xs-6 col-sm-6 col-md-6">
-                                <div class="form-group">
-                                    <input type="text" name="contact_last_name" id="contact_last_name" class="form-control input-sm" required="required" placeholder="Last Name">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <input class="form-control" id="inputPhone" maxlength="15" name="phone" required="required" size="3" placeholder="Phone number">
-                        </div>
-
-                        <div class="form-group">
-                            <input type="email" class="form-control" id="email" required="required" placeholder="email@example.com">
-                        </div>
+}
 
 
-                        <input type="submit" value="Register" class="btn btn-info btn-block" href="/AddPerson/SetPersonDetails">
-
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+@model ContactPerson
+@{
+    using (Html.BeginForm("AddContactPerson", "AddPerson", FormMethod.Post))
+    {
+        <label>FirstName</label>
+        @Html.TextBoxFor(m => m.firstName)
+        <br />
+        <label>LastName</label>
+        @Html.TextBoxFor(m => m.lastName)
+        <br />
+        <label>MissingPersonID</label>
+        @Html.TextBoxFor(m => m.missingPersonId)
+        <br />
+        <label>PhoneNumber</label>
+        @Html.TextBoxFor(m => m.phoneNumber)
+        <br />
+        <label>Email</label>
+        @Html.TextBoxFor(m => m.emailAddress)
+        <br />
+        <input type="submit" value="Submit" />
+    }
+}
