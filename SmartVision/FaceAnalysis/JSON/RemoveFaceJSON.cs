@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FaceAnalysis.JSON
 {
@@ -11,5 +12,21 @@ namespace FaceAnalysis.JSON
         public string request_id { get; set; }
         public string outer_id { get; set; }
         public IList<object> failure_detail { get; set; }
+
+        public override bool Equals(Object obj)
+        {
+            if (obj == null)
+                return false;
+
+            RemoveFaceJSON objectToCompare = (RemoveFaceJSON)obj;
+
+            return (faceset_token.Equals(objectToCompare.faceset_token)) &&
+                   (time_used == objectToCompare.time_used) &&
+                   (face_count == objectToCompare.face_count) &&
+                   (face_removed == objectToCompare.face_removed) &&
+                   (request_id.Equals(objectToCompare.request_id)) &&
+                   (outer_id.Equals(objectToCompare.outer_id)) &&
+                   (failure_detail.Count == objectToCompare.failure_detail.Count);
+        }
     }
 }
