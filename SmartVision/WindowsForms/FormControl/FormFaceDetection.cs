@@ -198,10 +198,7 @@ namespace WindowsForms.FormControl
         
         private void useWebcamPragueBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (useWebcamPragueBox.Checked)
-                cameraUrlBox.Enabled = false;
-            else
-                cameraUrlBox.Enabled = true;
+            cameraUrlBox.Enabled = !useWebcamPragueBox.Checked;
         }
 
         private void cameraUrlBox_TextChanged(object sender, EventArgs e)
@@ -215,6 +212,8 @@ namespace WindowsForms.FormControl
             {
                 cameraEnabled =
                     useWebcamPragueBox.Checked ? WebcamInput.EnableWebcam() : WebcamInput.EnableWebcam(cameraUrlBox.Text);
+                useWebcamPragueBox.Enabled = false;
+                cameraUrlBox.Enabled = false;
             }
             else
                 disableScanPanel();
@@ -229,6 +228,8 @@ namespace WindowsForms.FormControl
                 Current.scanPictureBox.Image = null;
                 cameraEnabled = false;
                 activateScanButton.Text = enabledButtonText;
+                useWebcamPragueBox.Enabled = true;
+                cameraUrlBox.Enabled = !useWebcamPragueBox.Checked;
             }
         }
 
