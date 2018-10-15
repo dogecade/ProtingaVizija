@@ -47,7 +47,7 @@ namespace FaceAnalysis
         /// Creates a new faceset
         /// </summary>
         /// <param name="facesetName">Name of the faceset</param>
-        /// <returns>CreateFacesetJSON</returns>
+        /// <returns>CreateFaceSetJSON</returns>
         public async Task<string> CreateNewFaceset(string facesetName)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
