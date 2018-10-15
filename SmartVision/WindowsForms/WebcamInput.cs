@@ -78,18 +78,26 @@ namespace WindowsForms
         /// Author: Arnas Danaitis
         /// </summary>
         private static async void GetFrameAsync(object sender, EventArgs e)
-        {
-            var imageFrame = capture.QueryFrame().ToImage<Bgr, Byte>().Clone();
-            FormFaceDetection.Current.scanPictureBox.Image = imageFrame.Bitmap;
-            lock (faceRectangles)
+        {          
+            try
             {
-                foreach (Rectangle face in faceRectangles)
-                    imageFrame.Draw(face, new Bgr(Color.Red), 1);
+                var imageFrame = capture.QueryFrame().ToImage<Bgr, Byte>().Clone();
+                FormFaceDetection.Current.scanPictureBox.Image = imageFrame.Bitmap;
+                lock (faceRectangles)
+                {
+                    foreach (Rectangle face in faceRectangles)
+                        imageFrame.Draw(face, new Bgr(Color.Red), 1);
+                }
+                if (lastImage != null)
+                    lastImage.Dispose();
+                lastImage = imageFrame;
+                await buffer.SendAsync(HelperMethods.ImageToByte(imageFrame.Bitmap));
             }
-            if (lastImage != null)
-                lastImage.Dispose();
-            lastImage = imageFrame;
-            await buffer.SendAsync(HelperMethods.ImageToByte(imageFrame.Bitmap));
+            catch (NullReferenceException)
+            {
+                Debug.WriteLine("No new frame available in camera feed");
+                return;
+            }
         }
 
         /// <summary>
