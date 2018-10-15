@@ -28,24 +28,16 @@ namespace WindowsForms
         /// <summary>
         /// Enables the input of the webcam
         /// </summary>
-        public static bool EnableWebcam()
+        public static bool EnableWebcam(string cameraUrl = null)
         {
             try
             {
-                capture = new VideoCapture();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
-
-            try
-            {
+                if (cameraUrl == null)
+                    capture = new VideoCapture();
+                else
+                    capture = new VideoCapture(cameraUrl);
                 if (!capture.IsOpened)
-                {
                     throw new SystemException("Input camera was not found");
-                }
             }
             catch (Exception e)
             {
