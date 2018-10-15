@@ -76,6 +76,7 @@
     <Compile Include="FaceApiCalls.cs" />
     <Compile Include="HelperMethods.cs" />
     <Compile Include="HttpClientWrapper.cs" />
+    <Compile Include="IHttpClientWrapper.cs" />
     <Compile Include="JSON\AddFaceJSON.cs" />
     <Compile Include="JSON\FrameAnalysisJSON.cs" />
     <Compile Include="JSON\CreateFaceSetJSON.cs" />
