@@ -212,8 +212,8 @@ namespace WindowsForms.FormControl
             {
                 cameraEnabled =
                     useWebcamPragueBox.Checked ? WebcamInput.EnableWebcam() : WebcamInput.EnableWebcam(cameraUrlBox.Text);
-                useWebcamPragueBox.Enabled = false;
-                cameraUrlBox.Enabled = false;
+                useWebcamPragueBox.Enabled = !cameraEnabled;
+                cameraUrlBox.Enabled = !cameraEnabled;
             }
             else
                 disableScanPanel();
