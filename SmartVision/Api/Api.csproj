@@ -201,13 +201,17 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AddPersonController.cs" />
+    <Compile Include="Controllers\ContactPersonsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageUploadController.cs" />
-    <Compile Include="Controllers\PeopleController.cs" />
+    <Compile Include="Controllers\MissingPersonsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Person.cs">
+    <Compile Include="Models\ContactPerson.cs">
+      <DependentUpon>Tables.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MissingPerson.cs">
       <DependentUpon>Tables.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tables.Context.cs">
@@ -242,6 +246,7 @@
       <DependentUpon>Tables.edmx</DependentUpon>
       <LastGenOutput>Tables.Context.cs</LastGenOutput>
     </Content>
+    <Content Include="Models\Tables.edmx.sql" />
     <Content Include="Models\Tables.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Tables.edmx</DependentUpon>
@@ -328,6 +333,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\AddPerson\Index.cshtml" />
+    <Content Include="Views\AddPerson\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

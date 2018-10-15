@@ -12,11 +12,13 @@ namespace Api.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Person
+    public partial class ContactPerson
     {
         public int Id { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-        public string face_token { get; set; }
+        public string missingPersonId { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public string phoneNumber { get; set; }
+        public string emailAddress { get; set; }
     }
 }
