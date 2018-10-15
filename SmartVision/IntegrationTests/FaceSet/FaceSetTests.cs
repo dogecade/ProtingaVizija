@@ -38,14 +38,14 @@ namespace UnitTests
             string expectedFacesetString =
                 "{\"faceset_token\": \"6192dcd46df652215295f41be478565c\", \"time_used\": 137, \"face_count\": 0, \"face_added\": 0, \"request_id\": \"1539602878,1d610383-d92a-4222-8868-1095c7e99654\", \"outer_id\": \"\", \"failure_detail\": []}";
 
-            var expectedFacesetObject = JsonConvert.DeserializeObject<CreateFacesetJSON>(expectedFacesetString);
+            var expectedFacesetObject = JsonConvert.DeserializeObject<CreateFaceSetJSON>(expectedFacesetString);
 
             var mock = new Mock<IHttpClientWrapper>();
 
             mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
                 .Returns(expectedFacesetString);
 
-            var actualFacesetObject = JsonConvert.DeserializeObject<CreateFacesetJSON>(mock.Object.Post(null, null));
+            var actualFacesetObject = JsonConvert.DeserializeObject<CreateFaceSetJSON>(mock.Object.Post(null, null));
 
             Assert.IsTrue(expectedFacesetObject.Equals(actualFacesetObject), "Mock call to faceset create api was not succesfull");
         }

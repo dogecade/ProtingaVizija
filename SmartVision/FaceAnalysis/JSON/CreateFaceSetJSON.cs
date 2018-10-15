@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WindowsForms.FaceAnalysis.JSON
 {
-    public class CreateFacesetJSON
+    public class CreateFaceSetJSON
     {
         public string faceset_token { get; set; }
         public int time_used { get; set; }
@@ -18,7 +18,7 @@ namespace WindowsForms.FaceAnalysis.JSON
             if (obj == null)
                 return false;
 
-            CreateFacesetJSON objectToCompare = (CreateFacesetJSON) obj;
+            CreateFaceSetJSON objectToCompare = (CreateFaceSetJSON) obj;
 
             return (faceset_token.Equals(objectToCompare.faceset_token)) &&
                    (time_used == objectToCompare.time_used) &&
