@@ -33,6 +33,15 @@
             this.homePanel = new System.Windows.Forms.Panel();
             this.youCanHelpLabel = new System.Windows.Forms.Label();
             this.missingPeopleDataGrid = new System.Windows.Forms.DataGridView();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.faceTokenDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.firstNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lastNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lastSeenDateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lastSeenLocationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.additionalInformationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.missingPersonsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.pstop2018DataSet2 = new WindowsForms.pstop2018DataSet2();
             this.label3 = new System.Windows.Forms.Label();
             this.homeLabel = new System.Windows.Forms.Label();
             this.scanPanel = new System.Windows.Forms.Panel();
@@ -77,26 +86,17 @@
             this.underPersonPanel = new System.Windows.Forms.Panel();
             this.underExitPanel = new System.Windows.Forms.Panel();
             this.buttonsPanel = new System.Windows.Forms.Panel();
-            this.pstop2018DataSet2 = new WindowsForms.pstop2018DataSet2();
-            this.missingPersonsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.missingPersonsTableAdapter = new WindowsForms.pstop2018DataSet2TableAdapters.MissingPersonsTableAdapter();
-            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.faceTokenDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.firstNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lastNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lastSeenDateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lastSeenLocationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.additionalInformationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.homePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.missingPeopleDataGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.missingPersonsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pstop2018DataSet2)).BeginInit();
             this.scanPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scanPictureBox)).BeginInit();
             this.addPersonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.missingPersonPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.buttonsPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pstop2018DataSet2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.missingPersonsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // homePanel
@@ -109,7 +109,7 @@
             this.homePanel.Controls.Add(this.missingPeopleDataGrid);
             this.homePanel.Controls.Add(this.label3);
             this.homePanel.Controls.Add(this.homeLabel);
-            this.homePanel.Location = new System.Drawing.Point(171, 204);
+            this.homePanel.Location = new System.Drawing.Point(208, 164);
             this.homePanel.Margin = new System.Windows.Forms.Padding(2);
             this.homePanel.Name = "homePanel";
             this.homePanel.Size = new System.Drawing.Size(673, 574);
@@ -150,9 +150,76 @@
             this.missingPeopleDataGrid.Name = "missingPeopleDataGrid";
             this.missingPeopleDataGrid.ReadOnly = true;
             this.missingPeopleDataGrid.RowTemplate.Height = 24;
+            this.missingPeopleDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.missingPeopleDataGrid.Size = new System.Drawing.Size(544, 370);
             this.missingPeopleDataGrid.TabIndex = 8;
             this.missingPeopleDataGrid.TabStop = false;
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.idDataGridViewTextBoxColumn.HeaderText = "Id";
+            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.ReadOnly = true;
+            this.idDataGridViewTextBoxColumn.Width = 51;
+            // 
+            // faceTokenDataGridViewTextBoxColumn
+            // 
+            this.faceTokenDataGridViewTextBoxColumn.DataPropertyName = "faceToken";
+            this.faceTokenDataGridViewTextBoxColumn.HeaderText = "faceToken";
+            this.faceTokenDataGridViewTextBoxColumn.Name = "faceTokenDataGridViewTextBoxColumn";
+            this.faceTokenDataGridViewTextBoxColumn.ReadOnly = true;
+            this.faceTokenDataGridViewTextBoxColumn.Width = 109;
+            // 
+            // firstNameDataGridViewTextBoxColumn
+            // 
+            this.firstNameDataGridViewTextBoxColumn.DataPropertyName = "firstName";
+            this.firstNameDataGridViewTextBoxColumn.HeaderText = "firstName";
+            this.firstNameDataGridViewTextBoxColumn.Name = "firstNameDataGridViewTextBoxColumn";
+            this.firstNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.firstNameDataGridViewTextBoxColumn.Width = 101;
+            // 
+            // lastNameDataGridViewTextBoxColumn
+            // 
+            this.lastNameDataGridViewTextBoxColumn.DataPropertyName = "lastName";
+            this.lastNameDataGridViewTextBoxColumn.HeaderText = "lastName";
+            this.lastNameDataGridViewTextBoxColumn.Name = "lastNameDataGridViewTextBoxColumn";
+            this.lastNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.lastNameDataGridViewTextBoxColumn.Width = 103;
+            // 
+            // lastSeenDateDataGridViewTextBoxColumn
+            // 
+            this.lastSeenDateDataGridViewTextBoxColumn.DataPropertyName = "lastSeenDate";
+            this.lastSeenDateDataGridViewTextBoxColumn.HeaderText = "lastSeenDate";
+            this.lastSeenDateDataGridViewTextBoxColumn.Name = "lastSeenDateDataGridViewTextBoxColumn";
+            this.lastSeenDateDataGridViewTextBoxColumn.ReadOnly = true;
+            this.lastSeenDateDataGridViewTextBoxColumn.Width = 129;
+            // 
+            // lastSeenLocationDataGridViewTextBoxColumn
+            // 
+            this.lastSeenLocationDataGridViewTextBoxColumn.DataPropertyName = "lastSeenLocation";
+            this.lastSeenLocationDataGridViewTextBoxColumn.HeaderText = "lastSeenLocation";
+            this.lastSeenLocationDataGridViewTextBoxColumn.Name = "lastSeenLocationDataGridViewTextBoxColumn";
+            this.lastSeenLocationDataGridViewTextBoxColumn.ReadOnly = true;
+            this.lastSeenLocationDataGridViewTextBoxColumn.Width = 155;
+            // 
+            // additionalInformationDataGridViewTextBoxColumn
+            // 
+            this.additionalInformationDataGridViewTextBoxColumn.DataPropertyName = "Additional_Information";
+            this.additionalInformationDataGridViewTextBoxColumn.HeaderText = "Additional_Information";
+            this.additionalInformationDataGridViewTextBoxColumn.Name = "additionalInformationDataGridViewTextBoxColumn";
+            this.additionalInformationDataGridViewTextBoxColumn.ReadOnly = true;
+            this.additionalInformationDataGridViewTextBoxColumn.Width = 194;
+            // 
+            // missingPersonsBindingSource
+            // 
+            this.missingPersonsBindingSource.DataMember = "MissingPersons";
+            this.missingPersonsBindingSource.DataSource = this.pstop2018DataSet2;
+            // 
+            // pstop2018DataSet2
+            // 
+            this.pstop2018DataSet2.DataSetName = "pstop2018DataSet2";
+            this.pstop2018DataSet2.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // label3
             // 
@@ -187,7 +254,7 @@
             this.scanPanel.Controls.Add(this.cameraUrlBox);
             this.scanPanel.Controls.Add(this.useWebcamPragueBox);
             this.scanPanel.Controls.Add(this.scanPictureBox);
-            this.scanPanel.Location = new System.Drawing.Point(171, 204);
+            this.scanPanel.Location = new System.Drawing.Point(208, 164);
             this.scanPanel.Margin = new System.Windows.Forms.Padding(2);
             this.scanPanel.Name = "scanPanel";
             this.scanPanel.Size = new System.Drawing.Size(673, 574);
@@ -207,7 +274,7 @@
             // activateScanButton
             // 
             this.activateScanButton.Location = new System.Drawing.Point(536, 5);
-            this.activateScanButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.activateScanButton.Margin = new System.Windows.Forms.Padding(4);
             this.activateScanButton.Name = "activateScanButton";
             this.activateScanButton.Size = new System.Drawing.Size(116, 29);
             this.activateScanButton.TabIndex = 3;
@@ -219,7 +286,7 @@
             // 
             this.cameraUrlBox.Enabled = false;
             this.cameraUrlBox.Location = new System.Drawing.Point(152, 6);
-            this.cameraUrlBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cameraUrlBox.Margin = new System.Windows.Forms.Padding(4);
             this.cameraUrlBox.Name = "cameraUrlBox";
             this.cameraUrlBox.Size = new System.Drawing.Size(364, 23);
             this.cameraUrlBox.TabIndex = 2;
@@ -231,7 +298,7 @@
             this.useWebcamPragueBox.Checked = true;
             this.useWebcamPragueBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.useWebcamPragueBox.Location = new System.Drawing.Point(9, 8);
-            this.useWebcamPragueBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.useWebcamPragueBox.Margin = new System.Windows.Forms.Padding(4);
             this.useWebcamPragueBox.Name = "useWebcamPragueBox";
             this.useWebcamPragueBox.Size = new System.Drawing.Size(121, 23);
             this.useWebcamPragueBox.TabIndex = 1;
@@ -279,7 +346,7 @@
             this.addPersonPanel.Controls.Add(this.LastNameLabel);
             this.addPersonPanel.Controls.Add(this.firstNameLabel);
             this.addPersonPanel.Controls.Add(this.addPersonLabel);
-            this.addPersonPanel.Location = new System.Drawing.Point(171, 204);
+            this.addPersonPanel.Location = new System.Drawing.Point(208, 164);
             this.addPersonPanel.Margin = new System.Windows.Forms.Padding(2);
             this.addPersonPanel.Name = "addPersonPanel";
             this.addPersonPanel.Size = new System.Drawing.Size(673, 574);
@@ -304,10 +371,10 @@
             // 
             // 
             this.contactEmailAddressBox.CustomButton.Image = null;
-            this.contactEmailAddressBox.CustomButton.Location = new System.Drawing.Point(231, 2);
+            this.contactEmailAddressBox.CustomButton.Location = new System.Drawing.Point(185, 2);
             this.contactEmailAddressBox.CustomButton.Margin = new System.Windows.Forms.Padding(2);
             this.contactEmailAddressBox.CustomButton.Name = "";
-            this.contactEmailAddressBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.contactEmailAddressBox.CustomButton.Size = new System.Drawing.Size(17, 17);
             this.contactEmailAddressBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.contactEmailAddressBox.CustomButton.TabIndex = 1;
             this.contactEmailAddressBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -347,10 +414,10 @@
             // 
             // 
             this.contactPhoneNumberBox.CustomButton.Image = null;
-            this.contactPhoneNumberBox.CustomButton.Location = new System.Drawing.Point(231, 2);
+            this.contactPhoneNumberBox.CustomButton.Location = new System.Drawing.Point(185, 2);
             this.contactPhoneNumberBox.CustomButton.Margin = new System.Windows.Forms.Padding(2);
             this.contactPhoneNumberBox.CustomButton.Name = "";
-            this.contactPhoneNumberBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.contactPhoneNumberBox.CustomButton.Size = new System.Drawing.Size(17, 17);
             this.contactPhoneNumberBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.contactPhoneNumberBox.CustomButton.TabIndex = 1;
             this.contactPhoneNumberBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -390,10 +457,10 @@
             // 
             // 
             this.contactLastNameBox.CustomButton.Image = null;
-            this.contactLastNameBox.CustomButton.Location = new System.Drawing.Point(231, 2);
+            this.contactLastNameBox.CustomButton.Location = new System.Drawing.Point(185, 2);
             this.contactLastNameBox.CustomButton.Margin = new System.Windows.Forms.Padding(2);
             this.contactLastNameBox.CustomButton.Name = "";
-            this.contactLastNameBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.contactLastNameBox.CustomButton.Size = new System.Drawing.Size(17, 17);
             this.contactLastNameBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.contactLastNameBox.CustomButton.TabIndex = 1;
             this.contactLastNameBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -433,10 +500,10 @@
             // 
             // 
             this.contactFirstNameBox.CustomButton.Image = null;
-            this.contactFirstNameBox.CustomButton.Location = new System.Drawing.Point(231, 2);
+            this.contactFirstNameBox.CustomButton.Location = new System.Drawing.Point(185, 2);
             this.contactFirstNameBox.CustomButton.Margin = new System.Windows.Forms.Padding(2);
             this.contactFirstNameBox.CustomButton.Name = "";
-            this.contactFirstNameBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.contactFirstNameBox.CustomButton.Size = new System.Drawing.Size(17, 17);
             this.contactFirstNameBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.contactFirstNameBox.CustomButton.TabIndex = 1;
             this.contactFirstNameBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -487,10 +554,10 @@
             // 
             // 
             this.locationBox.CustomButton.Image = null;
-            this.locationBox.CustomButton.Location = new System.Drawing.Point(231, 2);
+            this.locationBox.CustomButton.Location = new System.Drawing.Point(185, 2);
             this.locationBox.CustomButton.Margin = new System.Windows.Forms.Padding(2);
             this.locationBox.CustomButton.Name = "";
-            this.locationBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.locationBox.CustomButton.Size = new System.Drawing.Size(17, 17);
             this.locationBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.locationBox.CustomButton.TabIndex = 1;
             this.locationBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -548,10 +615,10 @@
             // 
             // 
             this.additionalInfoBox.CustomButton.Image = null;
-            this.additionalInfoBox.CustomButton.Location = new System.Drawing.Point(119, 1);
+            this.additionalInfoBox.CustomButton.Location = new System.Drawing.Point(95, 1);
             this.additionalInfoBox.CustomButton.Margin = new System.Windows.Forms.Padding(2);
             this.additionalInfoBox.CustomButton.Name = "";
-            this.additionalInfoBox.CustomButton.Size = new System.Drawing.Size(136, 136);
+            this.additionalInfoBox.CustomButton.Size = new System.Drawing.Size(109, 109);
             this.additionalInfoBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.additionalInfoBox.CustomButton.TabIndex = 1;
             this.additionalInfoBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -622,10 +689,10 @@
             // 
             // 
             this.lastNameBox.CustomButton.Image = null;
-            this.lastNameBox.CustomButton.Location = new System.Drawing.Point(231, 2);
+            this.lastNameBox.CustomButton.Location = new System.Drawing.Point(185, 2);
             this.lastNameBox.CustomButton.Margin = new System.Windows.Forms.Padding(2);
             this.lastNameBox.CustomButton.Name = "";
-            this.lastNameBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.lastNameBox.CustomButton.Size = new System.Drawing.Size(17, 17);
             this.lastNameBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.lastNameBox.CustomButton.TabIndex = 1;
             this.lastNameBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -654,10 +721,10 @@
             // 
             // 
             this.firstNameBox.CustomButton.Image = null;
-            this.firstNameBox.CustomButton.Location = new System.Drawing.Point(231, 2);
+            this.firstNameBox.CustomButton.Location = new System.Drawing.Point(185, 2);
             this.firstNameBox.CustomButton.Margin = new System.Windows.Forms.Padding(2);
             this.firstNameBox.CustomButton.Name = "";
-            this.firstNameBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.firstNameBox.CustomButton.Size = new System.Drawing.Size(17, 17);
             this.firstNameBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.firstNameBox.CustomButton.TabIndex = 1;
             this.firstNameBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -879,81 +946,15 @@
             this.buttonsPanel.Controls.Add(this.addPersonButton);
             this.buttonsPanel.Controls.Add(this.scanButton);
             this.buttonsPanel.Controls.Add(this.homeButton);
-            this.buttonsPanel.Location = new System.Drawing.Point(-34, 42);
+            this.buttonsPanel.Location = new System.Drawing.Point(3, 2);
             this.buttonsPanel.Margin = new System.Windows.Forms.Padding(2);
             this.buttonsPanel.Name = "buttonsPanel";
             this.buttonsPanel.Size = new System.Drawing.Size(1078, 129);
             this.buttonsPanel.TabIndex = 0;
             // 
-            // pstop2018DataSet2
-            // 
-            this.pstop2018DataSet2.DataSetName = "pstop2018DataSet2";
-            this.pstop2018DataSet2.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // missingPersonsBindingSource
-            // 
-            this.missingPersonsBindingSource.DataMember = "MissingPersons";
-            this.missingPersonsBindingSource.DataSource = this.pstop2018DataSet2;
-            // 
             // missingPersonsTableAdapter
             // 
             this.missingPersonsTableAdapter.ClearBeforeFill = true;
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            this.idDataGridViewTextBoxColumn.HeaderText = "Id";
-            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            this.idDataGridViewTextBoxColumn.ReadOnly = true;
-            this.idDataGridViewTextBoxColumn.Width = 51;
-            // 
-            // faceTokenDataGridViewTextBoxColumn
-            // 
-            this.faceTokenDataGridViewTextBoxColumn.DataPropertyName = "faceToken";
-            this.faceTokenDataGridViewTextBoxColumn.HeaderText = "faceToken";
-            this.faceTokenDataGridViewTextBoxColumn.Name = "faceTokenDataGridViewTextBoxColumn";
-            this.faceTokenDataGridViewTextBoxColumn.ReadOnly = true;
-            this.faceTokenDataGridViewTextBoxColumn.Width = 109;
-            // 
-            // firstNameDataGridViewTextBoxColumn
-            // 
-            this.firstNameDataGridViewTextBoxColumn.DataPropertyName = "firstName";
-            this.firstNameDataGridViewTextBoxColumn.HeaderText = "firstName";
-            this.firstNameDataGridViewTextBoxColumn.Name = "firstNameDataGridViewTextBoxColumn";
-            this.firstNameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.firstNameDataGridViewTextBoxColumn.Width = 101;
-            // 
-            // lastNameDataGridViewTextBoxColumn
-            // 
-            this.lastNameDataGridViewTextBoxColumn.DataPropertyName = "lastName";
-            this.lastNameDataGridViewTextBoxColumn.HeaderText = "lastName";
-            this.lastNameDataGridViewTextBoxColumn.Name = "lastNameDataGridViewTextBoxColumn";
-            this.lastNameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.lastNameDataGridViewTextBoxColumn.Width = 103;
-            // 
-            // lastSeenDateDataGridViewTextBoxColumn
-            // 
-            this.lastSeenDateDataGridViewTextBoxColumn.DataPropertyName = "lastSeenDate";
-            this.lastSeenDateDataGridViewTextBoxColumn.HeaderText = "lastSeenDate";
-            this.lastSeenDateDataGridViewTextBoxColumn.Name = "lastSeenDateDataGridViewTextBoxColumn";
-            this.lastSeenDateDataGridViewTextBoxColumn.ReadOnly = true;
-            this.lastSeenDateDataGridViewTextBoxColumn.Width = 129;
-            // 
-            // lastSeenLocationDataGridViewTextBoxColumn
-            // 
-            this.lastSeenLocationDataGridViewTextBoxColumn.DataPropertyName = "lastSeenLocation";
-            this.lastSeenLocationDataGridViewTextBoxColumn.HeaderText = "lastSeenLocation";
-            this.lastSeenLocationDataGridViewTextBoxColumn.Name = "lastSeenLocationDataGridViewTextBoxColumn";
-            this.lastSeenLocationDataGridViewTextBoxColumn.ReadOnly = true;
-            this.lastSeenLocationDataGridViewTextBoxColumn.Width = 155;
-            // 
-            // additionalInformationDataGridViewTextBoxColumn
-            // 
-            this.additionalInformationDataGridViewTextBoxColumn.DataPropertyName = "Additional_Information";
-            this.additionalInformationDataGridViewTextBoxColumn.HeaderText = "Additional_Information";
-            this.additionalInformationDataGridViewTextBoxColumn.Name = "additionalInformationDataGridViewTextBoxColumn";
-            this.additionalInformationDataGridViewTextBoxColumn.ReadOnly = true;
-            this.additionalInformationDataGridViewTextBoxColumn.Width = 194;
             // 
             // FormFaceDetection
             // 
@@ -964,11 +965,11 @@
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1162, 749);
+            this.ClientSize = new System.Drawing.Size(1085, 749);
             this.Controls.Add(this.homePanel);
+            this.Controls.Add(this.addPersonPanel);
             this.Controls.Add(this.scanPanel);
             this.Controls.Add(this.buttonsPanel);
-            this.Controls.Add(this.addPersonPanel);
             this.Font = new System.Drawing.Font("Century Gothic", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -980,6 +981,8 @@
             this.homePanel.ResumeLayout(false);
             this.homePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.missingPeopleDataGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.missingPersonsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pstop2018DataSet2)).EndInit();
             this.scanPanel.ResumeLayout(false);
             this.scanPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scanPictureBox)).EndInit();
@@ -988,8 +991,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.missingPersonPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
             this.buttonsPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pstop2018DataSet2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.missingPersonsBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }

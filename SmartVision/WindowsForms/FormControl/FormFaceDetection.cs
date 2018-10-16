@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using WindowsForms.FaceAnalysis;
 using FaceAnalysis;
 using FaceAnalysis.Persons;
+using System.Linq;
+
 
 namespace WindowsForms.FormControl
 {
@@ -25,7 +27,6 @@ namespace WindowsForms.FormControl
         private void FormFaceDetection_Load(object sender, EventArgs e)
         {
             // TODO: This line of code loads data into the 'pstop2018DataSet2.MissingPersons' table. You can move, or remove it, as needed.
-            this.missingPersonsTableAdapter.Fill(this.pstop2018DataSet2.MissingPersons);
             try
             {
                 this.missingPersonsTableAdapter.Fill(this.pstop2018DataSet2.MissingPersons);
@@ -45,6 +46,15 @@ namespace WindowsForms.FormControl
         public void homeButton_Click(object sender, EventArgs e)
         {
             disableScanPanel();
+
+            try
+            {
+                this.missingPersonsTableAdapter.Fill(this.pstop2018DataSet2.MissingPersons);
+            }
+            catch (System.Data.SqlClient.SqlException)
+            {
+
+            }
 
             homePanel.BringToFront();
 
@@ -129,7 +139,6 @@ namespace WindowsForms.FormControl
                 }
 
                 Bitmap missingPersonImage = HelperMethods.ProcessImage(new Bitmap(missingPersonPictureBox.Image));
-                MissingPerson missingPerson = new MissingPerson(firstNameBox.Text, lastNameBox.Text, additionalInfoBox.Text, locationBox.Text, dateOfBirthPicker.Value, lastSeenOnPicker.Value, missingPersonImage);
                 ContactPerson contactPerson = new ContactPerson(contactFirstNameBox.Text, contactLastNameBox.Text, contactPhoneNumberBox.Text, contactEmailAddressBox.Text);
 
                 switch (/*await HelperMethods.NumberOfFaces(missingPersonImage)*/1)
@@ -143,8 +152,14 @@ namespace WindowsForms.FormControl
                         break;
                     case 1:
                         //add to db here.
-                        pstop2018DataSet2.MissingPersons.AddMissingPersonsRow(1, "0,7", missingPerson.GetFirstName(), missingPerson.GetLastName(), missingPerson.GetLastSeenDate(), missingPerson.GetLastSeenLocation(), missingPerson.GetDescription());
-                        MessageBox.Show("Face should be added to DB here.");
+                        using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
+                        {
+                            db.MissingPersons.Add(InitializeMissingPerson(db.MissingPersons.Max(p => p.Id)));
+                            db.ContactPersons.Add(InitializeContactPerson(db.ContactPersons.Max(p => p.Id), db.MissingPersons.Max(p => p.Id)));
+                            db.SaveChanges();
+                        }
+                        
+                        MessageBox.Show("Missing person submitted successfully.");
                         break;
                     default:
                         MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +
@@ -222,6 +237,30 @@ namespace WindowsForms.FormControl
             }
         }
 
+        private Api.Models.MissingPerson InitializeMissingPerson(int Id)
+        {
+            Api.Models.MissingPerson missingPerson = new Api.Models.MissingPerson();
+            missingPerson.Id = Id + 1;
+            missingPerson.faceToken = "0.777";
+            missingPerson.firstName = firstNameBox.Text;
+            missingPerson.lastName = lastNameBox.Text;
+            missingPerson.lastSeenDate = lastSeenOnPicker.Value.ToString();
+            missingPerson.lastSeenLocation = locationBox.Text;
+            missingPerson.Additional_Information = additionalInfoBox.Text;
 
+            return missingPerson;
+        }
+        private Api.Models.ContactPerson InitializeContactPerson(int Id, int missingPersonId)
+        {
+            Api.Models.ContactPerson contactPerson = new Api.Models.ContactPerson();
+            contactPerson.Id = Id + 1;
+            contactPerson.firstName = contactFirstNameBox.Text;
+            contactPerson.lastName = contactLastNameBox.Text;
+            contactPerson.missingPersonId = (missingPersonId + 1).ToString();
+            contactPerson.phoneNumber = contactPhoneNumberBox.Text;
+            contactPerson.emailAddress = contactEmailAddressBox.Text;
+
+            return contactPerson;
+        }
     }
 }
