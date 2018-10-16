@@ -207,6 +207,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>pstop2018DataSet11.xsd</DependentUpon>
     </Compile>
+    <Compile Include="pstop2018DataSet2.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>pstop2018DataSet2.xsd</DependentUpon>
+    </Compile>
     <Compile Include="WebcamInput.cs" />
     <EmbeddedResource Include="FormControl\FormFaceDetection.resx">
       <DependentUpon>FormFaceDetection.cs</DependentUpon>
@@ -252,6 +257,17 @@
     </None>
     <None Include="pstop2018DataSet11.xss">
       <DependentUpon>pstop2018DataSet11.xsd</DependentUpon>
+    </None>
+    <None Include="pstop2018DataSet2.xsc">
+      <DependentUpon>pstop2018DataSet2.xsd</DependentUpon>
+    </None>
+    <None Include="pstop2018DataSet2.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>pstop2018DataSet2.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="pstop2018DataSet2.xss">
+      <DependentUpon>pstop2018DataSet2.xsd</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>

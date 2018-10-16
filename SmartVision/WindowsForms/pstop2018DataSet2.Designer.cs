@@ -20,9 +20,9 @@ namespace WindowsForms {
     [global::System.ComponentModel.DesignerCategoryAttribute("code")]
     [global::System.ComponentModel.ToolboxItem(true)]
     [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedDataSetSchema")]
-    [global::System.Xml.Serialization.XmlRootAttribute("pstop2018DataSet1")]
+    [global::System.Xml.Serialization.XmlRootAttribute("pstop2018DataSet2")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
-    public partial class pstop2018DataSet1 : global::System.Data.DataSet {
+    public partial class pstop2018DataSet2 : global::System.Data.DataSet {
         
         private MissingPersonsDataTable tableMissingPersons;
         
@@ -30,7 +30,7 @@ namespace WindowsForms {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        public pstop2018DataSet1() {
+        public pstop2018DataSet2() {
             this.BeginInit();
             this.InitClass();
             global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
@@ -41,7 +41,7 @@ namespace WindowsForms {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        protected pstop2018DataSet1(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+        protected pstop2018DataSet2(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
                 this.InitVars(false);
@@ -127,7 +127,7 @@ namespace WindowsForms {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         public override global::System.Data.DataSet Clone() {
-            pstop2018DataSet1 cln = ((pstop2018DataSet1)(base.Clone()));
+            pstop2018DataSet2 cln = ((pstop2018DataSet2)(base.Clone()));
             cln.InitVars();
             cln.SchemaSerializationMode = this.SchemaSerializationMode;
             return cln;
@@ -199,9 +199,9 @@ namespace WindowsForms {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitClass() {
-            this.DataSetName = "pstop2018DataSet1";
+            this.DataSetName = "pstop2018DataSet2";
             this.Prefix = "";
-            this.Namespace = "http://tempuri.org/pstop2018DataSet11.xsd";
+            this.Namespace = "http://tempuri.org/pstop2018DataSet2.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
             this.tableMissingPersons = new MissingPersonsDataTable();
@@ -225,7 +225,7 @@ namespace WindowsForms {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedDataSetSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-            pstop2018DataSet1 ds = new pstop2018DataSet1();
+            pstop2018DataSet2 ds = new pstop2018DataSet2();
             global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
             global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
             global::System.Xml.Schema.XmlSchemaAny any = new global::System.Xml.Schema.XmlSchemaAny();
@@ -281,6 +281,8 @@ namespace WindowsForms {
             
             private global::System.Data.DataColumn columnId;
             
+            private global::System.Data.DataColumn columnfaceToken;
+            
             private global::System.Data.DataColumn columnfirstName;
             
             private global::System.Data.DataColumn columnlastName;
@@ -331,17 +333,15 @@ namespace WindowsForms {
                     return this.columnId;
                 }
             }
-            /**/
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn faceToken
-            {
-                get
-                {
-                    return this.faceToken;
+            public global::System.Data.DataColumn faceTokenColumn {
+                get {
+                    return this.columnfaceToken;
                 }
             }
-
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public global::System.Data.DataColumn firstNameColumn {
@@ -459,6 +459,7 @@ namespace WindowsForms {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             internal void InitVars() {
                 this.columnId = base.Columns["Id"];
+                this.columnfaceToken = base.Columns["faceToken"];
                 this.columnfirstName = base.Columns["firstName"];
                 this.columnlastName = base.Columns["lastName"];
                 this.columnlastSeenDate = base.Columns["lastSeenDate"];
@@ -471,6 +472,8 @@ namespace WindowsForms {
             private void InitClass() {
                 this.columnId = new global::System.Data.DataColumn("Id", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnId);
+                this.columnfaceToken = new global::System.Data.DataColumn("faceToken", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnfaceToken);
                 this.columnfirstName = new global::System.Data.DataColumn("firstName", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnfirstName);
                 this.columnlastName = new global::System.Data.DataColumn("lastName", typeof(string), null, global::System.Data.MappingType.Element);
@@ -485,6 +488,8 @@ namespace WindowsForms {
                                 this.columnId}, true));
                 this.columnId.AllowDBNull = false;
                 this.columnId.Unique = true;
+                this.columnfaceToken.AllowDBNull = false;
+                this.columnfaceToken.MaxLength = 2147483647;
                 this.columnfirstName.MaxLength = 2147483647;
                 this.columnlastName.MaxLength = 2147483647;
                 this.columnlastSeenDate.AllowDBNull = false;
@@ -560,7 +565,7 @@ namespace WindowsForms {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                pstop2018DataSet1 ds = new pstop2018DataSet1();
+                pstop2018DataSet2 ds = new pstop2018DataSet2();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -641,6 +646,17 @@ namespace WindowsForms {
                 }
                 set {
                     this[this.tableMissingPersons.IdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public string faceToken {
+                get {
+                    return ((string)(this[this.tableMissingPersons.faceTokenColumn]));
+                }
+                set {
+                    this[this.tableMissingPersons.faceTokenColumn] = value;
                 }
             }
             
@@ -769,7 +785,7 @@ namespace WindowsForms {
         }
     }
 }
-namespace WindowsForms.pstop2018DataSet1TableAdapters {
+namespace WindowsForms.pstop2018DataSet2TableAdapters {
     
     
     /// <summary>
@@ -894,6 +910,7 @@ namespace WindowsForms.pstop2018DataSet1TableAdapters {
             tableMapping.SourceTable = "Table";
             tableMapping.DataSetTable = "MissingPersons";
             tableMapping.ColumnMappings.Add("Id", "Id");
+            tableMapping.ColumnMappings.Add("faceToken", "faceToken");
             tableMapping.ColumnMappings.Add("firstName", "firstName");
             tableMapping.ColumnMappings.Add("lastName", "lastName");
             tableMapping.ColumnMappings.Add("lastSeenDate", "lastSeenDate");
@@ -905,12 +922,25 @@ namespace WindowsForms.pstop2018DataSet1TableAdapters {
             this._adapter.DeleteCommand.CommandText = "DELETE FROM [dbo].[MissingPersons] WHERE (([Id] = @Original_Id))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
+            this._adapter.InsertCommand.Connection = this.Connection;
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO [dbo].[MissingPersons] ([Id], [faceToken], [firstName], [lastName], [lastSeenDate], [lastSeenLocation], [Additional_Information]) VALUES (@Id, @faceToken, @firstName, @lastName, @lastSeenDate, @lastSeenLocation, @Additional_Information);
+SELECT Id, faceToken, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Information FROM MissingPersons WHERE (Id = @Id)";
+            this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@faceToken", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "faceToken", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@firstName", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "firstName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@lastName", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "lastName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@lastSeenDate", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "lastSeenDate", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@lastSeenLocation", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "lastSeenLocation", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Additional_Information", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Additional_Information", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [dbo].[MissingPersons] SET [Id] = @Id, [firstName] = @firstName, [lastName] = @lastName, [lastSeenDate] = @lastSeenDate, [lastSeenLocation] = @lastSeenLocation, [Additional_Information] = @Additional_Information WHERE (([Id] = @Original_Id));
-SELECT Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Information FROM MissingPersons WHERE (Id = @Id)";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [dbo].[MissingPersons] SET [Id] = @Id, [faceToken] = @faceToken, [firstName] = @firstName, [lastName] = @lastName, [lastSeenDate] = @lastSeenDate, [lastSeenLocation] = @lastSeenLocation, [Additional_Information] = @Additional_Information WHERE (([Id] = @Original_Id));
+SELECT Id, faceToken, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Information FROM MissingPersons WHERE (Id = @Id)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@faceToken", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "faceToken", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@firstName", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "firstName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@lastName", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "lastName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@lastSeenDate", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "lastSeenDate", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -932,8 +962,8 @@ SELECT Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Infor
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Inform" +
-                "ation FROM dbo.MissingPersons";
+            this._commandCollection[0].CommandText = "SELECT Id, faceToken, firstName, lastName, lastSeenDate, lastSeenLocation, Additi" +
+                "onal_Information FROM dbo.MissingPersons";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -941,7 +971,7 @@ SELECT Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Infor
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(pstop2018DataSet1.MissingPersonsDataTable dataTable) {
+        public virtual int Fill(pstop2018DataSet2.MissingPersonsDataTable dataTable) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -954,9 +984,9 @@ SELECT Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Infor
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual pstop2018DataSet1.MissingPersonsDataTable GetData() {
+        public virtual pstop2018DataSet2.MissingPersonsDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            pstop2018DataSet1.MissingPersonsDataTable dataTable = new pstop2018DataSet1.MissingPersonsDataTable();
+            pstop2018DataSet2.MissingPersonsDataTable dataTable = new pstop2018DataSet2.MissingPersonsDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -964,14 +994,14 @@ SELECT Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Infor
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(pstop2018DataSet1.MissingPersonsDataTable dataTable) {
+        public virtual int Update(pstop2018DataSet2.MissingPersonsDataTable dataTable) {
             return this.Adapter.Update(dataTable);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(pstop2018DataSet1 dataSet) {
+        public virtual int Update(pstop2018DataSet2 dataSet) {
             return this.Adapter.Update(dataSet, "MissingPersons");
         }
         
@@ -1015,40 +1045,104 @@ SELECT Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Infor
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(int Id, string firstName, string lastName, string lastSeenDate, string lastSeenLocation, string Additional_Information, int Original_Id) {
-            this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(Id));
-            if ((firstName == null)) {
-                this.Adapter.UpdateCommand.Parameters[1].Value = global::System.DBNull.Value;
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
+        public virtual int Insert(int Id, string faceToken, string firstName, string lastName, string lastSeenDate, string lastSeenLocation, string Additional_Information) {
+            this.Adapter.InsertCommand.Parameters[0].Value = ((int)(Id));
+            if ((faceToken == null)) {
+                throw new global::System.ArgumentNullException("faceToken");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(firstName));
+                this.Adapter.InsertCommand.Parameters[1].Value = ((string)(faceToken));
+            }
+            if ((firstName == null)) {
+                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[2].Value = ((string)(firstName));
             }
             if ((lastName == null)) {
-                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
+                this.Adapter.InsertCommand.Parameters[3].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[2].Value = ((string)(lastName));
+                this.Adapter.InsertCommand.Parameters[3].Value = ((string)(lastName));
             }
             if ((lastSeenDate == null)) {
                 throw new global::System.ArgumentNullException("lastSeenDate");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[3].Value = ((string)(lastSeenDate));
+                this.Adapter.InsertCommand.Parameters[4].Value = ((string)(lastSeenDate));
             }
             if ((lastSeenLocation == null)) {
                 throw new global::System.ArgumentNullException("lastSeenLocation");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(lastSeenLocation));
+                this.Adapter.InsertCommand.Parameters[5].Value = ((string)(lastSeenLocation));
             }
             if ((Additional_Information == null)) {
                 throw new global::System.ArgumentNullException("Additional_Information");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[5].Value = ((string)(Additional_Information));
+                this.Adapter.InsertCommand.Parameters[6].Value = ((string)(Additional_Information));
             }
-            this.Adapter.UpdateCommand.Parameters[6].Value = ((int)(Original_Id));
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
+            if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.InsertCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.InsertCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.InsertCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
+        public virtual int Update(int Id, string faceToken, string firstName, string lastName, string lastSeenDate, string lastSeenLocation, string Additional_Information, int Original_Id) {
+            this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(Id));
+            if ((faceToken == null)) {
+                throw new global::System.ArgumentNullException("faceToken");
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(faceToken));
+            }
+            if ((firstName == null)) {
+                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[2].Value = ((string)(firstName));
+            }
+            if ((lastName == null)) {
+                this.Adapter.UpdateCommand.Parameters[3].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[3].Value = ((string)(lastName));
+            }
+            if ((lastSeenDate == null)) {
+                throw new global::System.ArgumentNullException("lastSeenDate");
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(lastSeenDate));
+            }
+            if ((lastSeenLocation == null)) {
+                throw new global::System.ArgumentNullException("lastSeenLocation");
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[5].Value = ((string)(lastSeenLocation));
+            }
+            if ((Additional_Information == null)) {
+                throw new global::System.ArgumentNullException("Additional_Information");
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[6].Value = ((string)(Additional_Information));
+            }
+            this.Adapter.UpdateCommand.Parameters[7].Value = ((int)(Original_Id));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -1069,8 +1163,8 @@ SELECT Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Infor
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string firstName, string lastName, string lastSeenDate, string lastSeenLocation, string Additional_Information, int Original_Id) {
-            return this.Update(Original_Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Information, Original_Id);
+        public virtual int Update(string faceToken, string firstName, string lastName, string lastSeenDate, string lastSeenLocation, string Additional_Information, int Original_Id) {
+            return this.Update(Original_Id, faceToken, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Information, Original_Id);
         }
     }
     
@@ -1165,7 +1259,7 @@ SELECT Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Infor
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        private int UpdateUpdatedRows(pstop2018DataSet1 dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+        private int UpdateUpdatedRows(pstop2018DataSet2 dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
             if ((this._missingPersonsTableAdapter != null)) {
                 global::System.Data.DataRow[] updatedRows = dataSet.MissingPersons.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
@@ -1184,7 +1278,7 @@ SELECT Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Infor
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        private int UpdateInsertedRows(pstop2018DataSet1 dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+        private int UpdateInsertedRows(pstop2018DataSet2 dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
             if ((this._missingPersonsTableAdapter != null)) {
                 global::System.Data.DataRow[] addedRows = dataSet.MissingPersons.Select(null, null, global::System.Data.DataViewRowState.Added);
@@ -1202,7 +1296,7 @@ SELECT Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Infor
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        private int UpdateDeletedRows(pstop2018DataSet1 dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
+        private int UpdateDeletedRows(pstop2018DataSet2 dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
             int result = 0;
             if ((this._missingPersonsTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.MissingPersons.Select(null, null, global::System.Data.DataViewRowState.Deleted);
@@ -1244,7 +1338,7 @@ SELECT Id, firstName, lastName, lastSeenDate, lastSeenLocation, Additional_Infor
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        public virtual int UpdateAll(pstop2018DataSet1 dataSet) {
+        public virtual int UpdateAll(pstop2018DataSet2 dataSet) {
             if ((dataSet == null)) {
                 throw new global::System.ArgumentNullException("dataSet");
             }

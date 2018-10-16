@@ -24,10 +24,11 @@ namespace WindowsForms.FormControl
 
         private void FormFaceDetection_Load(object sender, EventArgs e)
         {
+            // TODO: This line of code loads data into the 'pstop2018DataSet2.MissingPersons' table. You can move, or remove it, as needed.
+            this.missingPersonsTableAdapter.Fill(this.pstop2018DataSet2.MissingPersons);
             try
             {
-                this.missingPersonsTableAdapter.Fill(this.pstop2018DataSet1.MissingPersons);
-                this.contactPersonsTableAdapter.Fill(this.pstop2018DataSet.ContactPersons);
+                this.missingPersonsTableAdapter.Fill(this.pstop2018DataSet2.MissingPersons);
             }
             catch (System.Data.SqlClient.SqlException)
             {
@@ -131,7 +132,7 @@ namespace WindowsForms.FormControl
                 MissingPerson missingPerson = new MissingPerson(firstNameBox.Text, lastNameBox.Text, additionalInfoBox.Text, locationBox.Text, dateOfBirthPicker.Value, lastSeenOnPicker.Value, missingPersonImage);
                 ContactPerson contactPerson = new ContactPerson(contactFirstNameBox.Text, contactLastNameBox.Text, contactPhoneNumberBox.Text, contactEmailAddressBox.Text);
 
-                switch (await HelperMethods.NumberOfFaces(missingPersonImage))
+                switch (/*await HelperMethods.NumberOfFaces(missingPersonImage)*/1)
                 {
                     case -1:
                         MessageBox.Show("An error occured while analysing the image, please try again later");
@@ -142,6 +143,7 @@ namespace WindowsForms.FormControl
                         break;
                     case 1:
                         //add to db here.
+                        pstop2018DataSet2.MissingPersons.AddMissingPersonsRow(1, "0,7", missingPerson.GetFirstName(), missingPerson.GetLastName(), missingPerson.GetLastSeenDate(), missingPerson.GetLastSeenLocation(), missingPerson.GetDescription());
                         MessageBox.Show("Face should be added to DB here.");
                         break;
                     default:
@@ -181,19 +183,6 @@ namespace WindowsForms.FormControl
                 Console.WriteLine(exception);
                 throw;
             }
-        }
-
-        private void fillByToolStripButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                this.contactPersonsTableAdapter.FillBy(this.pstop2018DataSet.ContactPersons);
-            }
-            catch (System.Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
-            }
-
         }
         
         private void useWebcamPragueBox_CheckedChanged(object sender, EventArgs e)

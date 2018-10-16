@@ -22,5 +22,22 @@ namespace FaceAnalysis.Persons
             this.lastSeenDate = lastSeenDate;
             this.missingPersonImage = missingPersonImage;
         }
+
+        public string GetDescription()
+        {
+            return description;
+        }
+        public string GetLastSeenLocation()
+        {
+            return lastSeenLocation;
+        }
+        public string GetDateOfBirth()
+        {
+            return dateOfBirth.ToString();
+        }
+        public string GetLastSeenDate()
+        {
+            return lastSeenDate.ToString();
+        }
     }
 }
