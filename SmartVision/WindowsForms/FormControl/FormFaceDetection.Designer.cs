@@ -290,7 +290,6 @@
             this.cameraUrlBox.Name = "cameraUrlBox";
             this.cameraUrlBox.Size = new System.Drawing.Size(364, 23);
             this.cameraUrlBox.TabIndex = 2;
-            this.cameraUrlBox.TextChanged += new System.EventHandler(this.cameraUrlBox_TextChanged);
             // 
             // useWebcamPragueBox
             // 

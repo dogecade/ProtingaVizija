@@ -139,9 +139,8 @@ namespace WindowsForms.FormControl
                 }
 
                 Bitmap missingPersonImage = HelperMethods.ProcessImage(new Bitmap(missingPersonPictureBox.Image));
-                ContactPerson contactPerson = new ContactPerson(contactFirstNameBox.Text, contactLastNameBox.Text, contactPhoneNumberBox.Text, contactEmailAddressBox.Text);
 
-                switch (/*await HelperMethods.NumberOfFaces(missingPersonImage)*/1)
+                switch (await HelperMethods.NumberOfFaces(missingPersonImage))
                 {
                     case -1:
                         MessageBox.Show("An error occured while analysing the image, please try again later");
@@ -205,11 +204,6 @@ namespace WindowsForms.FormControl
             cameraUrlBox.Enabled = !useWebcamPragueBox.Checked;
         }
 
-        private void cameraUrlBox_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-        
         private void activateScanButton_Click(object sender, EventArgs e)
         {
             if (!cameraEnabled)
