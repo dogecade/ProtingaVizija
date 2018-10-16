@@ -23,7 +23,7 @@ namespace NotificationService
             smtpServer.EnableSsl = true;
         }
 
-        public void SendMail(string recipientMail, string subject, string body, Bitmap picture = null)
+        public void SendMail(string recipientMail, string subject, string body, byte[] pictureBytes = null)
         {
             try
             {
@@ -31,8 +31,10 @@ namespace NotificationService
                 mail.Subject = subject;
                 mail.Body = body;
 
-                if (picture != null)
+                if (pictureBytes != null)
                 {
+                    Bitmap picture = new Bitmap(new MemoryStream(pictureBytes));
+
                     var stream = new MemoryStream();
                     picture.Save(stream, ImageFormat.Jpeg);
                     stream.Position = 0;
