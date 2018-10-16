@@ -12,44 +12,44 @@ using Api.Models;
 
 namespace Api.Controllers
 {
-    public class PeopleController : ApiController
+    public class MissingPersonsController : ApiController
     {
         private pstop2018Entities1 db = new pstop2018Entities1();
 
-        // GET: api/People
-        public IQueryable<Person> GetPeople()
+        // GET: api/MissingPersons
+        public IQueryable<MissingPerson> GetMissingPersons()
         {
-            return db.People;
+            return db.MissingPersons;
         }
 
-        // GET: api/People/5
-        [ResponseType(typeof(Person))]
-        public IHttpActionResult GetPerson(int id)
+        // GET: api/MissingPersons/5
+        [ResponseType(typeof(MissingPerson))]
+        public IHttpActionResult GetMissingPerson(int id)
         {
-            Person person = db.People.Find(id);
-            if (person == null)
+            MissingPerson missingPerson = db.MissingPersons.Find(id);
+            if (missingPerson == null)
             {
                 return NotFound();
             }
 
-            return Ok(person);
+            return Ok(missingPerson);
         }
 
-        // PUT: api/People/5
+        // PUT: api/MissingPersons/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutPerson(int id, Person person)
+        public IHttpActionResult PutMissingPerson(int id, MissingPerson missingPerson)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != person.Id)
+            if (id != missingPerson.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(person).State = EntityState.Modified;
+            db.Entry(missingPerson).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PersonExists(id))
+                if (!MissingPersonExists(id))
                 {
                     return NotFound();
                 }
@@ -70,16 +70,16 @@ namespace Api.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/People
-        [ResponseType(typeof(Person))]
-        public IHttpActionResult PostPerson(Person person)
+        // POST: api/MissingPersons
+        [ResponseType(typeof(MissingPerson))]
+        public IHttpActionResult PostMissingPerson(MissingPerson missingPerson)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.People.Add(person);
+            db.MissingPersons.Add(missingPerson);
 
             try
             {
@@ -87,7 +87,7 @@ namespace Api.Controllers
             }
             catch (DbUpdateException)
             {
-                if (PersonExists(person.Id))
+                if (MissingPersonExists(missingPerson.Id))
                 {
                     return Conflict();
                 }
@@ -97,23 +97,23 @@ namespace Api.Controllers
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = person.Id }, person);
+            return CreatedAtRoute("DefaultApi", new { id = missingPerson.Id }, missingPerson);
         }
 
-        // DELETE: api/People/5
-        [ResponseType(typeof(Person))]
-        public IHttpActionResult DeletePerson(int id)
+        // DELETE: api/MissingPersons/5
+        [ResponseType(typeof(MissingPerson))]
+        public IHttpActionResult DeleteMissingPerson(int id)
         {
-            Person person = db.People.Find(id);
-            if (person == null)
+            MissingPerson missingPerson = db.MissingPersons.Find(id);
+            if (missingPerson == null)
             {
                 return NotFound();
             }
 
-            db.People.Remove(person);
+            db.MissingPersons.Remove(missingPerson);
             db.SaveChanges();
 
-            return Ok(person);
+            return Ok(missingPerson);
         }
 
         protected override void Dispose(bool disposing)
@@ -125,9 +125,9 @@ namespace Api.Controllers
             base.Dispose(disposing);
         }
 
-        private bool PersonExists(int id)
+        private bool MissingPersonExists(int id)
         {
-            return db.People.Count(e => e.Id == id) > 0;
+            return db.MissingPersons.Count(e => e.Id == id) > 0;
         }
     }
 }

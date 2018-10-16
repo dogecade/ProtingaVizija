@@ -5,7 +5,8 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="1ce5921f83ec42519a2311ba6cb68634" Name="Diagram1">
-        <EntityTypeShape EntityType="pstop2018Model.Person" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pstop2018Model.MissingPerson" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pstop2018Model.ContactPerson" Width="1.5" PointX="4" PointY="1.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

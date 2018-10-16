@@ -25,6 +25,7 @@ namespace Api.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Person> People { get; set; }
+        public virtual DbSet<MissingPerson> MissingPersons { get; set; }
+        public virtual DbSet<ContactPerson> ContactPersons { get; set; }
     }
 }
