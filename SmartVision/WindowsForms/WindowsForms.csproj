@@ -188,6 +188,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormControl\ExtraInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormControl\ExtraInfoForm.Designer.cs">
+      <DependentUpon>ExtraInfoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormControl\ImageUpload.cs" />
     <Compile Include="FormControl\FormFaceDetection.cs">
       <SubType>Form</SubType>
@@ -197,17 +203,15 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="pstop2018DataSet.Designer.cs">
+    <Compile Include="pstop2018DataSet2.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>pstop2018DataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="pstop2018DataSet11.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>pstop2018DataSet11.xsd</DependentUpon>
+      <DependentUpon>pstop2018DataSet2.xsd</DependentUpon>
     </Compile>
     <Compile Include="WebcamInput.cs" />
+    <EmbeddedResource Include="FormControl\ExtraInfoForm.resx">
+      <DependentUpon>ExtraInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormControl\FormFaceDetection.resx">
       <DependentUpon>FormFaceDetection.cs</DependentUpon>
     </EmbeddedResource>
@@ -231,27 +235,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="pstop2018DataSet.xsc">
-      <DependentUpon>pstop2018DataSet.xsd</DependentUpon>
+    <None Include="pstop2018DataSet2.xsc">
+      <DependentUpon>pstop2018DataSet2.xsd</DependentUpon>
     </None>
-    <None Include="pstop2018DataSet.xsd">
+    <None Include="pstop2018DataSet2.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>pstop2018DataSet.Designer.cs</LastGenOutput>
+      <LastGenOutput>pstop2018DataSet2.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="pstop2018DataSet.xss">
-      <DependentUpon>pstop2018DataSet.xsd</DependentUpon>
-    </None>
-    <None Include="pstop2018DataSet11.xsc">
-      <DependentUpon>pstop2018DataSet11.xsd</DependentUpon>
-    </None>
-    <None Include="pstop2018DataSet11.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>pstop2018DataSet11.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="pstop2018DataSet11.xss">
-      <DependentUpon>pstop2018DataSet11.xsd</DependentUpon>
+    <None Include="pstop2018DataSet2.xss">
+      <DependentUpon>pstop2018DataSet2.xsd</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>
