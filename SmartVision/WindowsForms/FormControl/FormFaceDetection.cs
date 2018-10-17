@@ -153,11 +153,11 @@ namespace WindowsForms.FormControl
                         //add to db here.
                         using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
                         {
-                            db.MissingPersons.Add(InitializeMissingPerson(db.MissingPersons.Max(p => p.Id)));
-                            db.ContactPersons.Add(InitializeContactPerson(db.ContactPersons.Max(p => p.Id), db.MissingPersons.Max(p => p.Id)));
+                            db.MissingPersons.Add(InitializeMissingPerson());
+                            db.ContactPersons.Add(InitializeContactPerson(db.MissingPersons.Max(p => p.Id)));
                             db.SaveChanges();
                         }
-                        
+
                         MessageBox.Show("Missing person submitted successfully.");
                         break;
                     default:
@@ -198,7 +198,7 @@ namespace WindowsForms.FormControl
                 throw;
             }
         }
-        
+
         private void useWebcamPragueBox_CheckedChanged(object sender, EventArgs e)
         {
             cameraUrlBox.Enabled = !useWebcamPragueBox.Checked;
@@ -231,10 +231,9 @@ namespace WindowsForms.FormControl
             }
         }
 
-        private Api.Models.MissingPerson InitializeMissingPerson(int Id)
+        private Api.Models.MissingPerson InitializeMissingPerson()
         {
             Api.Models.MissingPerson missingPerson = new Api.Models.MissingPerson();
-            missingPerson.Id = Id + 1;
             missingPerson.faceToken = "0.777";
             missingPerson.firstName = firstNameBox.Text;
             missingPerson.lastName = lastNameBox.Text;
@@ -244,10 +243,9 @@ namespace WindowsForms.FormControl
 
             return missingPerson;
         }
-        private Api.Models.ContactPerson InitializeContactPerson(int Id, int missingPersonId)
+        private Api.Models.ContactPerson InitializeContactPerson(int missingPersonId)
         {
             Api.Models.ContactPerson contactPerson = new Api.Models.ContactPerson();
-            contactPerson.Id = Id + 1;
             contactPerson.firstName = contactFirstNameBox.Text;
             contactPerson.lastName = contactLastNameBox.Text;
             contactPerson.missingPersonId = (missingPersonId + 1).ToString();
@@ -255,6 +253,32 @@ namespace WindowsForms.FormControl
             contactPerson.emailAddress = contactEmailAddressBox.Text;
 
             return contactPerson;
+        }
+
+        private void missingPeopleDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            ExtraInfoForm form = new ExtraInfoForm();
+            var Id = Convert.ToInt32(missingPeopleDataGrid.CurrentRow.Cells[0].Value);
+            var stringId = Id.ToString();
+
+            using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
+            {
+                Api.Models.MissingPerson missingPerson = db.MissingPersons.Find(Id);
+                Api.Models.ContactPerson contactPerson = db.ContactPersons.FirstOrDefault(f => f.missingPersonId == stringId);
+
+                form.firstNameBox.Text = missingPerson.firstName;
+                form.lastNameBox.Text = missingPerson.lastName;
+                form.lastSeenOnPicker.Text = missingPerson.lastSeenDate;
+                form.locationBox.Text = missingPerson.lastSeenLocation;
+                form.additionalInfoBox.Text = missingPerson.Additional_Information;
+                form.contactEmailAddressBox.Text = contactPerson.emailAddress;
+                form.contactPhoneNumberBox.Text = contactPerson.phoneNumber;
+                form.contactLastNameBox.Text = contactPerson.lastName;
+                form.contactFirstNameBox.Text = contactPerson.firstName;
+                //form.dateOfBirthPicker.Text = ;
+
+                form.ShowDialog();
+            }
         }
     }
 }
