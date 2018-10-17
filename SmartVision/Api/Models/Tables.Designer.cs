@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\tomas\Source\Repos\ProtingaVizija\SmartVision\Api\Models\Tables.edmx'. 
+﻿// T4 code generation is enabled for model 'D:\CODING\C#\ProtingaVizija\SmartVision\Api\Models\Tables.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.
