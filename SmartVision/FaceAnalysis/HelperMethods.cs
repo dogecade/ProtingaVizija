@@ -56,7 +56,7 @@ namespace FaceAnalysis
             catch (ArgumentNullException)
             {
                 Debug.WriteLine("Invalid API response");
-                return rectangles;
+                return null;
             }
             foreach (Face face in faceData)
                  rectangles.Add(face.face_rectangle);

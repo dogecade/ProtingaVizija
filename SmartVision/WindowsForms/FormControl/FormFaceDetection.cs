@@ -152,6 +152,8 @@ namespace WindowsForms.FormControl
                         MessageBox.Show("Missing person submitted successfully.");
                     }
                 }
+                else
+                    MessageBox.Show("Please upload a valid picture!");
             }
             catch (Exception exception)
             {
@@ -170,13 +172,14 @@ namespace WindowsForms.FormControl
             if (uploadedImage == null)
                 return;
             List<Rectangle> faceRectangles = await HelperMethods.FaceRectangleList((Bitmap)uploadedImage.Clone());
+            if (faceRectangles == null)
+            {
+                MessageBox.Show("An error occured while analysing the image, please try again later");
+                validImage = false;
+                missingPersonPictureBox.Image = null;
+            }
             switch (faceRectangles.Count)
             {
-                case -1:
-                    MessageBox.Show("An error occured while analysing the image, please try again later");
-                    validImage = false;
-                    missingPersonPictureBox.Image = null;
-                    break;
                 case 0:
                     MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
                                     "Please try another one.");
