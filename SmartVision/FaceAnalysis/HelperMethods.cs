@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using WindowsForms.FaceAnalysis;
 
 namespace FaceAnalysis
 {

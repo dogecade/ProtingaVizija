@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace WindowsForms.FaceAnalysis
+namespace FaceAnalysis
 {
     public class FrameAnalysisJSON
     {
