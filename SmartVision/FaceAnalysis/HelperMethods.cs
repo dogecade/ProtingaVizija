@@ -67,7 +67,7 @@ namespace FaceAnalysis
         /// Crops an image to a given rectangle + given percentage
         /// </summary>
         /// <param name="img">Image in bitmap form</param>
-        /// <returns>Processed image in bitmap form</returns>
+        /// <returns>Cropped image in bitmap form</returns>
         public static Bitmap CropImage(Bitmap img, Rectangle cropRectangle, int percentage)
         {
             cropRectangle.Inflate(cropRectangle.Width * percentage / 100, cropRectangle.Height * percentage / 100);

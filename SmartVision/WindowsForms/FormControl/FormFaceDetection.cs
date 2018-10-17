@@ -139,7 +139,7 @@ namespace WindowsForms.FormControl
                 }
 
                 //this might be needed for a picture upload in the future.
-                Bitmap missingPersonImage = HelperMethods.ProcessImage(new Bitmap(missingPersonPictureBox.Image));
+                Bitmap missingPersonImage = new Bitmap(missingPersonPictureBox.Image);
 
                 if (validImage)
                 {
@@ -188,7 +188,6 @@ namespace WindowsForms.FormControl
                     break;
                 case 1:
                     validImage = true;
-                    //missingPersonPictureBox.Image = uploadedImage;
                     missingPersonPictureBox.Image = HelperMethods.CropImage(uploadedImage, faceRectangles[0], 25);
                     break;
                 default:
