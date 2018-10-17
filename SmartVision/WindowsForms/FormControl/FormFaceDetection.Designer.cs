@@ -113,7 +113,7 @@
             this.homePanel.Controls.Add(this.missingPeopleDataGrid);
             this.homePanel.Controls.Add(this.label3);
             this.homePanel.Controls.Add(this.homeLabel);
-            this.homePanel.Location = new System.Drawing.Point(137, 163);
+            this.homePanel.Location = new System.Drawing.Point(129, 163);
             this.homePanel.Margin = new System.Windows.Forms.Padding(2);
             this.homePanel.Name = "homePanel";
             this.homePanel.Size = new System.Drawing.Size(539, 460);
@@ -258,7 +258,7 @@
             this.scanPanel.Controls.Add(this.cameraUrlBox);
             this.scanPanel.Controls.Add(this.useWebcamPragueBox);
             this.scanPanel.Controls.Add(this.scanPictureBox);
-            this.scanPanel.Location = new System.Drawing.Point(137, 163);
+            this.scanPanel.Location = new System.Drawing.Point(129, 163);
             this.scanPanel.Margin = new System.Windows.Forms.Padding(2);
             this.scanPanel.Name = "scanPanel";
             this.scanPanel.Size = new System.Drawing.Size(539, 460);
@@ -346,7 +346,7 @@
             this.addPersonPanel.Controls.Add(this.LastNameLabel);
             this.addPersonPanel.Controls.Add(this.firstNameLabel);
             this.addPersonPanel.Controls.Add(this.addPersonLabel);
-            this.addPersonPanel.Location = new System.Drawing.Point(137, 163);
+            this.addPersonPanel.Location = new System.Drawing.Point(129, 163);
             this.addPersonPanel.Margin = new System.Windows.Forms.Padding(2);
             this.addPersonPanel.Name = "addPersonPanel";
             this.addPersonPanel.Size = new System.Drawing.Size(539, 460);
@@ -946,7 +946,7 @@
             this.buttonsPanel.Controls.Add(this.addPersonButton);
             this.buttonsPanel.Controls.Add(this.scanButton);
             this.buttonsPanel.Controls.Add(this.homeButton);
-            this.buttonsPanel.Location = new System.Drawing.Point(-27, 34);
+            this.buttonsPanel.Location = new System.Drawing.Point(-35, 34);
             this.buttonsPanel.Margin = new System.Windows.Forms.Padding(2);
             this.buttonsPanel.Name = "buttonsPanel";
             this.buttonsPanel.Size = new System.Drawing.Size(862, 103);
@@ -969,7 +969,7 @@
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(930, 599);
+            this.ClientSize = new System.Drawing.Size(947, 599);
             this.Controls.Add(this.scanPanel);
             this.Controls.Add(this.homePanel);
             this.Controls.Add(this.buttonsPanel);
