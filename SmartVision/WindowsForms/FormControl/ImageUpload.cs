@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace WindowsForms.FormControl
@@ -7,10 +8,10 @@ namespace WindowsForms.FormControl
     {
         private const string fileFilter = "jpg files(*.jpg)|*.jpg| PNG files(*.png)|*.png| All Files(*.*)|*.*";
 
-        public static void UploadImage()
+        public static Bitmap UploadImage()
         {
-            var form = Form.ActiveForm as FormFaceDetection;
-            form.missingPersonPictureBox.ImageLocation = GetImagePath();
+            string path = GetImagePath();
+            return path != null && path != "" ? new Bitmap(Image.FromFile(path)): null;
         }
 
         private static string GetImagePath()

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using FaceAnalysis;
 using FaceAnalysis.Persons;
 using System.Linq;
-
+using System.Collections.Generic;
 
 namespace WindowsForms.FormControl
 {
@@ -15,6 +15,7 @@ namespace WindowsForms.FormControl
         private const string disabledButtonText = "Disable scan";
         private Color underButtonColor = Color.LightSteelBlue;
         private bool cameraEnabled = false;
+        private bool validImage = false;
         public static FormFaceDetection Current { get; private set; }
 
         public FormFaceDetection()
@@ -96,7 +97,7 @@ namespace WindowsForms.FormControl
         /// Gets information about the missing person
         /// Author: Tomas Drasutis
         /// </summary>
-        private async void addMissingPersonButton_Click(object sender, EventArgs e)
+        private void addMissingPersonButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -137,32 +138,19 @@ namespace WindowsForms.FormControl
                     return;
                 }
 
+                //this might be needed for a picture upload in the future.
                 Bitmap missingPersonImage = HelperMethods.ProcessImage(new Bitmap(missingPersonPictureBox.Image));
 
-                switch (await HelperMethods.NumberOfFaces(missingPersonImage))
+                if (validImage)
                 {
-                    case -1:
-                        MessageBox.Show("An error occured while analysing the image, please try again later");
-                        break;
-                    case 0:
-                        MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
-                                        "Please try another one.");
-                        break;
-                    case 1:
-                        //add to db here.
-                        using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
-                        {
-                            db.MissingPersons.Add(InitializeMissingPerson());
-                            db.ContactPersons.Add(InitializeContactPerson(db.MissingPersons.Max(p => p.Id)));
-                            db.SaveChanges();
-                        }
-
+                    //add to db here.
+                    using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
+                    {
+                        db.MissingPersons.Add(InitializeMissingPerson());
+                        db.ContactPersons.Add(InitializeContactPerson(db.MissingPersons.Max(p => p.Id)));
+                        db.SaveChanges();
                         MessageBox.Show("Missing person submitted successfully.");
-                        break;
-                    default:
-                        MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +
-                                        "Please try another one.");
-                        break;
+                    }
                 }
             }
             catch (Exception exception)
@@ -176,9 +164,37 @@ namespace WindowsForms.FormControl
         /// Uploads the picture
         /// Author: Tomas Drasutis
         /// </summary>
-        private void uploadButton_Click(object sender, EventArgs e)
+        private async void uploadButton_Click(object sender, EventArgs e)
         {
-            ImageUpload.UploadImage();
+            Bitmap uploadedImage = ImageUpload.UploadImage();
+            if (uploadedImage == null)
+                return;
+            List<Rectangle> faceRectangles = await HelperMethods.FaceRectangleList((Bitmap)uploadedImage.Clone());
+            switch (faceRectangles.Count)
+            {
+                case -1:
+                    MessageBox.Show("An error occured while analysing the image, please try again later");
+                    validImage = false;
+                    missingPersonPictureBox.Image = null;
+                    break;
+                case 0:
+                    MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
+                                    "Please try another one.");
+                    validImage = false;
+                    missingPersonPictureBox.Image = null;
+                    break;
+                case 1:
+                    validImage = true;
+                    //missingPersonPictureBox.Image = uploadedImage;
+                    missingPersonPictureBox.Image = HelperMethods.CropImage(uploadedImage, faceRectangles[0], 25);
+                    break;
+                default:
+                    MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +
+                                    "Please try another one.");
+                    validImage = false;
+                    missingPersonPictureBox.Image = null;
+                    break;
+            }
         }
 
         /// <summary>
