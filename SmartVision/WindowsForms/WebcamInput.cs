@@ -72,7 +72,7 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Gets frame from input and adds to buffer.
+        /// Gets frame from processor, draws face rectangles on it.
         /// Author: Arnas Danaitis
         /// </summary>
         private static async void GetFrameAsync(object sender, EventArgs e)
