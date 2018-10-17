@@ -20,6 +20,8 @@
     <Property Name="lastSeenDate" Type="nvarchar(max)" Nullable="false" />
     <Property Name="lastSeenLocation" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Additional_Information" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="dateOfBirth" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="faceImg" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="ContactPersons">
     <Key>
@@ -47,6 +49,8 @@
           <Property Name="lastSeenDate" Type="String" Nullable="false" />
           <Property Name="lastSeenLocation" Type="String" Nullable="false" />
           <Property Name="Additional_Information" Type="String" Nullable="false" />
+          <Property Name="dateOfBirth" Type="String" Nullable="false" />
+          <Property Name="faceImg" Type="String" Nullable="false" />
         </EntityType>
         <EntityContainer Name="pstop2018Entities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="MissingPersons" EntityType="pstop2018Model.MissingPerson" />
@@ -79,6 +83,8 @@
           <ScalarProperty Name="lastSeenDate" ColumnName="lastSeenDate" />
           <ScalarProperty Name="lastSeenLocation" ColumnName="lastSeenLocation" />
           <ScalarProperty Name="Additional_Information" ColumnName="Additional_Information" />
+          <ScalarProperty Name="dateOfBirth" ColumnName="dateOfBirth" />
+          <ScalarProperty Name="faceImg" ColumnName="faceImg" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

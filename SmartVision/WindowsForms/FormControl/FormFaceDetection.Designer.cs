@@ -113,7 +113,7 @@
             this.homePanel.Controls.Add(this.missingPeopleDataGrid);
             this.homePanel.Controls.Add(this.label3);
             this.homePanel.Controls.Add(this.homeLabel);
-            this.homePanel.Location = new System.Drawing.Point(137, 163);
+            this.homePanel.Location = new System.Drawing.Point(128, 163);
             this.homePanel.Margin = new System.Windows.Forms.Padding(2);
             this.homePanel.Name = "homePanel";
             this.homePanel.Size = new System.Drawing.Size(539, 460);
@@ -122,11 +122,11 @@
             // youCanHelpLabel
             // 
             this.youCanHelpLabel.AutoSize = true;
-            this.youCanHelpLabel.Font = new System.Drawing.Font("Century Gothic", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
+            this.youCanHelpLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
             this.youCanHelpLabel.Location = new System.Drawing.Point(121, 414);
             this.youCanHelpLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.youCanHelpLabel.Name = "youCanHelpLabel";
-            this.youCanHelpLabel.Size = new System.Drawing.Size(297, 25);
+            this.youCanHelpLabel.Size = new System.Drawing.Size(271, 26);
             this.youCanHelpLabel.TabIndex = 9;
             this.youCanHelpLabel.Text = "You can help us find them!";
             // 
@@ -163,7 +163,7 @@
             this.idDataGridViewTextBoxColumn.HeaderText = "Id";
             this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
             this.idDataGridViewTextBoxColumn.ReadOnly = true;
-            this.idDataGridViewTextBoxColumn.Width = 44;
+            this.idDataGridViewTextBoxColumn.Width = 41;
             // 
             // firstNameDataGridViewTextBoxColumn
             // 
@@ -171,7 +171,7 @@
             this.firstNameDataGridViewTextBoxColumn.HeaderText = "firstName";
             this.firstNameDataGridViewTextBoxColumn.Name = "firstNameDataGridViewTextBoxColumn";
             this.firstNameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.firstNameDataGridViewTextBoxColumn.Width = 82;
+            this.firstNameDataGridViewTextBoxColumn.Width = 76;
             // 
             // lastNameDataGridViewTextBoxColumn
             // 
@@ -179,7 +179,7 @@
             this.lastNameDataGridViewTextBoxColumn.HeaderText = "lastName";
             this.lastNameDataGridViewTextBoxColumn.Name = "lastNameDataGridViewTextBoxColumn";
             this.lastNameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.lastNameDataGridViewTextBoxColumn.Width = 84;
+            this.lastNameDataGridViewTextBoxColumn.Width = 76;
             // 
             // lastSeenDateDataGridViewTextBoxColumn
             // 
@@ -187,7 +187,7 @@
             this.lastSeenDateDataGridViewTextBoxColumn.HeaderText = "lastSeenDate";
             this.lastSeenDateDataGridViewTextBoxColumn.Name = "lastSeenDateDataGridViewTextBoxColumn";
             this.lastSeenDateDataGridViewTextBoxColumn.ReadOnly = true;
-            this.lastSeenDateDataGridViewTextBoxColumn.Width = 105;
+            this.lastSeenDateDataGridViewTextBoxColumn.Width = 96;
             // 
             // lastSeenLocationDataGridViewTextBoxColumn
             // 
@@ -195,7 +195,7 @@
             this.lastSeenLocationDataGridViewTextBoxColumn.HeaderText = "lastSeenLocation";
             this.lastSeenLocationDataGridViewTextBoxColumn.Name = "lastSeenLocationDataGridViewTextBoxColumn";
             this.lastSeenLocationDataGridViewTextBoxColumn.ReadOnly = true;
-            this.lastSeenLocationDataGridViewTextBoxColumn.Width = 125;
+            this.lastSeenLocationDataGridViewTextBoxColumn.Width = 114;
             // 
             // additionalInformationDataGridViewTextBoxColumn
             // 
@@ -203,7 +203,7 @@
             this.additionalInformationDataGridViewTextBoxColumn.HeaderText = "Additional_Information";
             this.additionalInformationDataGridViewTextBoxColumn.Name = "additionalInformationDataGridViewTextBoxColumn";
             this.additionalInformationDataGridViewTextBoxColumn.ReadOnly = true;
-            this.additionalInformationDataGridViewTextBoxColumn.Width = 155;
+            this.additionalInformationDataGridViewTextBoxColumn.Width = 136;
             // 
             // missingPersonsBindingSource
             // 
@@ -218,11 +218,11 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
             this.label3.Location = new System.Drawing.Point(56, 50);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(202, 21);
+            this.label3.Size = new System.Drawing.Size(185, 20);
             this.label3.TabIndex = 7;
             this.label3.Text = "Currently missing people:";
             // 
@@ -258,7 +258,7 @@
             this.scanPanel.Controls.Add(this.cameraUrlBox);
             this.scanPanel.Controls.Add(this.useWebcamPragueBox);
             this.scanPanel.Controls.Add(this.scanPictureBox);
-            this.scanPanel.Location = new System.Drawing.Point(137, 163);
+            this.scanPanel.Location = new System.Drawing.Point(128, 163);
             this.scanPanel.Margin = new System.Windows.Forms.Padding(2);
             this.scanPanel.Name = "scanPanel";
             this.scanPanel.Size = new System.Drawing.Size(539, 460);
@@ -270,7 +270,7 @@
             this.cameraUrlLabel.BackColor = System.Drawing.Color.Transparent;
             this.cameraUrlLabel.Location = new System.Drawing.Point(121, 25);
             this.cameraUrlLabel.Name = "cameraUrlLabel";
-            this.cameraUrlLabel.Size = new System.Drawing.Size(87, 16);
+            this.cameraUrlLabel.Size = new System.Drawing.Size(80, 13);
             this.cameraUrlLabel.TabIndex = 4;
             this.cameraUrlLabel.Text = "IP camera URL";
             // 
@@ -289,7 +289,7 @@
             this.cameraUrlBox.Enabled = false;
             this.cameraUrlBox.Location = new System.Drawing.Point(122, 5);
             this.cameraUrlBox.Name = "cameraUrlBox";
-            this.cameraUrlBox.Size = new System.Drawing.Size(292, 20);
+            this.cameraUrlBox.Size = new System.Drawing.Size(292, 19);
             this.cameraUrlBox.TabIndex = 2;
             this.cameraUrlBox.TextChanged += new System.EventHandler(this.cameraUrlBox_TextChanged);
             // 
@@ -300,7 +300,7 @@
             this.useWebcamPragueBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.useWebcamPragueBox.Location = new System.Drawing.Point(7, 6);
             this.useWebcamPragueBox.Name = "useWebcamPragueBox";
-            this.useWebcamPragueBox.Size = new System.Drawing.Size(99, 20);
+            this.useWebcamPragueBox.Size = new System.Drawing.Size(88, 17);
             this.useWebcamPragueBox.TabIndex = 1;
             this.useWebcamPragueBox.Text = "Use webcam";
             this.useWebcamPragueBox.UseVisualStyleBackColor = true;
@@ -346,7 +346,7 @@
             this.addPersonPanel.Controls.Add(this.LastNameLabel);
             this.addPersonPanel.Controls.Add(this.firstNameLabel);
             this.addPersonPanel.Controls.Add(this.addPersonLabel);
-            this.addPersonPanel.Location = new System.Drawing.Point(137, 163);
+            this.addPersonPanel.Location = new System.Drawing.Point(128, 163);
             this.addPersonPanel.Margin = new System.Windows.Forms.Padding(2);
             this.addPersonPanel.Name = "addPersonPanel";
             this.addPersonPanel.Size = new System.Drawing.Size(539, 460);
@@ -404,7 +404,7 @@
             this.contactEmailAddressLabel.Location = new System.Drawing.Point(42, 399);
             this.contactEmailAddressLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.contactEmailAddressLabel.Name = "contactEmailAddressLabel";
-            this.contactEmailAddressLabel.Size = new System.Drawing.Size(81, 16);
+            this.contactEmailAddressLabel.Size = new System.Drawing.Size(72, 13);
             this.contactEmailAddressLabel.TabIndex = 24;
             this.contactEmailAddressLabel.Text = "Email address";
             // 
@@ -447,7 +447,7 @@
             this.contactPhoneNumberLabel.Location = new System.Drawing.Point(42, 373);
             this.contactPhoneNumberLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.contactPhoneNumberLabel.Name = "contactPhoneNumberLabel";
-            this.contactPhoneNumberLabel.Size = new System.Drawing.Size(88, 16);
+            this.contactPhoneNumberLabel.Size = new System.Drawing.Size(76, 13);
             this.contactPhoneNumberLabel.TabIndex = 22;
             this.contactPhoneNumberLabel.Text = "Phone number";
             // 
@@ -490,7 +490,7 @@
             this.contactLastNameLabel.Location = new System.Drawing.Point(42, 346);
             this.contactLastNameLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.contactLastNameLabel.Name = "contactLastNameLabel";
-            this.contactLastNameLabel.Size = new System.Drawing.Size(64, 16);
+            this.contactLastNameLabel.Size = new System.Drawing.Size(56, 13);
             this.contactLastNameLabel.TabIndex = 20;
             this.contactLastNameLabel.Text = "Last name";
             // 
@@ -533,7 +533,7 @@
             this.contactFirstNameLabel.Location = new System.Drawing.Point(42, 320);
             this.contactFirstNameLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.contactFirstNameLabel.Name = "contactFirstNameLabel";
-            this.contactFirstNameLabel.Size = new System.Drawing.Size(61, 16);
+            this.contactFirstNameLabel.Size = new System.Drawing.Size(55, 13);
             this.contactFirstNameLabel.TabIndex = 18;
             this.contactFirstNameLabel.Text = "First name";
             // 
@@ -544,7 +544,7 @@
             this.label1.Location = new System.Drawing.Point(42, 152);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(104, 16);
+            this.label1.Size = new System.Drawing.Size(93, 13);
             this.label1.TabIndex = 16;
             this.label1.Text = "Last seen location";
             // 
@@ -587,7 +587,7 @@
             this.lastSeenOn.Location = new System.Drawing.Point(42, 126);
             this.lastSeenOn.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lastSeenOn.Name = "lastSeenOn";
-            this.lastSeenOn.Size = new System.Drawing.Size(74, 16);
+            this.lastSeenOn.Size = new System.Drawing.Size(68, 13);
             this.lastSeenOn.TabIndex = 14;
             this.lastSeenOn.Text = "Last seen on";
             // 
@@ -596,7 +596,7 @@
             this.lastSeenOnPicker.Location = new System.Drawing.Point(148, 126);
             this.lastSeenOnPicker.Margin = new System.Windows.Forms.Padding(2);
             this.lastSeenOnPicker.Name = "lastSeenOnPicker";
-            this.lastSeenOnPicker.Size = new System.Drawing.Size(165, 20);
+            this.lastSeenOnPicker.Size = new System.Drawing.Size(165, 19);
             this.lastSeenOnPicker.TabIndex = 13;
             // 
             // uploadButton
@@ -659,7 +659,7 @@
             this.dateOfBirthPicker.Location = new System.Drawing.Point(148, 99);
             this.dateOfBirthPicker.Margin = new System.Windows.Forms.Padding(2);
             this.dateOfBirthPicker.Name = "dateOfBirthPicker";
-            this.dateOfBirthPicker.Size = new System.Drawing.Size(165, 20);
+            this.dateOfBirthPicker.Size = new System.Drawing.Size(165, 19);
             this.dateOfBirthPicker.TabIndex = 10;
             // 
             // addMissingPersonButton
@@ -679,7 +679,7 @@
             this.adInfoLabel.Location = new System.Drawing.Point(42, 178);
             this.adInfoLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.adInfoLabel.Name = "adInfoLabel";
-            this.adInfoLabel.Size = new System.Drawing.Size(68, 32);
+            this.adInfoLabel.Size = new System.Drawing.Size(58, 26);
             this.adInfoLabel.TabIndex = 7;
             this.adInfoLabel.Text = "Additional \r\ninformation";
             // 
@@ -754,7 +754,7 @@
             this.dateOfBirthLabel.Location = new System.Drawing.Point(42, 99);
             this.dateOfBirthLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.dateOfBirthLabel.Name = "dateOfBirthLabel";
-            this.dateOfBirthLabel.Size = new System.Drawing.Size(75, 16);
+            this.dateOfBirthLabel.Size = new System.Drawing.Size(65, 13);
             this.dateOfBirthLabel.TabIndex = 3;
             this.dateOfBirthLabel.Text = "Date of birth";
             // 
@@ -765,7 +765,7 @@
             this.LastNameLabel.Location = new System.Drawing.Point(42, 73);
             this.LastNameLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LastNameLabel.Name = "LastNameLabel";
-            this.LastNameLabel.Size = new System.Drawing.Size(64, 16);
+            this.LastNameLabel.Size = new System.Drawing.Size(56, 13);
             this.LastNameLabel.TabIndex = 2;
             this.LastNameLabel.Text = "Last name";
             // 
@@ -777,7 +777,7 @@
             this.firstNameLabel.Location = new System.Drawing.Point(42, 46);
             this.firstNameLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.firstNameLabel.Name = "firstNameLabel";
-            this.firstNameLabel.Size = new System.Drawing.Size(61, 16);
+            this.firstNameLabel.Size = new System.Drawing.Size(55, 13);
             this.firstNameLabel.TabIndex = 1;
             this.firstNameLabel.Text = "First name";
             // 
@@ -946,7 +946,7 @@
             this.buttonsPanel.Controls.Add(this.addPersonButton);
             this.buttonsPanel.Controls.Add(this.scanButton);
             this.buttonsPanel.Controls.Add(this.homeButton);
-            this.buttonsPanel.Location = new System.Drawing.Point(-27, 34);
+            this.buttonsPanel.Location = new System.Drawing.Point(-36, 34);
             this.buttonsPanel.Margin = new System.Windows.Forms.Padding(2);
             this.buttonsPanel.Name = "buttonsPanel";
             this.buttonsPanel.Size = new System.Drawing.Size(862, 103);
@@ -974,7 +974,7 @@
             this.Controls.Add(this.homePanel);
             this.Controls.Add(this.buttonsPanel);
             this.Controls.Add(this.addPersonPanel);
-            this.Font = new System.Drawing.Font("Century Gothic", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
