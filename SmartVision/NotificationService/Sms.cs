@@ -7,7 +7,7 @@ namespace NotificationService
 {
     public class Sms
     {
-        public void SendSms(string toNumber, string body)
+        public static void SendSms(string toNumber, string body)
         {
             TwilioClient.Init(Credentials.smsAccountSid, Credentials.smsAuthToken);
 

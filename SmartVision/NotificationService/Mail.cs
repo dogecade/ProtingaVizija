@@ -9,10 +9,10 @@ namespace NotificationService
 {
     public class Mail
     {
-        private readonly MailMessage mail;
-        private readonly SmtpClient smtpServer;
+        private static readonly MailMessage mail;
+        private static readonly SmtpClient smtpServer;
 
-        public Mail()
+        static Mail()
         {
             mail = new MailMessage();
             mail.From = new MailAddress(Credentials.mailAddress);
@@ -29,8 +29,9 @@ namespace NotificationService
         /// <param name="recipientMail">Recipient's mail</param>
         /// <param name="subject">Subject of the mail</param>
         /// <param name="body">Message</param>
-        /// <param name="pictureBytes">Picture to send (optional)</param>
-        public void SendMail(string recipientMail, string subject, string body, byte[] pictureBytes = null)
+        /// <param name="pictureBytes">Picture to send in byte format(optional)</param>
+        /// <returns>If message is sent, returns a guid. Else, returns null</returns>
+        public static string SendMail(string recipientMail, string subject, string body, byte[] pictureBytes = null)
         {
             try
             {
@@ -50,10 +51,13 @@ namespace NotificationService
                 }
 
                 smtpServer.Send(mail);
+
+                return Guid.NewGuid().ToString();
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e);
+                return null;
             }
         }
     }
