@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace JSON
+namespace FaceAnalysis
 {
     public class RemoveFaceJSON
     {

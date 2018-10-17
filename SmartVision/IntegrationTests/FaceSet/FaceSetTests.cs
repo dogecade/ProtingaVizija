@@ -5,10 +5,6 @@ using Newtonsoft.Json;
 using System;
 using System.Drawing;
 using System.Net.Http;
-using WindowsForms.FaceAnalysis;
-using WindowsForms.FaceAnalysis.JSON;
-using FaceAnalysis.JSON;
-
 namespace UnitTests
 {
     [TestClass]
