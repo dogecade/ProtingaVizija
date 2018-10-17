@@ -234,7 +234,6 @@ namespace WindowsForms.FormControl
         private Api.Models.MissingPerson InitializeMissingPerson()
         {
             Api.Models.MissingPerson missingPerson = new Api.Models.MissingPerson();
-            missingPerson.faceToken = "0.777";
             missingPerson.firstName = firstNameBox.Text;
             missingPerson.lastName = lastNameBox.Text;
             missingPerson.lastSeenDate = lastSeenOnPicker.Value.ToString();
