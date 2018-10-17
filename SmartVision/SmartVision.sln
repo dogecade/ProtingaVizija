@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "Integra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceAnalysis", "FaceAnalysis\FaceAnalysis.csproj", "{C9DD5EB7-25CD-4F3A-901A-0F20A7F8479D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "NotificationService\NotificationService.csproj", "{E0654466-0E6F-4A56-8972-AF3D1666D780}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,14 @@ Global
 		{C9DD5EB7-25CD-4F3A-901A-0F20A7F8479D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C9DD5EB7-25CD-4F3A-901A-0F20A7F8479D}.Release|x86.ActiveCfg = Release|x86
 		{C9DD5EB7-25CD-4F3A-901A-0F20A7F8479D}.Release|x86.Build.0 = Release|x86
+		{E0654466-0E6F-4A56-8972-AF3D1666D780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0654466-0E6F-4A56-8972-AF3D1666D780}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0654466-0E6F-4A56-8972-AF3D1666D780}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E0654466-0E6F-4A56-8972-AF3D1666D780}.Debug|x86.Build.0 = Debug|Any CPU
+		{E0654466-0E6F-4A56-8972-AF3D1666D780}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0654466-0E6F-4A56-8972-AF3D1666D780}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0654466-0E6F-4A56-8972-AF3D1666D780}.Release|x86.ActiveCfg = Release|Any CPU
+		{E0654466-0E6F-4A56-8972-AF3D1666D780}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
