@@ -15,14 +15,21 @@ namespace NotificationService
         public Mail()
         {
             mail = new MailMessage();
-            mail.From = new MailAddress(MailCredentials.mailAddress);
+            mail.From = new MailAddress(Credentials.mailAddress);
 
             smtpServer = new SmtpClient("smtp.gmail.com");
-            smtpServer.Credentials = new System.Net.NetworkCredential(MailCredentials.mailAddress, MailCredentials.mailPassword);
+            smtpServer.Credentials = new System.Net.NetworkCredential(Credentials.mailAddress, Credentials.mailPassword);
             smtpServer.Port = 587;
             smtpServer.EnableSsl = true;
         }
 
+        /// <summary>
+        /// Sends a mail message
+        /// </summary>
+        /// <param name="recipientMail">Recipient's mail</param>
+        /// <param name="subject">Subject of the mail</param>
+        /// <param name="body">Message</param>
+        /// <param name="pictureBytes">Picture to send (optional)</param>
         public void SendMail(string recipientMail, string subject, string body, byte[] pictureBytes = null)
         {
             try
