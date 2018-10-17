@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Net.Mail;
 
 namespace NotificationService
@@ -21,13 +23,24 @@ namespace NotificationService
             smtpServer.EnableSsl = true;
         }
 
-        public void SendMail(string recipientMail, string subject, string body)
+        public void SendMail(string recipientMail, string subject, string body, byte[] pictureBytes = null)
         {
             try
             {
                 mail.To.Add(recipientMail);
                 mail.Subject = subject;
                 mail.Body = body;
+
+                if (pictureBytes != null)
+                {
+                    Bitmap picture = new Bitmap(new MemoryStream(pictureBytes));
+
+                    var stream = new MemoryStream();
+                    picture.Save(stream, ImageFormat.Jpeg);
+                    stream.Position = 0;
+
+                    mail.Attachments.Add(new Attachment(stream, "MissingPersonImage.jpeg"));
+                }
 
                 smtpServer.Send(mail);
             }
