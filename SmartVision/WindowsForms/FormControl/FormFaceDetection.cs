@@ -168,15 +168,15 @@ namespace WindowsForms.FormControl
         /// </summary>
         private async void uploadButton_Click(object sender, EventArgs e)
         {
-            Bitmap uploadedImage = ImageUpload.UploadImage();
+            Bitmap uploadedImage = HelperMethods.ProcessImage(ImageUpload.UploadImage());
             if (uploadedImage == null)
                 return;
             List<Rectangle> faceRectangles = await FaceProcessor.ProcessFrame((Bitmap)uploadedImage.Clone());
+            missingPersonPictureBox.Image?.Dispose();
             if (faceRectangles == null)
             {
                 MessageBox.Show("An error occured while analysing the image, please try again later");
                 validImage = false;
-                missingPersonPictureBox.Image = null;
                 return;
             }
             switch (faceRectangles.Count)
@@ -185,7 +185,7 @@ namespace WindowsForms.FormControl
                     MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
                                     "Please try another one.");
                     validImage = false;
-                    missingPersonPictureBox.Image = null;
+                    uploadedImage.Dispose();                  
                     break;
                 case 1:
                     validImage = true;
@@ -195,7 +195,7 @@ namespace WindowsForms.FormControl
                     MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +
                                     "Please try another one.");
                     validImage = false;
-                    missingPersonPictureBox.Image = null;
+                    uploadedImage.Dispose();
                     break;
             }
         }

@@ -84,8 +84,7 @@ namespace WindowsForms
             lock (faceRectangles)
                 foreach (Rectangle face in faceRectangles)
                     imageFrame.Draw(face, new Bgr(Color.Red), 1);
-            if (lastImage != null)
-                lastImage.Dispose();
+            lastImage?.Dispose();
             lastImage = imageFrame;
         }
 
