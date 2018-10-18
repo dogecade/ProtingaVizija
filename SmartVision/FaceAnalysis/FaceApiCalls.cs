@@ -14,6 +14,7 @@ namespace FaceAnalysis
         private readonly string searchUrl = rootUrl + "search";
         private readonly string removeUrl = rootUrl + "faceset/removeface";
         private readonly string getDetailUrl = rootUrl + "faceset/getdetail";
+        private readonly string deleteFacesetUrl = rootUrl + "faceset/delete";
 
         private readonly HttpClientWrapper httpClientWrapper;
 
@@ -154,6 +155,27 @@ namespace FaceAnalysis
                 formData.Add(facesetTokenContent, "faceset_token");
 
                 return await httpClientWrapper.Post(getDetailUrl, formData);
+            }
+        }
+
+        /// <summary>
+        /// Deletes the faceset
+        /// </summary>
+        /// <param name="facesetToken">Faceset token</param>
+        /// <returns>DeleteFacesetJSON</returns>
+        public async Task<string> DeleteFaceset(string facesetToken)
+        {
+            HttpContent keyContent = new StringContent(Keys.apiKey);
+            HttpContent secretContent = new StringContent(Keys.apiSecret);
+            HttpContent facesetTokenContent = new StringContent(facesetToken);
+
+            using (var formData = new MultipartFormDataContent())
+            {
+                formData.Add(keyContent, "api_key");
+                formData.Add(secretContent, "api_secret");
+                formData.Add(facesetTokenContent, "faceset_token");
+
+                return await httpClientWrapper.Post(deleteFacesetUrl, formData);
             }
         }
     }
