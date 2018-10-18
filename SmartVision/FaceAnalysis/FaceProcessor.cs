@@ -26,7 +26,10 @@ namespace FaceAnalysis
 
         }
 
-
+        /// <summary>
+        /// Gets frame camera feed
+        /// </summary>
+        /// <returns>Image frame (async)</returns>
         public async Task<Image<Bgr, byte>> GetCaptureFrame()
         {
             Image<Bgr, byte> imageFrame = null;
@@ -44,11 +47,19 @@ namespace FaceAnalysis
             return imageFrame;
         }
 
+        /// <summary>
+        /// Gets whether the buffer still has a frame to process.
+        /// </summary>
+        /// <returns>Buffer has frame (async)</returns>
         public async Task<bool> HasFrames()
         {
             return await buffer.OutputAvailableAsync();
         }
 
+        /// <summary>
+        /// Analyses the frame currently in buffer (makes an API call, etc)
+        /// </summary>
+        /// <returns>List of face rectangles from frame</returns>
         public async Task<List<Rectangle>> ProcessFrame()
         {
             byte[] frameToProcess = await buffer.ReceiveAsync();
