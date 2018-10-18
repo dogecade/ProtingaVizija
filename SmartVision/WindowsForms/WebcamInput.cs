@@ -84,19 +84,18 @@ namespace WindowsForms
             lock (faceRectangles)
                 foreach (Rectangle face in faceRectangles)
                     imageFrame.Draw(face, new Bgr(Color.Red), 1);
-            if (lastImage != null)
-                lastImage.Dispose();
+            lastImage?.Dispose();
             lastImage = imageFrame;
         }
 
         /// <summary>
-        /// Processes frames from the buffer.
+        /// Gets list of faces from processor.
         /// Author: Arnas Danaitis
         /// </summary>
         private static async void ProcessFrameAsync()
         {
             while (await processor.HasFrames() && !tokenSource.IsCancellationRequested)
-                faceRectangles = await processor.ProcessFrame();
+                faceRectangles = processor.GetRectanglesFromFrame().Result ?? faceRectangles;
             lock (faceRectangles)
                 faceRectangles.Clear();
         }

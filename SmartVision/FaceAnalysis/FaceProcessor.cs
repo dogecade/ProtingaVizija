@@ -17,7 +17,7 @@ namespace FaceAnalysis
 
         private VideoCapture capture;
         private readonly BroadcastBlock<byte[]> buffer = new BroadcastBlock<byte[]>(item => item);
-        private readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
+        private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
 
 
         public FaceProcessor(VideoCapture capture)
@@ -60,23 +60,41 @@ namespace FaceAnalysis
         /// Analyses the frame currently in buffer (makes an API call, etc)
         /// </summary>
         /// <returns>List of face rectangles from frame</returns>
-        public async Task<List<Rectangle>> ProcessFrame()
+        public async Task<List<Rectangle>> GetRectanglesFromFrame()
         {
-            byte[] frameToProcess = await buffer.ReceiveAsync();
-            List<Rectangle> faceRectangles = new List<Rectangle>();
+            var result = await ProcessFrame(await buffer.ReceiveAsync());
+            return result == null ? 
+                null : (from face in result.faces select (Rectangle)face.face_rectangle).ToList();
+        }
+
+        /// <summary>
+        /// Analyses the given byte array
+        /// </summary>
+        /// <returns>JSON response, null if invalid</returns>
+        public static async Task<FrameAnalysisJSON> ProcessFrame(byte[] frameToProcess)
+        {
             Debug.WriteLine("Starting processing of frame");
             try
             {
-                var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(faceApiCalls.AnalyzeFrame(frameToProcess).Result);
+                var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(await faceApiCalls.AnalyzeFrame(frameToProcess));
                 Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
-                foreach (Face face in result.faces)
-                    faceRectangles.Add(face.face_rectangle);
+                return result;
             }
             catch (ArgumentNullException)
             {
                 Debug.WriteLine("Invalid response received from API");
+                return null;
             }
-            return faceRectangles;
+            
+        }
+
+        /// <summary>
+        /// Converts the Bitmap to byte[] and calls ProcessFrame(byte[])
+        /// </summary>
+        /// <returns>ProcessFrame(byte[])</returns>
+        public static async Task<FrameAnalysisJSON> ProcessFrame(Bitmap bitmap)
+        {
+            return await ProcessFrame(HelperMethods.ImageToByte(bitmap));
         }
     }
 }

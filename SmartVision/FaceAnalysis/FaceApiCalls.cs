@@ -39,7 +39,7 @@ namespace FaceAnalysis
                 formData.Add(secretContent, "api_secret");
                 formData.Add(imageContent, "image_base64");
 
-                return httpClientWrapper.Post(detectUrl, formData);
+                return await httpClientWrapper.Post(detectUrl, formData);
             }
         }
 
@@ -60,7 +60,7 @@ namespace FaceAnalysis
                 formData.Add(secretContent, "api_secret");
                 formData.Add(facesetNameContent, "display_name");
 
-                return httpClientWrapper.Post(createUrl, formData);
+                return await httpClientWrapper.Post(createUrl, formData);
             }
         }
 
@@ -84,7 +84,7 @@ namespace FaceAnalysis
                 formData.Add(facesetTokenContent, "faceset_token");
                 formData.Add(faceTokenContent, "face_tokens");
 
-                return httpClientWrapper.Post(addUrl, formData);
+                return await httpClientWrapper.Post(addUrl, formData);
             }
         }
 
@@ -108,7 +108,7 @@ namespace FaceAnalysis
                 formData.Add(facesetTokenContent, "faceset_token");
                 formData.Add(faceTokenContent, "face_tokens");
 
-                return httpClientWrapper.Post(removeUrl, formData);
+                return await httpClientWrapper.Post(removeUrl, formData);
             }
         }
 
@@ -132,7 +132,7 @@ namespace FaceAnalysis
                 formData.Add(faceTokenContent, "face_token");
                 formData.Add(facesetTokenContent, "faceset_token");
 
-                return httpClientWrapper.Post(searchUrl, formData);
+                return await httpClientWrapper.Post(searchUrl, formData);
             }
         }
 
@@ -153,7 +153,7 @@ namespace FaceAnalysis
                 formData.Add(secretContent, "api_secret");
                 formData.Add(facesetTokenContent, "faceset_token");
 
-                return httpClientWrapper.Post(getDetailUrl, formData);
+                return await httpClientWrapper.Post(getDetailUrl, formData);
             }
         }
     }
