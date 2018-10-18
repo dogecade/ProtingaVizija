@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using WindowsForms.FaceAnalysis;
 
 namespace FaceAnalysis
 {
@@ -38,25 +38,49 @@ namespace FaceAnalysis
 
         /// <summary>
         /// Makes an API call for image analysis.
-        /// Returns just the number of faces (for cases where this is all that is needed)
+        /// Returns face rectangle List, if any.
         /// </summary>
         /// <param name="img">Image in bitmap form</param>
-        /// <returns>Number of faces in image, -1 if error occured</returns>
+        /// <returns>face rectangles</returns>
         /// 
-        public static async Task<int> NumberOfFaces(Bitmap img)
+        public static async Task<List<Rectangle>> FaceRectangleList(Bitmap img)
         {
+            //TODO: Redo this using IObservable
             FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
-            int faceCount;
+            IList<Face> faceData;
+            List<Rectangle> rectangles = new List<Rectangle>();
             try
             {
-                faceCount = JsonConvert.DeserializeObject<FrameAnalysisJSON>(await faceApiCalls.AnalyzeFrame(ImageToByte(img))).faces.Count;
+                faceData = JsonConvert.DeserializeObject<FrameAnalysisJSON>(await faceApiCalls.AnalyzeFrame(ImageToByte(img))).faces;
             }
             catch (ArgumentNullException)
             {
                 Debug.WriteLine("Invalid API response");
-                return -1;
+                return null;
             }
-            return faceCount;
+            foreach (Face face in faceData)
+                 rectangles.Add(face.face_rectangle);
+            return rectangles;
+        }
+
+        /// <summary>
+        /// Crops an image to a given rectangle + given percentage
+        /// </summary>
+        /// <param name="img">Image in bitmap form</param>
+        /// <returns>Cropped image in bitmap form</returns>
+        public static Bitmap CropImage(Bitmap img, Rectangle cropRectangle, int percentage)
+        {
+            cropRectangle.Inflate(cropRectangle.Width * percentage / 100, cropRectangle.Height * percentage / 100);
+            Bitmap imgClone = new Bitmap(cropRectangle.Width, cropRectangle.Height, PixelFormat.Format24bppRgb);
+            Debug.WriteLine(img.Width + " " + img.Height);
+            Debug.WriteLine(cropRectangle);
+            using (Graphics gr = Graphics.FromImage(imgClone))
+            {
+                gr.DrawImage(img, new Rectangle(0, 0, imgClone.Width, imgClone.Height),
+                             cropRectangle, GraphicsUnit.Pixel);
+            }
+            img.Dispose();
+            return imgClone;
         }
 
         /// <summary>

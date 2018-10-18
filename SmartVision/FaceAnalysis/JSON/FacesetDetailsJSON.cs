@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WindowsForms.FaceAnalysis
+namespace FaceAnalysis
 {
     public struct FacesetDetailsJSON
     {

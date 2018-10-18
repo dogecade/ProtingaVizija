@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FaceAnalysis.JSON
+namespace FaceAnalysis
 {
     public class AddFaceJSON
     {
