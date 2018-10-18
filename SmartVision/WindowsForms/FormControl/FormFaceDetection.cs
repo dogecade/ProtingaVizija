@@ -168,7 +168,7 @@ namespace WindowsForms.FormControl
         /// </summary>
         private async void uploadButton_Click(object sender, EventArgs e)
         {
-            Bitmap uploadedImage = ImageUpload.UploadImage();
+            Bitmap uploadedImage = HelperMethods.ProcessImage(ImageUpload.UploadImage());
             if (uploadedImage == null)
                 return;
             else
