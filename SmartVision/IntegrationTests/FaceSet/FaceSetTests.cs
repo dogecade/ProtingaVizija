@@ -20,10 +20,10 @@ namespace UnitTests
 
             var mock = new Mock<IHttpClientWrapper>();
 
-            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
+            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()).Result)
                 .Returns(expectedAnalysisString);
 
-            var actualFacesetObject = JsonConvert.DeserializeObject<FrameAnalysisJSON>(mock.Object.Post(null, null));
+            var actualFacesetObject = JsonConvert.DeserializeObject<FrameAnalysisJSON>(mock.Object.Post(null, null).Result);
 
             Assert.IsTrue(expectedAnalysisObject.Equals(actualFacesetObject), "Mock call to frame analyze api was not succesfull");
         }
@@ -38,10 +38,10 @@ namespace UnitTests
 
             var mock = new Mock<IHttpClientWrapper>();
 
-            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
+            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()).Result)
                 .Returns(expectedFacesetString);
 
-            var actualFacesetObject = JsonConvert.DeserializeObject<CreateFaceSetJSON>(mock.Object.Post(null, null));
+            var actualFacesetObject = JsonConvert.DeserializeObject<CreateFaceSetJSON>(mock.Object.Post(null, null).Result);
 
             Assert.IsTrue(expectedFacesetObject.Equals(actualFacesetObject), "Mock call to faceset create api was not succesfull");
         }
@@ -56,10 +56,10 @@ namespace UnitTests
 
             var mock = new Mock<IHttpClientWrapper>();
 
-            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
+            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()).Result)
                 .Returns(expectedDetailsString);
 
-            var actualDetailsObject = JsonConvert.DeserializeObject<FacesetDetailsJSON>(mock.Object.Post(null, null));
+            var actualDetailsObject = JsonConvert.DeserializeObject<FacesetDetailsJSON>(mock.Object.Post(null, null).Result);
 
             Assert.IsTrue(expectedDetailsObject.Equals(actualDetailsObject), "Mock call to faceset details api was not succesfull");
         }
@@ -74,10 +74,10 @@ namespace UnitTests
 
             var mock = new Mock<IHttpClientWrapper>();
 
-            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
+            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()).Result)
                 .Returns(expectedAddString);
 
-            var actualAddObject = JsonConvert.DeserializeObject<AddFaceJSON>(mock.Object.Post(null, null));
+            var actualAddObject = JsonConvert.DeserializeObject<AddFaceJSON>(mock.Object.Post(null, null).Result);
 
             Assert.IsTrue(expectedAddObject.Equals(actualAddObject), "Mock call to add to faceset api was not succesfull");
         }
@@ -92,10 +92,10 @@ namespace UnitTests
 
             var mock = new Mock<IHttpClientWrapper>();
 
-            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
+            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()).Result)
                 .Returns(expectedRemoveString);
 
-            var actualRemoveObject = JsonConvert.DeserializeObject<RemoveFaceJSON>(mock.Object.Post(null, null));
+            var actualRemoveObject = JsonConvert.DeserializeObject<RemoveFaceJSON>(mock.Object.Post(null, null).Result);
 
             Assert.IsTrue(expectedRemoveObject.Equals(actualRemoveObject), "Mock call to face remove api was not succesfull");
         }
@@ -110,10 +110,10 @@ namespace UnitTests
 
             var mock = new Mock<IHttpClientWrapper>();
 
-            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()))
+            mock.Setup(m => m.Post(It.IsAny<string>(), It.IsAny<MultipartFormDataContent>()).Result)
                 .Returns(expectedSearchString);
 
-            var actualSearchObject = JsonConvert.DeserializeObject<FoundFacesJSON>(mock.Object.Post(null, null));
+            var actualSearchObject = JsonConvert.DeserializeObject<FoundFacesJSON>(mock.Object.Post(null, null).Result);
 
             Assert.IsTrue(expectedSearchObject.Equals(actualSearchObject), "Mock call to search api was not succesfull");
         }
