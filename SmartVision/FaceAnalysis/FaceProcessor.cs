@@ -17,7 +17,7 @@ namespace FaceAnalysis
 
         private VideoCapture capture;
         private readonly BroadcastBlock<byte[]> buffer = new BroadcastBlock<byte[]>(item => item);
-        private readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
+        private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
 
 
         public FaceProcessor(VideoCapture capture)
@@ -63,20 +63,29 @@ namespace FaceAnalysis
         public async Task<List<Rectangle>> ProcessFrame()
         {
             byte[] frameToProcess = await buffer.ReceiveAsync();
-            List<Rectangle> faceRectangles = new List<Rectangle>();
+            return await ProcessFrame(frameToProcess);
+        }
+
+        public static async Task<List<Rectangle>> ProcessFrame(byte[] frameToProcess)
+        {
             Debug.WriteLine("Starting processing of frame");
             try
             {
-                var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(faceApiCalls.AnalyzeFrame(frameToProcess).Result);
+                var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(await faceApiCalls.AnalyzeFrame(frameToProcess));
                 Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
-                foreach (Face face in result.faces)
-                    faceRectangles.Add(face.face_rectangle);
+                return (from face in result.faces select (Rectangle)face.face_rectangle).ToList();
             }
             catch (ArgumentNullException)
             {
                 Debug.WriteLine("Invalid response received from API");
+                return null;
             }
-            return faceRectangles;
+            
+        }
+
+        public static async Task<List<Rectangle>> ProcessFrame(Bitmap bitmap)
+        {
+            return await ProcessFrame(HelperMethods.ImageToByte(bitmap));
         }
     }
 }

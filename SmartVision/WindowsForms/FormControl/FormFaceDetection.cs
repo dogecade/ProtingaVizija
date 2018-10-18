@@ -171,7 +171,7 @@ namespace WindowsForms.FormControl
             Bitmap uploadedImage = ImageUpload.UploadImage();
             if (uploadedImage == null)
                 return;
-            List<Rectangle> faceRectangles = await HelperMethods.FaceRectangleList((Bitmap)uploadedImage.Clone());
+            List<Rectangle> faceRectangles = await FaceProcessor.ProcessFrame((Bitmap)uploadedImage.Clone());
             if (faceRectangles == null)
             {
                 MessageBox.Show("An error occured while analysing the image, please try again later");

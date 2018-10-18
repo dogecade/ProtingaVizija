@@ -90,13 +90,13 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Processes frames from the buffer.
+        /// Gets list of faces from processor.
         /// Author: Arnas Danaitis
         /// </summary>
         private static async void ProcessFrameAsync()
         {
             while (await processor.HasFrames() && !tokenSource.IsCancellationRequested)
-                faceRectangles = await processor.ProcessFrame();
+                faceRectangles = await processor.ProcessFrame() ?? faceRectangles;
             lock (faceRectangles)
                 faceRectangles.Clear();
         }

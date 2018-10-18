@@ -37,33 +37,6 @@ namespace FaceAnalysis
         }
 
         /// <summary>
-        /// Makes an API call for image analysis.
-        /// Returns face rectangle List, if any.
-        /// </summary>
-        /// <param name="img">Image in bitmap form</param>
-        /// <returns>face rectangles</returns>
-        /// 
-        public static async Task<List<Rectangle>> FaceRectangleList(Bitmap img)
-        {
-            //TODO: Redo this using IObservable
-            FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
-            IList<Face> faceData;
-            List<Rectangle> rectangles = new List<Rectangle>();
-            try
-            {
-                faceData = JsonConvert.DeserializeObject<FrameAnalysisJSON>(await faceApiCalls.AnalyzeFrame(ImageToByte(img))).faces;
-            }
-            catch (ArgumentNullException)
-            {
-                Debug.WriteLine("Invalid API response");
-                return null;
-            }
-            foreach (Face face in faceData)
-                 rectangles.Add(face.face_rectangle);
-            return rectangles;
-        }
-
-        /// <summary>
         /// Crops an image to a given rectangle + given percentage
         /// </summary>
         /// <param name="img">Image in bitmap form</param>
