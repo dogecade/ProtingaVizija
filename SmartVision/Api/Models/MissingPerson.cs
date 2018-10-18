@@ -21,5 +21,7 @@ namespace Api.Models
         public string lastSeenDate { get; set; }
         public string lastSeenLocation { get; set; }
         public string Additional_Information { get; set; }
+        public string dateOfBirth { get; set; }
+        public string faceImg { get; set; }
     }
 }

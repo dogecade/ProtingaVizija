@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 10/11/2018 08:22:40
+-- Date Created: 10/17/2018 11:44:00
 -- Generated from EDMX file: C:\Users\tomas\Source\Repos\ProtingaVizija\SmartVision\Api\Models\Tables.edmx
 -- --------------------------------------------------
 
@@ -22,8 +22,11 @@ GO
 -- Dropping existing tables
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[Table]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Table];
+IF OBJECT_ID(N'[dbo].[MissingPersons]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[MissingPersons];
+GO
+IF OBJECT_ID(N'[dbo].[ContactPersons]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[ContactPersons];
 GO
 
 -- --------------------------------------------------
@@ -38,7 +41,9 @@ CREATE TABLE [dbo].[MissingPersons] (
     [lastName] varchar(max)  NULL,
     [lastSeenDate] nvarchar(max)  NOT NULL,
     [lastSeenLocation] nvarchar(max)  NOT NULL,
-    [Additional_Information] nvarchar(max)  NOT NULL
+    [Additional_Information] nvarchar(max)  NOT NULL,
+    [dateOfBirth] nvarchar(max)  NOT NULL,
+    [faceImg] nvarchar(max)  NOT NULL
 );
 GO
 
