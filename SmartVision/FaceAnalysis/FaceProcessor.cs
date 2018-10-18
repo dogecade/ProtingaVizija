@@ -60,20 +60,25 @@ namespace FaceAnalysis
         /// Analyses the frame currently in buffer (makes an API call, etc)
         /// </summary>
         /// <returns>List of face rectangles from frame</returns>
-        public async Task<List<Rectangle>> ProcessFrame()
+        public async Task<List<Rectangle>> GetRectanglesFromFrame()
         {
-            byte[] frameToProcess = await buffer.ReceiveAsync();
-            return await ProcessFrame(frameToProcess);
+            var result = await ProcessFrame(await buffer.ReceiveAsync());
+            return result == null ? 
+                null : (from face in result.faces select (Rectangle)face.face_rectangle).ToList();
         }
 
-        public static async Task<List<Rectangle>> ProcessFrame(byte[] frameToProcess)
+        /// <summary>
+        /// Analyses the given byte array
+        /// </summary>
+        /// <returns>JSON response, null if invalid</returns>
+        public static async Task<FrameAnalysisJSON> ProcessFrame(byte[] frameToProcess)
         {
             Debug.WriteLine("Starting processing of frame");
             try
             {
                 var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(await faceApiCalls.AnalyzeFrame(frameToProcess));
                 Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
-                return (from face in result.faces select (Rectangle)face.face_rectangle).ToList();
+                return result;
             }
             catch (ArgumentNullException)
             {
@@ -83,7 +88,11 @@ namespace FaceAnalysis
             
         }
 
-        public static async Task<List<Rectangle>> ProcessFrame(Bitmap bitmap)
+        /// <summary>
+        /// Converts the Bitmap to byte[] and calls ProcessFrame(byte[])
+        /// </summary>
+        /// <returns>ProcessFrame(byte[])</returns>
+        public static async Task<FrameAnalysisJSON> ProcessFrame(Bitmap bitmap)
         {
             return await ProcessFrame(HelperMethods.ImageToByte(bitmap));
         }

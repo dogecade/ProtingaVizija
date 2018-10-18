@@ -16,6 +16,7 @@ namespace WindowsForms.FormControl
         private Color underButtonColor = Color.LightSteelBlue;
         private bool cameraEnabled = false;
         private bool validImage = false;
+        private string faceToken;
         public static FormFaceDetection Current { get; private set; }
 
         public FormFaceDetection()
@@ -168,20 +169,21 @@ namespace WindowsForms.FormControl
         /// </summary>
         private async void uploadButton_Click(object sender, EventArgs e)
         {
-            Bitmap uploadedImage = HelperMethods.ProcessImage(ImageUpload.UploadImage());
+            Bitmap uploadedImage = ImageUpload.UploadImage();
             if (uploadedImage == null)
                 return;
             else
                 uploadedImage = HelperMethods.ProcessImage(uploadedImage);
-            List <Rectangle> faceRectangles = await FaceProcessor.ProcessFrame((Bitmap)uploadedImage.Clone());
+            FrameAnalysisJSON result = await FaceProcessor.ProcessFrame((Bitmap)uploadedImage.Clone());
             missingPersonPictureBox.Image?.Dispose();
-            if (faceRectangles == null)
+            missingPersonPictureBox.Image = null;
+            if (result == null)
             {
                 MessageBox.Show("An error occured while analysing the image, please try again later");
                 validImage = false;
                 return;
             }
-            switch (faceRectangles.Count)
+            switch (result.faces.Count)
             {
                 case 0:
                     MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
@@ -191,7 +193,8 @@ namespace WindowsForms.FormControl
                     break;
                 case 1:
                     validImage = true;
-                    missingPersonPictureBox.Image = HelperMethods.CropImage(uploadedImage, faceRectangles[0], 25);
+                    missingPersonPictureBox.Image = HelperMethods.CropImage(uploadedImage, result.faces[0].face_rectangle, 25);
+                    faceToken = result.faces[0].face_token;
                     break;
                 default:
                     MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +
@@ -259,6 +262,7 @@ namespace WindowsForms.FormControl
             missingPerson.lastSeenDate = lastSeenOnPicker.Value.ToString();
             missingPerson.lastSeenLocation = locationBox.Text;
             missingPerson.Additional_Information = additionalInfoBox.Text;
+            missingPerson.faceToken = faceToken;
 
             return missingPerson;
         }

@@ -95,7 +95,7 @@ namespace WindowsForms
         private static async void ProcessFrameAsync()
         {
             while (await processor.HasFrames() && !tokenSource.IsCancellationRequested)
-                faceRectangles = processor.ProcessFrame().Result ?? faceRectangles;
+                faceRectangles = processor.GetRectanglesFromFrame().Result ?? faceRectangles;
             lock (faceRectangles)
                 faceRectangles.Clear();
         }
