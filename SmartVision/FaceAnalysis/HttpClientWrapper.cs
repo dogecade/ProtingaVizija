@@ -13,9 +13,9 @@ namespace FaceAnalysis
             httpClient = new HttpClient();
         }
 
-        public string Post(string url, MultipartFormDataContent httpContent)
+        public async Task<string> Post(string url, MultipartFormDataContent httpContent)
         {
-            return PostRequest(url, httpContent).Result;
+            return await PostRequest(url, httpContent);
         }
 
         private async Task<string> PostRequest(string url, MultipartFormDataContent httpContent)
@@ -30,8 +30,8 @@ namespace FaceAnalysis
                     {
                         return responseString;
                     }
-
-                    throw new Exception(responseString);
+                    
+                    throw new Exception(response.StatusCode.ToString());
                 }
             }
 

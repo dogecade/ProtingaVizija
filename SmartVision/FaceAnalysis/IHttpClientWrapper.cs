@@ -1,9 +1,10 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace FaceAnalysis
 {
     public interface IHttpClientWrapper
     {
-        string Post(string url, MultipartFormDataContent httpContent);
+        Task<string> Post(string url, MultipartFormDataContent httpContent);
     }
 }
