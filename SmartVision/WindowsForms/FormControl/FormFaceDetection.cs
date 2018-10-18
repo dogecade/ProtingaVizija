@@ -177,6 +177,7 @@ namespace WindowsForms.FormControl
                 MessageBox.Show("An error occured while analysing the image, please try again later");
                 validImage = false;
                 missingPersonPictureBox.Image = null;
+                return;
             }
             switch (faceRectangles.Count)
             {
