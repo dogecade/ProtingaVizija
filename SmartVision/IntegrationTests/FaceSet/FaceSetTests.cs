@@ -12,12 +12,13 @@ namespace UnitTests
     public class FaceSetTests
     {
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
+        private static string imagePath1 = "..\\..\\TestPictures\\1.jpg";
 
         [TestMethod]
         public void Faceset_AnalyzeFrame_Succeeds()
         {
             // Analyze image. Verify
-            var analysisResult = AnalyzeFrameAndVerify(new Bitmap("..\\..\\TestPictures\\1.jpg"), 1);
+            var analysisResult = AnalyzeFrameAndVerify(new Bitmap(imagePath1), 1);
         }
 
         [TestMethod]
@@ -37,7 +38,7 @@ namespace UnitTests
             var createResult = CreateFacesetAndVerify(Guid.NewGuid().ToString());
 
             // Analyze image. Verify
-            var analysisResult = AnalyzeFrameAndVerify(new Bitmap("..\\..\\TestPictures\\1.jpg"), 1);
+            var analysisResult = AnalyzeFrameAndVerify(new Bitmap(imagePath1), 1);
 
             // Add image from faceset. Verify
             var addResult = AddImageToFacesetAndVerify(createResult.faceset_token, analysisResult.faces[0].face_token, 1);
