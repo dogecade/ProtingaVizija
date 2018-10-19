@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FaceAnalysis
 {
-    public class RemoveFaceJSON
+    public class RemoveFaceJSON : IApiResponseJSON
     {
         public string faceset_token { get; set; }
         public int face_removed { get; set; }

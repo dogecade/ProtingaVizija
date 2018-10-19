@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace FaceAnalysis
 {
-    public class FrameAnalysisJSON
+    public class FrameAnalysisJSON : IApiResponseJSON
     {
         public string image_id { get; set; }
         public string request_id { get; set; }

@@ -1,6 +1,5 @@
 ﻿using FaceAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -58,7 +57,7 @@ namespace UnitTests
 
         private CreateFaceSetJSON CreateFacesetAndVerify(string facesetname)
         {
-            var result = JsonConvert.DeserializeObject<CreateFaceSetJSON>(faceApiCalls.CreateNewFaceset(facesetname).Result);
+            var result = faceApiCalls.CreateNewFaceset(facesetname).Result;
             Assert.AreNotEqual("", result.faceset_token, "Faceset was not created");
             Assert.AreEqual(0, result.face_added, "No faces actually were added");
             Assert.AreEqual(0, result.face_count, "There should be no faces in the newly created faceset");
@@ -69,7 +68,7 @@ namespace UnitTests
 
         private DeleteFacesetJSON DeleteFacesetAndVerify(string facesetToken)
         {
-            var result = JsonConvert.DeserializeObject<DeleteFacesetJSON>(faceApiCalls.DeleteFaceset(facesetToken).Result);
+            var result = faceApiCalls.DeleteFaceset(facesetToken).Result;
             Assert.AreEqual(facesetToken, result.faceset_token, "Faceset was not removed");
 
             return result;
@@ -78,7 +77,7 @@ namespace UnitTests
         private FrameAnalysisJSON AnalyzeFrameAndVerify(Bitmap bitmap, int expectedFacesCount)
         {
             bitmap = HelperMethods.ProcessImage(bitmap);
-            var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(faceApiCalls.AnalyzeFrame(HelperMethods.ImageToByte(bitmap)).Result);
+            var result = faceApiCalls.AnalyzeFrame(HelperMethods.ImageToByte(bitmap)).Result;
             Assert.AreEqual(expectedFacesCount, result.faces.Count, "There should be only one face in the picture. Actually found:{0}", result.faces.Count);
 
             return result;
@@ -86,7 +85,7 @@ namespace UnitTests
 
         private AddFaceJSON AddImageToFacesetAndVerify(string facesetToken, string faceToken, int expectedFacesetFaceCount)
         {
-            var result = JsonConvert.DeserializeObject<AddFaceJSON>(faceApiCalls.AddFaceToFaceset(facesetToken, faceToken).Result);
+            var result = faceApiCalls.AddFaceToFaceset(facesetToken, faceToken).Result;
             Assert.AreEqual(facesetToken, result.faceset_token, "Face was added to the wrong faceset");
             Assert.AreEqual(1, result.face_added, "There should be exactly 1 face added");
             Assert.AreEqual(expectedFacesetFaceCount, result.face_count, "There should be exactly {0} face in the faceset", expectedFacesetFaceCount);
@@ -97,7 +96,7 @@ namespace UnitTests
 
         private FacesetDetailsJSON GetFacesetDetailsAndVerify(string facesetToken, int expectedFacesetFaceCount, List<string> expectedFaceTokens)
         {
-            var result = JsonConvert.DeserializeObject<FacesetDetailsJSON>(faceApiCalls.GetFacesetDetail(facesetToken).Result);
+            var result = faceApiCalls.GetFacesetDetail(facesetToken).Result;
             Assert.AreEqual(facesetToken, result.faceset_token, "Retrieved details of the wrong faceset");
             Assert.AreEqual(expectedFacesetFaceCount, result.face_count, "There should be exactly {0} face in the faceset", expectedFacesetFaceCount);
 
@@ -111,7 +110,7 @@ namespace UnitTests
 
         private RemoveFaceJSON RemoveFaceFromFacesetAndVerify(string facesetToken, string faceToken, int expectedFacesetFaceCount)
         {
-            var result = JsonConvert.DeserializeObject<RemoveFaceJSON>(faceApiCalls.RemoveFaceFromFaceset(facesetToken, faceToken).Result);
+            var result = faceApiCalls.RemoveFaceFromFaceset(facesetToken, faceToken).Result;
             Assert.AreEqual(facesetToken, result.faceset_token, "Removed face from the wrong faceset");
             Assert.AreEqual(1, result.face_removed, "There should be exactly 1 faces removed from the faceset");
             Assert.AreEqual(expectedFacesetFaceCount, result.face_count, "There should be exactly {0} faces left in the faceset",expectedFacesetFaceCount);

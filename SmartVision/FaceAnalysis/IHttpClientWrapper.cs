@@ -5,6 +5,6 @@ namespace FaceAnalysis
 {
     public interface IHttpClientWrapper
     {
-        Task<string> Post(string url, MultipartFormDataContent httpContent);
+        Task<string> Post(string url, MultipartFormDataContent httpContent, bool repeatedRequest = false);
     }
 }
