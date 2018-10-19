@@ -57,6 +57,7 @@ namespace UnitTests
         private CreateFaceSetJSON CreateFacesetAndVerify(string facesetname)
         {
             var result = faceApiCalls.CreateNewFaceset(facesetname).Result;
+            Assert.IsNotNull(result, "Invalid API response");
             Assert.AreNotEqual("", result.faceset_token, "Faceset was not created");
             Assert.AreEqual(0, result.face_added, "No faces actually were added");
             Assert.AreEqual(0, result.face_count, "There should be no faces in the newly created faceset");
@@ -68,6 +69,7 @@ namespace UnitTests
         private DeleteFacesetJSON DeleteFacesetAndVerify(string facesetToken)
         {
             var result = faceApiCalls.DeleteFaceset(facesetToken).Result;
+            Assert.IsNotNull(result, "Invalid API response");
             Assert.AreEqual(facesetToken, result.faceset_token, "Faceset was not removed");
 
             return result;
@@ -77,6 +79,7 @@ namespace UnitTests
         {
             bitmap = HelperMethods.ProcessImage(bitmap);
             var result = faceApiCalls.AnalyzeFrame(HelperMethods.ImageToByte(bitmap)).Result;
+            Assert.IsNotNull(result, "Invalid API response");
             Assert.AreEqual(expectedFacesCount, result.faces.Count, "There should be only one face in the picture. Actually found:{0}", result.faces.Count);
 
             return result;
