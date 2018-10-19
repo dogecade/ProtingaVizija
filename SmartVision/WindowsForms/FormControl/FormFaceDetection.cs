@@ -150,6 +150,7 @@ namespace WindowsForms.FormControl
                         db.MissingPersons.Add(InitializeMissingPerson());
                         db.ContactPersons.Add(InitializeContactPerson(db.MissingPersons.Max(p => p.Id)));
                         db.SaveChanges();
+                        (new FaceApiCalls(new HttpClientWrapper()).AddFaceToFaceset(;
                         MessageBox.Show("Missing person submitted successfully.");
                     }
                 }

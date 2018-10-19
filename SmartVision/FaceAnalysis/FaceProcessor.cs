@@ -63,10 +63,11 @@ namespace FaceAnalysis
         public async Task<List<Rectangle>> GetRectanglesFromFrame()
         {
             var result = await ProcessFrame(await buffer.ReceiveAsync());
+            foreach (Face face in result.faces)
+                await faceApiCalls.SearchFaceInFaceset("aaaaaa", face.face_token);
             return result == null ? 
                 null : (from face in result.faces select (Rectangle)face.face_rectangle).ToList();
         }
-
         /// <summary>
         /// Analyses the given byte array
         /// </summary>
@@ -78,6 +79,8 @@ namespace FaceAnalysis
             {
                 var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(await faceApiCalls.AnalyzeFrame(frameToProcess));
                 Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
+                foreach (Face face in result.faces)
+                    Debug.WriteLine("Face token: " + face.face_token);
                 return result;
             }
             catch (ArgumentNullException)
