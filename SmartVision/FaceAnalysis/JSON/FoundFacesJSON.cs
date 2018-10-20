@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace FaceAnalysis
 {
-    public struct FoundFacesJSON
+    public struct FoundFacesJSON : IApiResponseJSON
     {
         public string request_id { get; set; }
         public int time_used { get; set; }

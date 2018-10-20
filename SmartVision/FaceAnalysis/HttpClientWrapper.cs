@@ -14,12 +14,12 @@ namespace FaceAnalysis
             httpClient = new HttpClient();
         }
 
-        public async Task<string> Post(string url, MultipartFormDataContent httpContent)
+        public string PostSync(string url, MultipartFormDataContent httpContent)
         {
-            return await PostRequest(url, httpContent);
+            return Post(url, httpContent).Result;
         }
 
-        private async Task<string> PostRequest(string url, MultipartFormDataContent httpContent, bool repeatedRequest = false)
+        public async Task<string> Post(string url, MultipartFormDataContent httpContent, bool repeatedRequest = false)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace FaceAnalysis
                 if (e.Message == "Error while copying content to a stream." && repeatedRequest == false)
                 {
                     Debug.WriteLine("Bad response, attempting to send request again");
-                    return await PostRequest(url, httpContent, true);
+                    return await Post(url, httpContent, true);
                 }                  
                 else
                 {

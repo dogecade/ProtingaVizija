@@ -87,6 +87,7 @@
     <Compile Include="JSON\CreateFaceSetJSON.cs" />
     <Compile Include="JSON\FacesetDetailsJSON.cs" />
     <Compile Include="JSON\FoundFacesJSON.cs" />
+    <Compile Include="JSON\IApiResponseJSON.cs" />
     <Compile Include="JSON\RemoveFaceJSON.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="Persons\ContactPerson.cs" />
