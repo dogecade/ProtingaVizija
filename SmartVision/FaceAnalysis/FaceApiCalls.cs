@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace FaceAnalysis
 {
@@ -28,7 +29,7 @@ namespace FaceAnalysis
         /// </summary>
         /// <param name="image">Image in byte array format</param>
         /// <returns>FrameAnalysisJSON</returns>
-        public async Task<string> AnalyzeFrame(byte[] image)
+        public async Task<FrameAnalysisJSON> AnalyzeFrame(byte[] image)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
@@ -40,7 +41,7 @@ namespace FaceAnalysis
                 formData.Add(secretContent, "api_secret");
                 formData.Add(imageContent, "image_base64");
 
-                return await httpClientWrapper.Post(detectUrl, formData);
+                return DeserializeResponse<FrameAnalysisJSON>(await httpClientWrapper.Post(detectUrl, formData));
             }
         }
 
@@ -49,7 +50,7 @@ namespace FaceAnalysis
         /// </summary>
         /// <param name="facesetName">Name of the faceset</param>
         /// <returns>CreateFaceSetJSON</returns>
-        public async Task<string> CreateNewFaceset(string facesetName)
+        public async Task<CreateFaceSetJSON> CreateNewFaceset(string facesetName)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
@@ -61,7 +62,7 @@ namespace FaceAnalysis
                 formData.Add(secretContent, "api_secret");
                 formData.Add(facesetNameContent, "display_name");
 
-                return await httpClientWrapper.Post(createUrl, formData);
+                return DeserializeResponse<CreateFaceSetJSON>(await httpClientWrapper.Post(createUrl, formData));
             }
         }
 
@@ -71,7 +72,7 @@ namespace FaceAnalysis
         /// <param name="facesetToken">Faceset token</param>
         /// <param name="faceToken">Face token</param>
         /// <returns>AddFaceJSON</returns>
-        public async Task<string> AddFaceToFaceset(string facesetToken, string faceToken)
+        public async Task<AddFaceJSON> AddFaceToFaceset(string facesetToken, string faceToken)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
@@ -85,7 +86,7 @@ namespace FaceAnalysis
                 formData.Add(facesetTokenContent, "faceset_token");
                 formData.Add(faceTokenContent, "face_tokens");
 
-                return await httpClientWrapper.Post(addUrl, formData);
+                return DeserializeResponse<AddFaceJSON>(await httpClientWrapper.Post(addUrl, formData));
             }
         }
 
@@ -95,7 +96,7 @@ namespace FaceAnalysis
         /// <param name="facesetToken">Faceset token</param>
         /// <param name="faceToken">Facetoken</param>
         /// <returns>RemoveFaceJSON</returns>
-        public async Task<string> RemoveFaceFromFaceset(string facesetToken, string faceToken)
+        public async Task<RemoveFaceJSON> RemoveFaceFromFaceset(string facesetToken, string faceToken)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
@@ -109,7 +110,7 @@ namespace FaceAnalysis
                 formData.Add(facesetTokenContent, "faceset_token");
                 formData.Add(faceTokenContent, "face_tokens");
 
-                return await httpClientWrapper.Post(removeUrl, formData);
+                return DeserializeResponse<RemoveFaceJSON>(await httpClientWrapper.Post(removeUrl, formData));
             }
         }
 
@@ -119,7 +120,7 @@ namespace FaceAnalysis
         /// <param name="facesetToken">Faceset token</param>
         /// <param name="faceToken">Face token</param>
         /// <returns>FoundFacesJSON</returns>
-        public async Task<string> SearchFaceInFaceset(string facesetToken, string faceToken)
+        public async Task<FoundFacesJSON> SearchFaceInFaceset(string facesetToken, string faceToken)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
@@ -133,7 +134,7 @@ namespace FaceAnalysis
                 formData.Add(faceTokenContent, "face_token");
                 formData.Add(facesetTokenContent, "faceset_token");
 
-                return await httpClientWrapper.Post(searchUrl, formData);
+                return DeserializeResponse<FoundFacesJSON>(await httpClientWrapper.Post(searchUrl, formData));
             }
         }
 
@@ -142,7 +143,7 @@ namespace FaceAnalysis
         /// </summary>
         /// <param name="facesetToken">Faceset token</param>
         /// <returns>FacesetDetailsJSON</returns>
-        public async Task<string> GetFacesetDetail(string facesetToken)
+        public async Task<FacesetDetailsJSON> GetFacesetDetail(string facesetToken)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
@@ -154,7 +155,7 @@ namespace FaceAnalysis
                 formData.Add(secretContent, "api_secret");
                 formData.Add(facesetTokenContent, "faceset_token");
 
-                return await httpClientWrapper.Post(getDetailUrl, formData);
+                return DeserializeResponse<FacesetDetailsJSON>(await httpClientWrapper.Post(getDetailUrl, formData));
             }
         }
 
@@ -163,7 +164,7 @@ namespace FaceAnalysis
         /// </summary>
         /// <param name="facesetToken">Faceset token</param>
         /// <returns>DeleteFacesetJSON</returns>
-        public async Task<string> DeleteFaceset(string facesetToken)
+        public async Task<DeleteFacesetJSON> DeleteFaceset(string facesetToken)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
@@ -175,8 +176,22 @@ namespace FaceAnalysis
                 formData.Add(secretContent, "api_secret");
                 formData.Add(facesetTokenContent, "faceset_token");
 
-                return await httpClientWrapper.Post(deleteFacesetUrl, formData);
+                return DeserializeResponse<DeleteFacesetJSON>(await httpClientWrapper.Post(deleteFacesetUrl, formData));
             }
+        }
+
+        private T DeserializeResponse<T>(string response) where T : IApiResponseJSON
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(response);
+            }
+            catch (ArgumentNullException)
+            {
+                Debug.WriteLine("Invalid response received from API");
+                return default(T);
+            }
+
         }
     }
 }

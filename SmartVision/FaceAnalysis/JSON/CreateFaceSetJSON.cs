@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FaceAnalysis
 {
-    public class CreateFaceSetJSON
+    public class CreateFaceSetJSON : IApiResponseJSON
     {
         public string faceset_token { get; set; }
         public int time_used { get; set; }

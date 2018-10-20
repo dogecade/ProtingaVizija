@@ -1,6 +1,6 @@
 ﻿namespace FaceAnalysis
 {
-    public class DeleteFacesetJSON
+    public class DeleteFacesetJSON : IApiResponseJSON
     {
         public string faceset_token { get; set; }
         public string request_id { get; set; }

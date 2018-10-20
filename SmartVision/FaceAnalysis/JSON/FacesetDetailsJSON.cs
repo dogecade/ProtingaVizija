@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FaceAnalysis
 {
-    public struct FacesetDetailsJSON
+    public struct FacesetDetailsJSON : IApiResponseJSON
     {
         public string faceset_token { get; set; }
         public string tags { get; set; }

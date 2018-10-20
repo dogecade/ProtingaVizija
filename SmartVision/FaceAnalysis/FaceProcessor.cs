@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Emgu.CV;
 using Emgu.CV.Structure;
-using Newtonsoft.Json;
 
 namespace FaceAnalysis
 {
@@ -75,20 +73,14 @@ namespace FaceAnalysis
         public static async Task<FrameAnalysisJSON> ProcessFrame(byte[] frameToProcess)
         {
             Debug.WriteLine("Starting processing of frame");
-            try
-            {
-                var result = JsonConvert.DeserializeObject<FrameAnalysisJSON>(await faceApiCalls.AnalyzeFrame(frameToProcess));
+            var result = await faceApiCalls.AnalyzeFrame(frameToProcess);
+            if (result != null)
+            { 
                 Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
                 foreach (Face face in result.faces)
                     Debug.WriteLine("Face token: " + face.face_token);
-                return result;
             }
-            catch (ArgumentNullException)
-            {
-                Debug.WriteLine("Invalid response received from API");
-                return null;
-            }
-            
+            return result;
         }
 
         /// <summary>
