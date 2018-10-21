@@ -64,6 +64,7 @@ namespace WindowsForms
                 capture.Dispose();
                 Application.Idle -= GetFrameAsync;
                 tokenSource.Cancel();
+                processor.Complete();
             }
             catch (Exception e)
             {

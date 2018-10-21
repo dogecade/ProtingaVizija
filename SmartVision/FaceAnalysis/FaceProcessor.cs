@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Emgu.CV;
@@ -56,8 +57,20 @@ namespace FaceAnalysis
             return await buffer.OutputAvailableAsync();
         }
 
+
+        /// <summary>
+        /// "Completes" the search process -
+        /// tells the class to complete the tokens currently in buffer and not to take any more.
+        /// </summary>
+        public async void Complete()
+        {
+            searchBuffer.Complete();
+            await searchTask;
+        }
+  
         /// <summary>
         /// Analyses the frame currently in buffer (makes an API call, etc)
+        /// Adds any found faces to a buffer for face search.
         /// </summary>
         /// <returns>List of face rectangles from frame</returns>
         public async Task<List<Rectangle>> GetRectanglesFromFrame()
@@ -69,16 +82,20 @@ namespace FaceAnalysis
                 null : (from face in result.faces select (Rectangle)face.face_rectangle).ToList();
         }
 
+        /// <summary>
+        /// Main task for face search - executes API call, etc.
+        /// </summary>
         private async void FaceSearch()
         {
-            //TODO: ADD CANCELLING
             while (await searchBuffer.OutputAvailableAsync())
             {
-                var response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, await searchBuffer.ReceiveAsync());
-                foreach (Result result in response.results)
-                {
-                    Debug.WriteLine("Confidence: " + result.confidence);
-                }
+                FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, await searchBuffer.ReceiveAsync());
+                Debug.WriteLine(response);
+                if (!response.Equals(null))
+                    foreach (Result result in response.results)
+                    {
+                        Debug.WriteLine("Confidence: " + result.confidence);
+                    }
             }
         }
 
