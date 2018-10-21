@@ -98,7 +98,7 @@ namespace WindowsForms.FormControl
         /// Gets information about the missing person
         /// Author: Tomas Drasutis
         /// </summary>
-        private void addMissingPersonButton_Click(object sender, EventArgs e)
+        private async void addMissingPersonButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -147,10 +147,12 @@ namespace WindowsForms.FormControl
                     //add to db here.
                     using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
                     {
+                        /*
                         db.MissingPersons.Add(InitializeMissingPerson());
                         db.ContactPersons.Add(InitializeContactPerson(db.MissingPersons.Max(p => p.Id)));
                         db.SaveChanges();
-                        (new FaceApiCalls(new HttpClientWrapper()).AddFaceToFaceset(;
+                        */
+                        await (new FaceApiCalls(new HttpClientWrapper())).AddFaceToFaceset(FaceAnalysis.Keys.facesetToken, faceToken);
                         MessageBox.Show("Missing person submitted successfully.");
                     }
                 }

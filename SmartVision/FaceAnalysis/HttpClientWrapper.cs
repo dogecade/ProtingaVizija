@@ -36,7 +36,7 @@ namespace FaceAnalysis
                     if (response.IsSuccessStatusCode)
                         return responseString;
                     else
-                        throw new HttpRequestException(response.ToString());
+                        throw new HttpRequestException(responseString);
                 }
             }
 

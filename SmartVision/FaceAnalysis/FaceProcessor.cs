@@ -12,16 +12,18 @@ namespace FaceAnalysis
 {
     public class FaceProcessor
     {
-
+        private const int BUFFER_LIMIT = 10000;
         private VideoCapture capture;
+        private readonly BufferBlock<string> searchBuffer = new BufferBlock<string>(new DataflowBlockOptions { BoundedCapacity = BUFFER_LIMIT });
         private readonly BroadcastBlock<byte[]> buffer = new BroadcastBlock<byte[]>(item => item);
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
+        private Task searchTask;
 
 
         public FaceProcessor(VideoCapture capture)
         {
             this.capture = capture;
-
+            searchTask = Task.Run(() => FaceSearch());
         }
 
         /// <summary>
@@ -62,10 +64,24 @@ namespace FaceAnalysis
         {
             var result = await ProcessFrame(await buffer.ReceiveAsync());
             foreach (Face face in result.faces)
-                await faceApiCalls.SearchFaceInFaceset("aaaaaa", face.face_token);
+                await searchBuffer.SendAsync(face.face_token);
             return result == null ? 
                 null : (from face in result.faces select (Rectangle)face.face_rectangle).ToList();
         }
+
+        private async void FaceSearch()
+        {
+            //TODO: ADD CANCELLING
+            while (await searchBuffer.OutputAvailableAsync())
+            {
+                var response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, await searchBuffer.ReceiveAsync());
+                foreach (Result result in response.results)
+                {
+                    Debug.WriteLine("Confidence: " + result.confidence);
+                }
+            }
+        }
+
         /// <summary>
         /// Analyses the given byte array
         /// </summary>
@@ -75,11 +91,7 @@ namespace FaceAnalysis
             Debug.WriteLine("Starting processing of frame");
             var result = await faceApiCalls.AnalyzeFrame(frameToProcess);
             if (result != null)
-            { 
                 Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
-                foreach (Face face in result.faces)
-                    Debug.WriteLine("Face token: " + face.face_token);
-            }
             return result;
         }
 
