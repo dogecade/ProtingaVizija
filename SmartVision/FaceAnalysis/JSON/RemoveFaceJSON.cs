@@ -3,30 +3,44 @@ using System.Collections.Generic;
 
 namespace FaceAnalysis
 {
-    public class RemoveFaceJSON : IApiResponseJSON
+    public struct RemoveFaceJSON : IApiResponseJSON
     {
-        public string faceset_token { get; set; }
-        public int face_removed { get; set; }
-        public int time_used { get; set; }
-        public int face_count { get; set; }
-        public string request_id { get; set; }
-        public string outer_id { get; set; }
-        public IList<object> failure_detail { get; set; }
+        public string Faceset_token { get; set; }
+        public int Face_removed { get; set; }
+        public int Time_used { get; set; }
+        public int Face_count { get; set; }
+        public string Request_id { get; set; }
+        public string Outer_id { get; set; }
+        public IList<object> Failure_detail { get; set; }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (!(obj is RemoveFaceJSON))
+            {
                 return false;
+            }
 
-            RemoveFaceJSON objectToCompare = (RemoveFaceJSON)obj;
+            var jSON = (RemoveFaceJSON)obj;
+            return Faceset_token == jSON.Faceset_token &&
+                   Face_removed == jSON.Face_removed &&
+                   Time_used == jSON.Time_used &&
+                   Face_count == jSON.Face_count &&
+                   Request_id == jSON.Request_id &&
+                   Outer_id == jSON.Outer_id &&
+                   EqualityComparer<IList<object>>.Default.Equals(Failure_detail, jSON.Failure_detail);
+        }
 
-            return (faceset_token.Equals(objectToCompare.faceset_token)) &&
-                   (time_used == objectToCompare.time_used) &&
-                   (face_count == objectToCompare.face_count) &&
-                   (face_removed == objectToCompare.face_removed) &&
-                   (request_id.Equals(objectToCompare.request_id)) &&
-                   (outer_id.Equals(objectToCompare.outer_id)) &&
-                   (failure_detail.Count == objectToCompare.failure_detail.Count);
+        public override int GetHashCode()
+        {
+            var hashCode = 437113202;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Faceset_token);
+            hashCode = hashCode * -1521134295 + Face_removed.GetHashCode();
+            hashCode = hashCode * -1521134295 + Time_used.GetHashCode();
+            hashCode = hashCode * -1521134295 + Face_count.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Request_id);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Outer_id);
+            hashCode = hashCode * -1521134295 + EqualityComparer<IList<object>>.Default.GetHashCode(Failure_detail);
+            return hashCode;
         }
     }
 }

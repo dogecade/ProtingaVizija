@@ -18,7 +18,6 @@ namespace WindowsForms
         private static List<Rectangle> faceRectangles = new List<Rectangle>();
         private static CancellationTokenSource tokenSource = new CancellationTokenSource();
         private static Task taskAnalysis;
-        private static Task taskSearch;
         private static Image<Bgr, Byte> lastImage;
         private static VideoCapture capture;
         private static FaceProcessor processor;

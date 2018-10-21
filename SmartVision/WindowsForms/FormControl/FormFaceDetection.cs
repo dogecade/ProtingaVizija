@@ -147,12 +147,13 @@ namespace WindowsForms.FormControl
                     //add to db here.
                     using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
                     {
-                        /*
+                        //should check for success of the faceset addition.
+                        await new FaceApiCalls(new HttpClientWrapper()).AddFaceToFaceset(FaceAnalysis.Keys.facesetToken, faceToken);
+                        
                         db.MissingPersons.Add(InitializeMissingPerson());
                         db.ContactPersons.Add(InitializeContactPerson(db.MissingPersons.Max(p => p.Id)));
                         db.SaveChanges();
-                        */
-                        await (new FaceApiCalls(new HttpClientWrapper())).AddFaceToFaceset(FaceAnalysis.Keys.facesetToken, faceToken);
+
                         MessageBox.Show("Missing person submitted successfully.");
                     }
                 }
@@ -186,7 +187,7 @@ namespace WindowsForms.FormControl
                 validImage = false;
                 return;
             }
-            switch (result.faces.Count)
+            switch (result.Faces.Count)
             {
                 case 0:
                     MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
@@ -196,8 +197,8 @@ namespace WindowsForms.FormControl
                     break;
                 case 1:
                     validImage = true;
-                    missingPersonPictureBox.Image = HelperMethods.CropImage(uploadedImage, result.faces[0].face_rectangle, 25);
-                    faceToken = result.faces[0].face_token;
+                    missingPersonPictureBox.Image = HelperMethods.CropImage(uploadedImage, result.Faces[0].Face_rectangle, 25);
+                    faceToken = result.Faces[0].Face_token;
                     break;
                 default:
                     MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +

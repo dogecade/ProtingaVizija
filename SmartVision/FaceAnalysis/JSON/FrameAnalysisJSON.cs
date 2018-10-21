@@ -4,43 +4,61 @@ using System.Drawing;
 
 namespace FaceAnalysis
 {
-    public class FrameAnalysisJSON : IApiResponseJSON
+    public struct FrameAnalysisJSON : IApiResponseJSON
     {
-        public string image_id { get; set; }
-        public string request_id { get; set; }
-        public int time_used { get; set; }
-        public IList<Face> faces { get; set; }
+        public string Image_id { get; set; }
+        public string Request_id { get; set; }
+        public int Time_used { get; set; }
+        public IList<Face> Faces { get; set; }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (!(obj is FrameAnalysisJSON))
+            {
                 return false;
+            }
 
-            FrameAnalysisJSON objectToCompare = (FrameAnalysisJSON)obj;
+            var jSON = (FrameAnalysisJSON)obj;
+            return Image_id == jSON.Image_id &&
+                   Request_id == jSON.Request_id &&
+                   Time_used == jSON.Time_used &&
+                   EqualityComparer<IList<Face>>.Default.Equals(Faces, jSON.Faces);
+        }
 
-            return (image_id.Equals(objectToCompare.image_id)) &&
-                   (request_id.Equals(objectToCompare.request_id)) &&
-                   (time_used == objectToCompare.time_used) &&
-                   (faces.Count == objectToCompare.faces.Count);
+        public override int GetHashCode()
+        {
+            var hashCode = -561735587;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Image_id);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Request_id);
+            hashCode = hashCode * -1521134295 + Time_used.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<IList<Face>>.Default.GetHashCode(Faces);
+            return hashCode;
+        }
+
+        public static bool operator ==(FrameAnalysisJSON lhs, FrameAnalysisJSON rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(FrameAnalysisJSON lhs, FrameAnalysisJSON rhs)
+        {
+            return !(lhs == rhs);
         }
     }
 
-    public class FaceRectangle
+    public struct FaceRectangle
     {
         public int Width { get; set; }
         public int Top { get; set; }
         public int Left { get; set; }
         public int Height { get; set; }
 
-        public static implicit operator Rectangle(FaceRectangle r)
-        {
-            return new Rectangle(r.Left, r.Top, r.Width, r.Height);
-        }
+        public static implicit operator Rectangle(FaceRectangle r) => new Rectangle(r.Left, r.Top, r.Width, r.Height);
     }
 
     public struct Face
     {
-        public FaceRectangle face_rectangle { get; set; }
-        public string face_token { get; set; }
+        public FaceRectangle Face_rectangle { get; set; }
+        public string Face_token { get; set; }
     }
 }

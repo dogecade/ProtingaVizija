@@ -8,7 +8,7 @@ namespace FaceAnalysis
 {
     interface IApiResponseJSON
     {
-        int time_used { get; set; }
-        string request_id { get; set; }
+        int Time_used { get; set; }
+        string Request_id { get; set; }
     }
 }

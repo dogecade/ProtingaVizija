@@ -75,11 +75,11 @@ namespace FaceAnalysis
         /// <returns>List of face rectangles from frame</returns>
         public async Task<List<Rectangle>> GetRectanglesFromFrame()
         {
-            var result = await ProcessFrame(await buffer.ReceiveAsync());
-            foreach (Face face in result.faces)
-                await searchBuffer.SendAsync(face.face_token);
-            return result == null ? 
-                null : (from face in result.faces select (Rectangle)face.face_rectangle).ToList();
+            FrameAnalysisJSON result = await ProcessFrame(await buffer.ReceiveAsync());
+            foreach (Face face in result.Faces)
+                await searchBuffer.SendAsync(face.Face_token);
+            return result == default(FrameAnalysisJSON) ? 
+                null : (from face in result.Faces select (Rectangle)face.Face_rectangle).ToList();
         }
 
         /// <summary>
@@ -91,10 +91,10 @@ namespace FaceAnalysis
             {
                 FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, await searchBuffer.ReceiveAsync());
                 Debug.WriteLine(response);
-                if (!response.Equals(null))
-                    foreach (Result result in response.results)
+                if (response != default(FoundFacesJSON))
+                    foreach (Result result in response.Results)
                     {
-                        Debug.WriteLine("Confidence: " + result.confidence);
+                        Debug.WriteLine("Confidence: " + result.Confidence);
                     }
             }
         }
@@ -107,8 +107,8 @@ namespace FaceAnalysis
         {
             Debug.WriteLine("Starting processing of frame");
             var result = await faceApiCalls.AnalyzeFrame(frameToProcess);
-            if (result != null)
-                Debug.WriteLine(DateTime.Now + " " + result.faces.Count + " face(s) found in given frame");
+            if (result != default(FrameAnalysisJSON))
+                Debug.WriteLine(DateTime.Now + " " + result.Faces.Count + " face(s) found in given frame");
             return result;
         }
 
