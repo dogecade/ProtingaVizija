@@ -42,7 +42,7 @@ namespace UnitTests
             var addResult = AddImageToFacesetAndVerify(createResult.Faceset_token, analysisResult.Faces[0].Face_token, 1);
 
             // Try to delete faceset. Should throw an exception as it is not empty (will return 'null')
-            Assert.IsNull(faceApiCalls.DeleteFaceset(createResult.Faceset_token).Result, "Should be null");
+            Assert.AreEqual(faceApiCalls.DeleteFaceset(createResult.Faceset_token).Result, default(DeleteFacesetJSON), "Should be null");
 
             // Make sure that there is only one face in the faceset
             var detailsResult = GetFacesetDetailsAndVerify(createResult.Faceset_token, 1, new List<string>() { analysisResult.Faces[0].Face_token });
