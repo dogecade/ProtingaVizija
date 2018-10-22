@@ -1,16 +1,20 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Script.Serialization;
 
 namespace Api.Controllers
 {
     public class ImageUploadController : ApiController
     {
         // post /api/ImageUpload , image in request body , multipart format
+        // if all ok - 200, file location in response JSON
         [HttpPost]
-        public async Task<HttpResponseMessage> UploadFile(HttpRequestMessage request)
+        public async Task<IHttpActionResult> UploadFile(HttpRequestMessage request)
         {
 
             //patikrinam ar geras requestas, t.y. ar yra failas
@@ -20,19 +24,21 @@ namespace Api.Controllers
             }
             string root = System.Web.HttpContext.Current.Server.MapPath("~/faces/");
             var provider = new MultipartFormDataStreamProvider(root);
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            List<string> strings = new List<string>();
             try
             {
                 await request.Content.ReadAsMultipartAsync(provider);
                 foreach (MultipartFileData file in provider.FileData)
                 {
-                    Trace.WriteLine(file.Headers.ContentDisposition.FileName);
-                    Trace.WriteLine("Server file path: " + file.LocalFileName);
+                    strings.Add(file.LocalFileName);
                 }
-                return new HttpResponseMessage(HttpStatusCode.OK);
+
+                return Ok(serializer.Serialize(strings));
             }
             catch (System.Exception e)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.PaymentRequired, "waddup nigga u bad");
+                return InternalServerError();
             }
         }
     }
