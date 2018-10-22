@@ -8,6 +8,7 @@ namespace Api.Controllers
 {
     public class ImageUploadController : ApiController
     {
+        // post /api/ImageUpload , image in request body , multipart format
         [HttpPost]
         public async Task<HttpResponseMessage> UploadFile(HttpRequestMessage request)
         {
