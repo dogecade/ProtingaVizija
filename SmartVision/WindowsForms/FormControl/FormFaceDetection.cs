@@ -98,7 +98,7 @@ namespace WindowsForms.FormControl
         /// Gets information about the missing person
         /// Author: Tomas Drasutis
         /// </summary>
-        private void addMissingPersonButton_Click(object sender, EventArgs e)
+        private async void addMissingPersonButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -144,14 +144,20 @@ namespace WindowsForms.FormControl
 
                 if (validImage)
                 {
+                    if (await new FaceApiCalls(new HttpClientWrapper()).AddFaceToFaceset(FaceAnalysis.Keys.facesetToken, faceToken) == null)
+                    {
+                        //TODO: have some proper things to do here.
+                        throw new SystemException("Invalid API Response");
+                    }
+                    
                     //add to db here.
                     using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
-                    {
+                    {                       
                         db.MissingPersons.Add(InitializeMissingPerson());
                         db.ContactPersons.Add(InitializeContactPerson(db.MissingPersons.Max(p => p.Id)));
                         db.SaveChanges();
-                        MessageBox.Show("Missing person submitted successfully.");
                     }
+                    MessageBox.Show("Missing person submitted successfully.");
                 }
                 else
                     MessageBox.Show("Please upload a valid picture!");
@@ -159,6 +165,7 @@ namespace WindowsForms.FormControl
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
+                MessageBox.Show("An error occured while saving missing person, please try again later");
             }
 
         }
@@ -183,7 +190,7 @@ namespace WindowsForms.FormControl
                 validImage = false;
                 return;
             }
-            switch (result.faces.Count)
+            switch (result.Faces.Count)
             {
                 case 0:
                     MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
@@ -193,8 +200,8 @@ namespace WindowsForms.FormControl
                     break;
                 case 1:
                     validImage = true;
-                    missingPersonPictureBox.Image = HelperMethods.CropImage(uploadedImage, result.faces[0].face_rectangle, 25);
-                    faceToken = result.faces[0].face_token;
+                    missingPersonPictureBox.Image = HelperMethods.CropImage(uploadedImage, result.Faces[0].Face_rectangle, 25);
+                    faceToken = result.Faces[0].Face_token;
                     break;
                 default:
                     MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +

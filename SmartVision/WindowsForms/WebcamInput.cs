@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsForms.FormControl;
@@ -8,7 +7,6 @@ using Emgu.CV.Structure;
 using FaceAnalysis;
 using System.Threading;
 using System.Drawing;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace WindowsForms
@@ -17,7 +15,7 @@ namespace WindowsForms
     {
         private static List<Rectangle> faceRectangles = new List<Rectangle>();
         private static CancellationTokenSource tokenSource = new CancellationTokenSource();
-        private static Task taskConsumer;
+        private static Task taskAnalysis;
         private static Image<Bgr, Byte> lastImage;
         private static VideoCapture capture;
         private static FaceProcessor processor;
@@ -48,7 +46,7 @@ namespace WindowsForms
                 tokenSource = new CancellationTokenSource();
             }
             processor = new FaceProcessor(capture);
-            taskConsumer = Task.Run(() => ProcessFrameAsync());
+            taskAnalysis = Task.Run(() => ProcessFrameAsync());
             Application.Idle += GetFrameAsync;
             return true;
         }
@@ -63,6 +61,7 @@ namespace WindowsForms
                 capture.Dispose();
                 Application.Idle -= GetFrameAsync;
                 tokenSource.Cancel();
+                processor.Complete();
             }
             catch (Exception e)
             {
@@ -95,7 +94,10 @@ namespace WindowsForms
         private static async void ProcessFrameAsync()
         {
             while (await processor.HasFrames() && !tokenSource.IsCancellationRequested)
-                faceRectangles = processor.GetRectanglesFromFrame().Result ?? faceRectangles;
+            {
+                faceRectangles = await processor.GetRectanglesFromFrame() ?? faceRectangles;
+            }
+                
             lock (faceRectangles)
                 faceRectangles.Clear();
         }

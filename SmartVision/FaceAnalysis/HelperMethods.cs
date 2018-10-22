@@ -79,5 +79,21 @@ namespace FaceAnalysis
             img.Dispose();
             return imgClone;
         }
+
+        public static void HandleSearchResult(LikelinessConfidence result, string matchedFace)
+        {
+            switch (result)
+            {
+                case LikelinessConfidence.LowProbability:
+                    break;
+                case LikelinessConfidence.NormalProbability:
+                    break;
+                case LikelinessConfidence.HighProbability:
+                    break;
+                case LikelinessConfidence.VeryHighProbability:
+                    break;
+            }
+        }
+
     }
 }
