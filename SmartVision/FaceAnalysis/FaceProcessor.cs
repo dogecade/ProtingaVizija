@@ -92,9 +92,8 @@ namespace FaceAnalysis
             {
                 FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, await searchBuffer.ReceiveAsync());
                 if (response != null)
-                    foreach (LikelinessConfidence confidence in response.LikelinessConfidences())
-                        Debug.WriteLine(confidence);
-                        //TODO IMPLEMENT STRING: HelperMethods.HandleSearchResult(result)
+                    foreach (LikelinessResult result in response.LikelinessConfidences())
+                        HelperMethods.HandleSearchResult(result.Confidence, result.FaceToken);
             }
         }
 

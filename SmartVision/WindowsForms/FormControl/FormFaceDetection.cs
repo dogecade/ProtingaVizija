@@ -144,8 +144,11 @@ namespace WindowsForms.FormControl
 
                 if (validImage)
                 {
-                    //TODO: should check for success
-                    await new FaceApiCalls(new HttpClientWrapper()).AddFaceToFaceset(FaceAnalysis.Keys.facesetToken, faceToken);
+                    if (await new FaceApiCalls(new HttpClientWrapper()).AddFaceToFaceset(FaceAnalysis.Keys.facesetToken, faceToken) == null)
+                    {
+                        //TODO: have some proper things to do here.
+                        throw new SystemException("Invalid API Response");
+                    }
                     
                     //add to db here.
                     using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
@@ -162,6 +165,7 @@ namespace WindowsForms.FormControl
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
+                MessageBox.Show("An error occured while saving missing person, please try again later");
             }
 
         }

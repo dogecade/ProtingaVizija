@@ -47,20 +47,23 @@ namespace FaceAnalysis
             return !(lhs == rhs);
         }
 
-        public IEnumerable<LikelinessConfidence> LikelinessConfidences()
+        public IEnumerable<LikelinessResult> LikelinessConfidences()
         {
             if (Results == null)
                 yield break;
             foreach (Result result in Results)
             {
+                LikelinessResult likelinessResult = default(LikelinessResult);
+                likelinessResult.FaceToken = result.Face_token;
                 if (result.Confidence < Thresholds.E3)
-                    yield return LikelinessConfidence.LowProbability;
+                    likelinessResult.Confidence = LikelinessConfidence.LowProbability;
                 else if (result.Confidence < Thresholds.E4)
-                    yield return LikelinessConfidence.NormalProbability;
+                    likelinessResult.Confidence = LikelinessConfidence.NormalProbability;
                 else if (result.Confidence < Thresholds.E5)
-                    yield return LikelinessConfidence.HighProbability;
+                    likelinessResult.Confidence = LikelinessConfidence.HighProbability;
                 else
-                    yield return LikelinessConfidence.VeryHighProbability;
+                    likelinessResult.Confidence = LikelinessConfidence.VeryHighProbability;
+                yield return likelinessResult;
             }
         }       
 
@@ -78,7 +81,11 @@ namespace FaceAnalysis
         public double E5 { get; set; }
     }
 
-
+    public struct LikelinessResult
+    {
+        public LikelinessConfidence Confidence { get; set; }
+        public string FaceToken { get; set; }
+    }
 
     public struct Result
     {
