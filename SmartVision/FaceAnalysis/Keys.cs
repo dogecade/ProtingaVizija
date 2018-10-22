@@ -10,5 +10,6 @@ namespace FaceAnalysis
     {
         public const string apiKey = "key";
         public const string apiSecret = "secret";
+        public const facesetToken = "facesetToken";
     }
 }
