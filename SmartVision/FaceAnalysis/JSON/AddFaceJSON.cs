@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FaceAnalysis
 {
-    public struct AddFaceJSON : IApiResponseJSON
+    public class AddFaceJSON : IApiResponseJSON
     {
         public string Faceset_token { get; set; }
         public int Time_used { get; set; }
@@ -15,6 +15,8 @@ namespace FaceAnalysis
 
         public static bool operator== (AddFaceJSON lhs, AddFaceJSON rhs)
         {
+            if (lhs is null)
+                return rhs is null;
             return lhs.Equals(rhs);
         }
 

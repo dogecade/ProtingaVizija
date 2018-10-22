@@ -23,7 +23,7 @@ namespace FaceAnalysis
         {
             try
             {
-
+                //TODO: Remove using here.
                 using (var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
                 {
                     Version = HttpVersion.Version10,

@@ -144,18 +144,17 @@ namespace WindowsForms.FormControl
 
                 if (validImage)
                 {
+                    //TODO: should check for success
+                    await new FaceApiCalls(new HttpClientWrapper()).AddFaceToFaceset(FaceAnalysis.Keys.facesetToken, faceToken);
+                    
                     //add to db here.
                     using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
-                    {
-                        //should check for success of the faceset addition.
-                        await new FaceApiCalls(new HttpClientWrapper()).AddFaceToFaceset(FaceAnalysis.Keys.facesetToken, faceToken);
-                        
+                    {                       
                         db.MissingPersons.Add(InitializeMissingPerson());
                         db.ContactPersons.Add(InitializeContactPerson(db.MissingPersons.Max(p => p.Id)));
                         db.SaveChanges();
-
-                        MessageBox.Show("Missing person submitted successfully.");
                     }
+                    MessageBox.Show("Missing person submitted successfully.");
                 }
                 else
                     MessageBox.Show("Please upload a valid picture!");

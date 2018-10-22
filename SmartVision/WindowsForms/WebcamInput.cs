@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsForms.FormControl;
@@ -8,7 +7,6 @@ using Emgu.CV.Structure;
 using FaceAnalysis;
 using System.Threading;
 using System.Drawing;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace WindowsForms
@@ -96,7 +94,10 @@ namespace WindowsForms
         private static async void ProcessFrameAsync()
         {
             while (await processor.HasFrames() && !tokenSource.IsCancellationRequested)
-                faceRectangles = processor.GetRectanglesFromFrame().Result ?? faceRectangles;
+            {
+                faceRectangles = await processor.GetRectanglesFromFrame() ?? faceRectangles;
+            }
+                
             lock (faceRectangles)
                 faceRectangles.Clear();
         }

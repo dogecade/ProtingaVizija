@@ -70,7 +70,7 @@ namespace UnitTests
         {
             var result = faceApiCalls.DeleteFaceset(facesetToken).Result;
             Assert.IsNotNull(result, "Invalid API response");
-            Assert.AreEqual(facesetToken, result.faceset_token, "Faceset was not removed");
+            Assert.AreEqual(facesetToken, result.Faceset_token, "Faceset was not removed");
 
             return result;
         }

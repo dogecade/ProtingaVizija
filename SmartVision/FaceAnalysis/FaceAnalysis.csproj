@@ -90,6 +90,7 @@
     <Compile Include="JSON\IApiResponseJSON.cs" />
     <Compile Include="JSON\RemoveFaceJSON.cs" />
     <Compile Include="Keys.cs" />
+    <Compile Include="LikelinessConfidence.cs" />
     <Compile Include="Persons\ContactPerson.cs" />
     <Compile Include="Persons\MissingPerson.cs" />
     <Compile Include="Persons\Person.cs" />

@@ -67,7 +67,7 @@ namespace FaceAnalysis
             searchBuffer.Complete();
             await searchTask;
         }
-  
+
         /// <summary>
         /// Analyses the frame currently in buffer (makes an API call, etc)
         /// Adds any found faces to a buffer for face search.
@@ -76,10 +76,11 @@ namespace FaceAnalysis
         public async Task<List<Rectangle>> GetRectanglesFromFrame()
         {
             FrameAnalysisJSON result = await ProcessFrame(await buffer.ReceiveAsync());
+            if (result == default(FrameAnalysisJSON))
+                return null;
             foreach (Face face in result.Faces)
                 await searchBuffer.SendAsync(face.Face_token);
-            return result == default(FrameAnalysisJSON) ? 
-                null : (from face in result.Faces select (Rectangle)face.Face_rectangle).ToList();
+            return (from face in result.Faces select (Rectangle)face.Face_rectangle).ToList();
         }
 
         /// <summary>
@@ -90,12 +91,10 @@ namespace FaceAnalysis
             while (await searchBuffer.OutputAvailableAsync())
             {
                 FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, await searchBuffer.ReceiveAsync());
-                Debug.WriteLine(response);
-                if (response != default(FoundFacesJSON))
-                    foreach (Result result in response.Results)
-                    {
-                        Debug.WriteLine("Confidence: " + result.Confidence);
-                    }
+                if (response != null)
+                    foreach (LikelinessConfidence confidence in response.LikelinessConfidences())
+                        Debug.WriteLine(confidence);
+                        //TODO IMPLEMENT STRING: HelperMethods.HandleSearchResult(result)
             }
         }
 
@@ -106,9 +105,10 @@ namespace FaceAnalysis
         public static async Task<FrameAnalysisJSON> ProcessFrame(byte[] frameToProcess)
         {
             Debug.WriteLine("Starting processing of frame");
-            var result = await faceApiCalls.AnalyzeFrame(frameToProcess);
-            if (result != default(FrameAnalysisJSON))
+            FrameAnalysisJSON result = await faceApiCalls.AnalyzeFrame(frameToProcess);
+            if (result != null)
                 Debug.WriteLine(DateTime.Now + " " + result.Faces.Count + " face(s) found in given frame");
+
             return result;
         }
 
@@ -121,4 +121,5 @@ namespace FaceAnalysis
             return await ProcessFrame(HelperMethods.ImageToByte(bitmap));
         }
     }
+
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FaceAnalysis
 {
-    public struct RemoveFaceJSON : IApiResponseJSON
+    public class RemoveFaceJSON : IApiResponseJSON
     {
         public string Faceset_token { get; set; }
         public int Face_removed { get; set; }
@@ -41,6 +41,18 @@ namespace FaceAnalysis
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Outer_id);
             hashCode = hashCode * -1521134295 + EqualityComparer<IList<object>>.Default.GetHashCode(Failure_detail);
             return hashCode;
+        }
+
+        public static bool operator ==(RemoveFaceJSON lhs, RemoveFaceJSON rhs)
+        {
+            if (lhs is null)
+                return rhs is null;
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(RemoveFaceJSON lhs, RemoveFaceJSON rhs)
+        {
+            return !(lhs == rhs);
         }
     }
 }

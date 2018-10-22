@@ -4,11 +4,11 @@ using Newtonsoft.Json;
 
 namespace FaceAnalysis
 {
-    public struct FoundFacesJSON : IApiResponseJSON
+    public class FoundFacesJSON : IApiResponseJSON
     {
         public string Request_id { get; set; }
         public int Time_used { get; set; }
-        public Thresholds thresholds { get; set; }
+        public Thresholds Thresholds { get; set; }
         public IList<Result> Results { get; set; }
 
         public override bool Equals(object obj)
@@ -21,7 +21,7 @@ namespace FaceAnalysis
             var jSON = (FoundFacesJSON)obj;
             return Request_id == jSON.Request_id &&
                    Time_used == jSON.Time_used &&
-                   EqualityComparer<Thresholds>.Default.Equals(thresholds, jSON.thresholds) &&
+                   EqualityComparer<Thresholds>.Default.Equals(Thresholds, jSON.Thresholds) &&
                    EqualityComparer<IList<Result>>.Default.Equals(Results, jSON.Results);
         }
 
@@ -30,13 +30,15 @@ namespace FaceAnalysis
             var hashCode = 571236380;
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Request_id);
             hashCode = hashCode * -1521134295 + Time_used.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<Thresholds>.Default.GetHashCode(thresholds);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Thresholds>.Default.GetHashCode(Thresholds);
             hashCode = hashCode * -1521134295 + EqualityComparer<IList<Result>>.Default.GetHashCode(Results);
             return hashCode;
         }
 
         public static bool operator ==(FoundFacesJSON lhs, FoundFacesJSON rhs)
         {
+            if (lhs is null)
+                return rhs is null;           
             return lhs.Equals(rhs);
         }
 
@@ -44,6 +46,24 @@ namespace FaceAnalysis
         {
             return !(lhs == rhs);
         }
+
+        public IEnumerable<LikelinessConfidence> LikelinessConfidences()
+        {
+            if (Results == null)
+                yield break;
+            foreach (Result result in Results)
+            {
+                if (result.Confidence < Thresholds.E3)
+                    yield return LikelinessConfidence.LowProbability;
+                else if (result.Confidence < Thresholds.E4)
+                    yield return LikelinessConfidence.NormalProbability;
+                else if (result.Confidence < Thresholds.E5)
+                    yield return LikelinessConfidence.HighProbability;
+                else
+                    yield return LikelinessConfidence.VeryHighProbability;
+            }
+        }       
+
     }
 
     public struct Thresholds

@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace FaceAnalysis
 {
-    public struct FrameAnalysisJSON : IApiResponseJSON
+    public class FrameAnalysisJSON : IApiResponseJSON
     {
         public string Image_id { get; set; }
         public string Request_id { get; set; }
@@ -37,6 +37,8 @@ namespace FaceAnalysis
 
         public static bool operator ==(FrameAnalysisJSON lhs, FrameAnalysisJSON rhs)
         {
+            if (lhs is null)
+                return rhs is null;
             return lhs.Equals(rhs);
         }
 

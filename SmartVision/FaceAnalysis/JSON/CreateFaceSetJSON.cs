@@ -41,6 +41,8 @@ namespace FaceAnalysis
 
         public static bool operator ==(CreateFacesetJSON lhs, CreateFacesetJSON rhs)
         {
+            if (lhs is null)
+                return rhs is null;
             return lhs.Equals(rhs);
         }
 
