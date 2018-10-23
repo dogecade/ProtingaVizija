@@ -11,7 +11,7 @@ namespace FaceAnalysis
 {
     public class SearchResultHandler
     {
-        private const string normalProbabilityEmailSubject = "HIGH possibility that your missing person was detected!";
+        private const string normalProbabilityEmailSubject = "Decent possibility that your missing person was detected!";
         private const string normalProbabilitySmsBodyBeginning = "Good afternoon. There's a possibility that your missing person ";
         private const string normalProbabilitySmsBodyEnding = " was detected. Please check you email for more detailed information.";
         private const string normalProbabilityEmailBodyBeginning = "Good afternoon. There's a possibility that your missing person ";
@@ -69,6 +69,10 @@ namespace FaceAnalysis
             notifactionSenderTask = Task.Run(() => SenderTask(token));
         }
 
+        /// <summary>
+        /// Task to process stored notification requests.
+        /// </summary>
+        /// <param name="token">Cancellation token to stop</param>
         public void SenderTask(CancellationToken token)
         {
             while (true)
@@ -87,6 +91,10 @@ namespace FaceAnalysis
             }
         }
 
+        /// <summary>
+        /// Handles an incoming search result.
+        /// </summary>
+        /// <param name="likeliness">Search result to handle</param>
         public void HandleSearchResult(LikelinessResult likeliness)
         {
             Debug.WriteLine(likeliness.Confidence);
@@ -111,6 +119,11 @@ namespace FaceAnalysis
             );
         }
 
+        /// <summary>
+        /// Sends Email and SMS
+        /// </summary>
+        /// <param name="confidence">Likeliness that the person is identified</param>
+        /// <param name="faceToken">Face token of the missing person</param>
         private void SendNotifications(LikelinessConfidence confidence, string faceToken)
         {
             NecessaryContactInformation information = GetMissingPersonData(faceToken);
@@ -121,6 +134,11 @@ namespace FaceAnalysis
             Sms.SendSms(information.contactPersonPhoneNumber, data.SmsBodyBeginning + information.missingPersonFirstName + " " + information.missingPersonLastName + data.SmsBodyEnding);
         }
 
+        /// <summary>
+        /// Grabs missing person data from DB.
+        /// </summary>
+        /// <param name="matchedFace">ID of face to grab</param>
+        /// <returns>Contact information</returns>
         private static NecessaryContactInformation GetMissingPersonData(string matchedFace)
         {
             //TODO: Get missing person from db where identifier is facetoken
