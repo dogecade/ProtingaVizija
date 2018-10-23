@@ -3,14 +3,14 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FaceAnalysis;
-using FaceAnalysis.Persons;
 using System.Linq;
-using System.Collections.Generic;
+using WindowsForms.Models;
 
 namespace WindowsForms.FormControl
 {
     public partial class FormFaceDetection : System.Windows.Forms.Form
     {
+        private HttpClientWrapper httpClient = new HttpClientWrapper();
         private const string enabledButtonText = "Enable scan";
         private const string disabledButtonText = "Disable scan";
         private Color underButtonColor = Color.LightSteelBlue;
@@ -18,7 +18,6 @@ namespace WindowsForms.FormControl
         private bool validImage = false;
         private string faceToken;
         public static FormFaceDetection Current { get; private set; }
-
         public FormFaceDetection()
         {
             InitializeComponent();
@@ -28,14 +27,6 @@ namespace WindowsForms.FormControl
         private void FormFaceDetection_Load(object sender, EventArgs e)
         {
             // TODO: This line of code loads data into the 'pstop2018DataSet2.MissingPersons' table. You can move, or remove it, as needed.
-            try
-            {
-                this.missingPersonsTableAdapter.Fill(this.pstop2018DataSet2.MissingPersons);
-            }
-            catch (System.Data.SqlClient.SqlException)
-            {
-                MessageBox.Show("Failed to establish database connection");
-            }
             homePanel.BringToFront();
             underHomePanel.BackColor = underButtonColor;
         }
@@ -98,7 +89,7 @@ namespace WindowsForms.FormControl
         /// Gets information about the missing person
         /// Author: Tomas Drasutis
         /// </summary>
-        private void addMissingPersonButton_Click(object sender, EventArgs e)
+        private async void addMissingPersonButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -145,13 +136,21 @@ namespace WindowsForms.FormControl
                 if (validImage)
                 {
                     //add to db here.
-                    using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
-                    {
-                        db.MissingPersons.Add(InitializeMissingPerson());
-                        db.ContactPersons.Add(InitializeContactPerson(db.MissingPersons.Max(p => p.Id)));
-                        db.SaveChanges();
-                        MessageBox.Show("Missing person submitted successfully.");
-                    }
+                    Api.Models.ContactPerson contact = InitializeContactPerson();
+
+                    MissingPerson missing = new MissingPerson();
+                    missing.firstName = firstNameBox.Text;
+                    missing.lastName = lastNameBox.Text;
+                    missing.lastSeenDate = lastSeenOnPicker.Text;
+                    missing.lastSeenLocation = lastSeenOn.Text;
+                    missing.Additional_Information = additionalInfoBox.Text;
+                    missing.dateOfBirth = dateOfBirthPicker.Text;
+                    missing.faceImg = "asdfasdfasdfasdfasdf";
+                    missing.faceToken = faceToken;
+
+                    Console.WriteLine("contact" + await httpClient.PostContactPersonToApiAsync(contact));
+                    Console.WriteLine("missing" + await httpClient.PostMissingPersonToApiAsync(missing));
+
                 }
                 else
                     MessageBox.Show("Please upload a valid picture!");
@@ -266,12 +265,11 @@ namespace WindowsForms.FormControl
 
             return missingPerson;
         }
-        private Api.Models.ContactPerson InitializeContactPerson(int missingPersonId)
+        private Api.Models.ContactPerson InitializeContactPerson()
         {
             Api.Models.ContactPerson contactPerson = new Api.Models.ContactPerson();
             contactPerson.firstName = contactFirstNameBox.Text;
             contactPerson.lastName = contactLastNameBox.Text;
-            contactPerson.missingPersonId = (missingPersonId + 1).ToString();
             contactPerson.phoneNumber = contactPhoneNumberBox.Text;
             contactPerson.emailAddress = contactEmailAddressBox.Text;
 
@@ -287,17 +285,17 @@ namespace WindowsForms.FormControl
             using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
             {
                 Api.Models.MissingPerson missingPerson = db.MissingPersons.Find(Id);
-                Api.Models.ContactPerson contactPerson = db.ContactPersons.FirstOrDefault(f => f.missingPersonId == stringId);
+                //Api.Models.ContactPerson contactPerson = db.ContactPersons.FirstOrDefault(f => f.missingPersonId == stringId);
 
-                form.firstNameBox.Text = missingPerson.firstName;
-                form.lastNameBox.Text = missingPerson.lastName;
-                form.lastSeenOnPicker.Text = missingPerson.lastSeenDate;
-                form.locationBox.Text = missingPerson.lastSeenLocation;
-                form.additionalInfoBox.Text = missingPerson.Additional_Information;
-                form.contactEmailAddressBox.Text = contactPerson.emailAddress;
-                form.contactPhoneNumberBox.Text = contactPerson.phoneNumber;
-                form.contactLastNameBox.Text = contactPerson.lastName;
-                form.contactFirstNameBox.Text = contactPerson.firstName;
+                //form.firstNameBox.Text = missingPerson.firstName;
+                //form.lastNameBox.Text = missingPerson.lastName;
+                //form.lastSeenOnPicker.Text = missingPerson.lastSeenDate;
+                //form.locationBox.Text = missingPerson.lastSeenLocation;
+                //form.additionalInfoBox.Text = missingPerson.Additional_Information;
+                //form.contactEmailAddressBox.Text = contactPerson.emailAddress;
+                //form.contactPhoneNumberBox.Text = contactPerson.phoneNumber;
+                //form.contactLastNameBox.Text = contactPerson.lastName;
+                //form.contactFirstNameBox.Text = contactPerson.firstName;
                 //form.dateOfBirthPicker.Text = ;
 
                 form.ShowDialog();

@@ -80,22 +80,7 @@ namespace Api.Controllers
             }
 
             db.MissingPersons.Add(missingPerson);
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateException)
-            {
-                if (MissingPersonExists(missingPerson.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            db.SaveChanges();
 
             return CreatedAtRoute("DefaultApi", new { id = missingPerson.Id }, missingPerson);
         }

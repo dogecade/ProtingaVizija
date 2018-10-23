@@ -14,11 +14,19 @@ namespace Api.Models
     
     public partial class ContactPerson
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public ContactPerson()
+        {
+            this.MissingPersons = new HashSet<MissingPerson>();
+        }
+    
         public int Id { get; set; }
-        public string missingPersonId { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string phoneNumber { get; set; }
         public string emailAddress { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MissingPerson> MissingPersons { get; set; }
     }
 }

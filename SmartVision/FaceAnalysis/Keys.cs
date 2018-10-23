@@ -8,7 +8,7 @@ namespace FaceAnalysis
 {
     class Keys
     {
-        public const string apiKey = "key";
-        public const string apiSecret = "secret";
+        public const string apiKey = "zIUg_FMaU3ryKw75XGT_DAD58VC7tDl-";
+        public const string apiSecret = "oJ2B4Tk0wP4BwNXfdpIKWeQ9yoQ6Z-UT";
     }
 }

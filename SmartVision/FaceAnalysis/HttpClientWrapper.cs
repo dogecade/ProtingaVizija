@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace FaceAnalysis
     public class HttpClientWrapper : IHttpClientWrapper
     {
         private static readonly HttpClient httpClient;
+        private string API = "http://localhost:52814/api/";
         static HttpClientWrapper()
         {
             httpClient = new HttpClient();
@@ -53,6 +55,16 @@ namespace FaceAnalysis
                     return null;
                 }                   
             }
+        }
+        public async Task<HttpStatusCode> PostMissingPersonToApiAsync(Object missingPerson)
+        {
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync(new Uri(API + "/MissingPersons"),missingPerson);
+            return response.StatusCode;
+        }
+        public async Task<HttpStatusCode> PostContactPersonToApiAsync(Object contactPerson)
+        {
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync(new Uri(API + "/ContactPersons"), contactPerson);
+            return response.StatusCode;
         }
     }
 }
