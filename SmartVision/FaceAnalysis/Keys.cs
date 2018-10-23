@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace FaceAnalysis
 {
-    class Keys
+    public class Keys
     {
         public const string apiKey = "key";
         public const string apiSecret = "secret";
-        public const facesetToken = "facesetToken";
+        public const string facesetToken = "facesetToken";
     }
 }
