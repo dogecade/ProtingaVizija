@@ -38,7 +38,9 @@
             // imageListView
             // 
             this.imageListView.Alignment = System.Windows.Forms.ListViewAlignment.Default;
-            this.imageListView.BackColor = System.Drawing.Color.NavajoWhite;
+            this.imageListView.BackColor = System.Drawing.Color.Blue;
+            this.imageListView.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("imageListView.BackgroundImage")));
+            this.imageListView.BackgroundImageTiled = true;
             this.imageListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this.imageListView.Cursor = System.Windows.Forms.Cursors.Default;

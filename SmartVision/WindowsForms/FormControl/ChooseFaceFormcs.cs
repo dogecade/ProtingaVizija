@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsForms.FormControl
@@ -32,6 +27,8 @@ namespace WindowsForms.FormControl
                 imageListView.SmallImageList = imageList;
                 textNearFace = "      Face Nr. " + (i + 1).ToString() + "            ";
                 imageListView.Items.Add(textNearFace, i);
+                imageListView.Items[i].ForeColor = Color.White;
+                imageListView.Items[i].Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Pixel);
             }
 
             if (faces.Count == 2)
