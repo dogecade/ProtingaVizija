@@ -1,0 +1,18 @@
+1. Peržiūrėti duomenis apie dingusius žmones, kurie įtraukti į mūsų aplikacijos dingusiųjų sąrašą.
+	- Duomenys imami iš duomenų bazės.
+	- Pateikiama tik dalis duomenų, naudotojas pasirinkęs duomenų eilutę turi prieiga prie daugiau duomenų.
+	
+2. Naudotojas gali pradėti veidų skenavimą/atpažinimą.
+	- Naudotojas gali pasirinkti ar naudoti kompiuterio ar IP kamerą.
+	- Aplikacijoje rodomas kameros vaizdas.
+	- Jei kadre aptinkamas veidas, aplink jį nupiešiamas stačiakampis.
+	- Kadras, kuriame aptiktas veidas, siunčiamas į API, kur yra palyginimas su dingusių žmonių veidais ir grąžina atsakyma ar tai tas pats žmogus.
+	- Jei yra aptinkamas dingęs žmogus, kontaktiniam asmeniui yra išsiunčiama SMS žinutė bei elektroninis laiškas pranešantis, jog jo pridėtas žmogus buvo pastebėtas.
+
+3. Naudotojas gali užpildyti formą ir pridėti dingusį žmogų, bei jo kontaktinį asmenį.
+	- Galimybė įvesti detalius duomenis padėsiančius policijai etc.
+	- Dingusio žmogaus nuotraukos pridėjimas.
+	- Tikrinama ar įvesti duomenys yra atitinkamo formato.
+	- Duomenys yra išsaugojami duomenų bazėje
+	
+4. Programą galima įjungti/išjungti.
