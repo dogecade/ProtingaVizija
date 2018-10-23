@@ -176,6 +176,7 @@ namespace WindowsForms.FormControl
         /// </summary>
         private async void uploadButton_Click(object sender, EventArgs e)
         {
+            int chosenImageIndex = 0;
             Bitmap uploadedImage = ImageUpload.UploadImage();
             if (uploadedImage == null)
                 return;
@@ -197,19 +198,22 @@ namespace WindowsForms.FormControl
                                     "Please try another one.");
                     validImage = false;
                     uploadedImage.Dispose();                  
-                    break;
+                    return;
                 case 1:
-                    validImage = true;
-                    missingPersonPictureBox.Image = HelperMethods.CropImage(uploadedImage, result.Faces[0].Face_rectangle, 25);
-                    faceToken = result.Faces[0].Face_token;
                     break;
                 default:
-                    MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +
-                                    "Please try another one.");
-                    validImage = false;
-                    uploadedImage.Dispose();
+                    var chooseFaceForm = new ChooseFaceFormcs(result.Faces, uploadedImage); //foreach face in faces => face.faceRectangles[]
+                    chooseFaceForm.ShowDialog();
+                    if(chooseFaceForm.DialogResult == DialogResult.OK)
+                    {
+                        chosenImageIndex = chooseFaceForm.SelectedFace;
+                        chooseFaceForm.Dispose();
+                    }
                     break;
             }
+            validImage = true;
+            missingPersonPictureBox.Image = HelperMethods.CropImage(uploadedImage, result.Faces[chosenImageIndex].Face_rectangle, 25);
+            faceToken = result.Faces[chosenImageIndex].Face_token;
         }
 
         /// <summary>
