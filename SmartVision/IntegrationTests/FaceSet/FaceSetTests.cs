@@ -12,6 +12,7 @@ namespace UnitTests
     {
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
 
+
         [TestMethod]
         public void Faceset_AnalyzeFrame_Succeeds()
         {
@@ -41,6 +42,7 @@ namespace UnitTests
             // Add image from faceset. Verify
             var addResult = AddImageToFacesetAndVerify(createResult.Faceset_token, analysisResult.Faces[0].Face_token, 1);
 
+
             // Try to delete faceset. Should throw an exception as it is not empty (will return 'null')
             Assert.AreEqual(faceApiCalls.DeleteFaceset(createResult.Faceset_token).Result, default(DeleteFacesetJSON), "Should be null");
 
@@ -52,6 +54,97 @@ namespace UnitTests
 
             // Remove faceset and verify it was removed successfully
             var removeResult = DeleteFacesetAndVerify(createResult.Faceset_token);
+        }
+
+        [TestMethod]
+        public void Faceset_SearchFaceWithSunglasses_Succeeds()
+        {
+            // Create a new faceset and verify that it was created successfully
+            var createResult = CreateFacesetAndVerify(Guid.NewGuid().ToString());
+
+
+            // Analyze 1st image. Verify
+            var analysisResult1 = AnalyzeFrameAndVerify(Resources.TestImage2, 1);
+
+            // Add 1st image to faceset. Verify
+            var addResult1 = AddImageToFacesetAndVerify(createResult.Faceset_token, analysisResult1.Faces[0].Face_token, 1);
+
+
+            // Analyze 2nd image. Verify
+            var analysisResult2 = AnalyzeFrameAndVerify(Resources.TestImage1, 1);
+
+            // Add 2nd image to faceset. Verify
+            var addResult2 = AddImageToFacesetAndVerify(createResult.Faceset_token, analysisResult2.Faces[0].Face_token, 2);
+
+
+            // Analyze search image (with sunglasses)
+            var analysisResult3 = AnalyzeFrameAndVerify(Resources.TestImage3, 1);
+
+            // Try to search. Should be the same person as in the 1st image
+            var searchResult = SearchFaceInFaceset(createResult.Faceset_token, analysisResult3.Faces[0].Face_token, analysisResult1.Faces[0].Face_token);
+        }
+
+        [TestMethod]
+        public void Faceset_SearchWithVariousImagesOfSamePerson_Succeeds()
+        {
+            // Create a new faceset and verify that it was created successfully
+            var createResult = CreateFacesetAndVerify(Guid.NewGuid().ToString());
+
+
+            // Analyze 1st image. Verify
+            var analysisResult1 = AnalyzeFrameAndVerify(Resources.TestImage2, 1);
+
+            // Add 1st image to faceset. Verify
+            var addResult1 = AddImageToFacesetAndVerify(createResult.Faceset_token, analysisResult1.Faces[0].Face_token, 1);
+
+
+            // Analyze 2nd image. Verify
+            var analysisResult2 = AnalyzeFrameAndVerify(Resources.TestImage1, 1);
+
+            // Add 2nd image to faceset. Verify
+            var addResult2 = AddImageToFacesetAndVerify(createResult.Faceset_token, analysisResult2.Faces[0].Face_token, 2);
+
+
+            // Analyze search 1st image (with sunglasses)
+            var analysisResult3 = AnalyzeFrameAndVerify(Resources.TestImage3, 1);
+
+            // Try to search. Should be the same person as in the 1st image
+            var searchResult1 = SearchFaceInFaceset(createResult.Faceset_token, analysisResult3.Faces[0].Face_token, analysisResult1.Faces[0].Face_token);
+
+
+            // Analyze search 2st image (with sunglasses)
+            var analysisResult4 = AnalyzeFrameAndVerify(Resources.TestImage5, 1);
+
+            // Try to search. Should be the same person as in the 1st image
+            var searchResult2 = SearchFaceInFaceset(createResult.Faceset_token, analysisResult4.Faces[0].Face_token, analysisResult1.Faces[0].Face_token);
+        }
+
+        [TestMethod]
+        public void Faceset_SearchForNonExistingPerson_Succeeds()
+        {
+            // Create a new faceset and verify that it was created successfully
+            var createResult = CreateFacesetAndVerify(Guid.NewGuid().ToString());
+
+
+            // Analyze 1st image. Verify
+            var analysisResult1 = AnalyzeFrameAndVerify(Resources.TestImage2, 1);
+
+            // Add 1st image to faceset. Verify
+            var addResult1 = AddImageToFacesetAndVerify(createResult.Faceset_token, analysisResult1.Faces[0].Face_token, 1);
+
+
+            // Analyze 2nd image. Verify
+            var analysisResult2 = AnalyzeFrameAndVerify(Resources.TestImage1, 1);
+
+            // Add 2nd image to faceset. Verify
+            var addResult2 = AddImageToFacesetAndVerify(createResult.Faceset_token, analysisResult2.Faces[0].Face_token, 2);
+
+
+            // Analyze search image 
+            var analysisResult3 = AnalyzeFrameAndVerify(Resources.TestImage6, 1);
+
+            // Try to search. Should find no matches
+            var searchResult = SearchFaceInFaceset(createResult.Faceset_token, analysisResult3.Faces[0].Face_token, "", 0);
         }
 
         private CreateFacesetJSON CreateFacesetAndVerify(string facesetname)
@@ -113,10 +206,21 @@ namespace UnitTests
         private RemoveFaceJSON RemoveFaceFromFacesetAndVerify(string facesetToken, string faceToken, int expectedFacesetFaceCount)
         {
             var result = faceApiCalls.RemoveFaceFromFaceset(facesetToken, faceToken).Result;
+
             Assert.AreEqual(facesetToken, result.Faceset_token, "Removed face from the wrong faceset");
             Assert.AreEqual(1, result.Face_removed, "There should be exactly 1 faces removed from the faceset");
             Assert.AreEqual(expectedFacesetFaceCount, result.Face_count, "There should be exactly {0} faces left in the faceset",expectedFacesetFaceCount);
             Assert.AreEqual(0, result.Failure_detail.Count, "There should be no failures");
+
+            return result;
+        }
+
+        private FoundFacesJSON SearchFaceInFaceset(string facesetToken, string faceToken, string expectedFaceToken, int expectedResultCount = 1)
+        {
+            var result = faceApiCalls.SearchFaceInFaceset(facesetToken, faceToken).Result;
+
+            Assert.AreEqual(expectedResultCount, result.Results.Count, "Should find exactly {0} similar face", expectedResultCount);
+            Assert.IsTrue(result.Results[0].Face_token.Equals(expectedFaceToken), "Found the wrong face");
 
             return result;
         }

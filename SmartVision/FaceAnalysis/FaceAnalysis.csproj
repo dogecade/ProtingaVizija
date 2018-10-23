@@ -91,15 +91,23 @@
     <Compile Include="JSON\RemoveFaceJSON.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="LikelinessConfidence.cs" />
+    <Compile Include="NecessaryContactInformation.cs" />
     <Compile Include="Persons\ContactPerson.cs" />
     <Compile Include="Persons\MissingPerson.cs" />
     <Compile Include="Persons\Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchResultHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NotificationService\NotificationService.csproj">
+      <Project>{e0654466-0e6f-4a56-8972-af3d1666d780}</Project>
+      <Name>NotificationService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
