@@ -49,8 +49,8 @@ namespace FaceAnalysis
         /// Creates a new faceset
         /// </summary>
         /// <param name="facesetName">Name of the faceset</param>
-        /// <returns>CreateFaceSetJSON</returns>
-        public async Task<CreateFaceSetJSON> CreateNewFaceset(string facesetName)
+        /// <returns>CreateFacesetJSON</returns>
+        public async Task<CreateFacesetJSON> CreateNewFaceset(string facesetName)
         {
             HttpContent keyContent = new StringContent(Keys.apiKey);
             HttpContent secretContent = new StringContent(Keys.apiSecret);
@@ -62,7 +62,7 @@ namespace FaceAnalysis
                 formData.Add(secretContent, "api_secret");
                 formData.Add(facesetNameContent, "display_name");
 
-                return DeserializeResponse<CreateFaceSetJSON>(await httpClientWrapper.Post(createUrl, formData));
+                return DeserializeResponse<CreateFacesetJSON>(await httpClientWrapper.Post(createUrl, formData));
             }
         }
 

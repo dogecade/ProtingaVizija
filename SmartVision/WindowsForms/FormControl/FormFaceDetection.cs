@@ -135,6 +135,12 @@ namespace WindowsForms.FormControl
 
                 if (validImage)
                 {
+                    if (await new FaceApiCalls(new HttpClientWrapper()).AddFaceToFaceset(FaceAnalysis.Keys.facesetToken, faceToken) == null)
+                    {
+                        //TODO: have some proper things to do here.
+                        throw new SystemException("Invalid API Response");
+                    }
+                    
                     //add to db here.
                     Api.Models.ContactPerson contact = InitializeContactPerson();
 
@@ -150,7 +156,6 @@ namespace WindowsForms.FormControl
 
                     Console.WriteLine("contact" + await httpClient.PostContactPersonToApiAsync(contact));
                     Console.WriteLine("missing" + await httpClient.PostMissingPersonToApiAsync(missing));
-
                 }
                 else
                     MessageBox.Show("Please upload a valid picture!");
@@ -158,6 +163,7 @@ namespace WindowsForms.FormControl
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
+                MessageBox.Show("An error occured while saving missing person, please try again later");
             }
 
         }
@@ -168,6 +174,7 @@ namespace WindowsForms.FormControl
         /// </summary>
         private async void uploadButton_Click(object sender, EventArgs e)
         {
+            int chosenImageIndex = 0;
             Bitmap uploadedImage = ImageUpload.UploadImage();
             if (uploadedImage == null)
                 return;
@@ -182,26 +189,33 @@ namespace WindowsForms.FormControl
                 validImage = false;
                 return;
             }
-            switch (result.faces.Count)
+            switch (result.Faces.Count)
             {
                 case 0:
                     MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
                                     "Please try another one.");
                     validImage = false;
                     uploadedImage.Dispose();                  
-                    break;
+                    return;
                 case 1:
-                    validImage = true;
-                    missingPersonPictureBox.Image = HelperMethods.CropImage(uploadedImage, result.faces[0].face_rectangle, 25);
-                    faceToken = result.faces[0].face_token;
                     break;
                 default:
-                    MessageBox.Show("Unfortunately, more than one face has been detected in the picture! \n" +
-                                    "Please try another one.");
-                    validImage = false;
-                    uploadedImage.Dispose();
+                    var chooseFaceForm = new ChooseFaceFormcs(result.Faces, uploadedImage); //foreach face in faces => face.faceRectangles[]
+                    chooseFaceForm.ShowDialog();
+                    if(chooseFaceForm.DialogResult == DialogResult.OK)
+                    {
+                        chosenImageIndex = chooseFaceForm.SelectedFace;
+                        chooseFaceForm.Dispose();
+                    }
+                    else
+                    {
+                        return;
+                    }
                     break;
             }
+            validImage = true;
+            missingPersonPictureBox.Image = HelperMethods.CropImage(uploadedImage, result.Faces[chosenImageIndex].Face_rectangle, 25);
+            faceToken = result.Faces[chosenImageIndex].Face_token;
         }
 
         /// <summary>

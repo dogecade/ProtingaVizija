@@ -3,34 +3,62 @@ using System.Collections.Generic;
 
 namespace FaceAnalysis
 {
-    public struct FacesetDetailsJSON : IApiResponseJSON
+    public class FacesetDetailsJSON : IApiResponseJSON
     {
-        public string faceset_token { get; set; }
-        public string tags { get; set; }
-        public int time_used { get; set; }
-        public string user_data { get; set; }
-        public string display_name { get; set; }
-        public IList<string> face_tokens { get; set; }
-        public int face_count { get; set; }
-        public string request_id { get; set; }
-        public string outer_id { get; set; }
+        public string Faceset_token { get; set; }
+        public string Tags { get; set; }
+        public int Time_used { get; set; }
+        public string User_data { get; set; }
+        public string Display_name { get; set; }
+        public IList<string> Face_tokens { get; set; }
+        public int Face_count { get; set; }
+        public string Request_id { get; set; }
+        public string Outer_id { get; set; }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (!(obj is FacesetDetailsJSON))
+            {
                 return false;
+            }
 
-            FacesetDetailsJSON objectToCompare = (FacesetDetailsJSON) obj;
+            var jSON = (FacesetDetailsJSON)obj;
+            return Faceset_token == jSON.Faceset_token &&
+                   Tags == jSON.Tags &&
+                   Time_used == jSON.Time_used &&
+                   User_data == jSON.User_data &&
+                   Display_name == jSON.Display_name &&
+                   EqualityComparer<IList<string>>.Default.Equals(Face_tokens, jSON.Face_tokens) &&
+                   Face_count == jSON.Face_count &&
+                   Request_id == jSON.Request_id &&
+                   Outer_id == jSON.Outer_id;
+        }
 
-            return (faceset_token.Equals(objectToCompare.faceset_token)) &&
-                   (tags.Equals(objectToCompare.tags)) &&
-                   (user_data.Equals(objectToCompare.user_data)) &&
-                   (display_name.Equals(objectToCompare.display_name)) &&
-                   (outer_id.Equals(objectToCompare.outer_id)) &&
-                   (request_id == objectToCompare.request_id) &&
-                   (time_used == objectToCompare.time_used) &&
-                   (face_count == objectToCompare.face_count) &&
-                   (face_tokens.Count == objectToCompare.face_tokens.Count);
+        public override int GetHashCode()
+        {
+            var hashCode = -327838629;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Faceset_token);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Tags);
+            hashCode = hashCode * -1521134295 + Time_used.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(User_data);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Display_name);
+            hashCode = hashCode * -1521134295 + EqualityComparer<IList<string>>.Default.GetHashCode(Face_tokens);
+            hashCode = hashCode * -1521134295 + Face_count.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Request_id);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Outer_id);
+            return hashCode;
+        }
+
+        public static bool operator ==(FacesetDetailsJSON lhs, FacesetDetailsJSON rhs)
+        {
+            if (lhs is null)
+                return rhs is null;
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(FacesetDetailsJSON lhs, FacesetDetailsJSON rhs)
+        {
+            return !(lhs == rhs);
         }
     }
 }

@@ -188,6 +188,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormControl\ChooseFaceFormcs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormControl\ChooseFaceFormcs.Designer.cs">
+      <DependentUpon>ChooseFaceFormcs.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormControl\ExtraInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -211,6 +217,9 @@
       <DependentUpon>pstop2018DataSet2.xsd</DependentUpon>
     </Compile>
     <Compile Include="WebcamInput.cs" />
+    <EmbeddedResource Include="FormControl\ChooseFaceFormcs.resx">
+      <DependentUpon>ChooseFaceFormcs.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormControl\ExtraInfoForm.resx">
       <DependentUpon>ExtraInfoForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -23,14 +23,13 @@ namespace FaceAnalysis
 
         public async Task<string> Post(string url, MultipartFormDataContent httpContent, bool repeatedRequest = false)
         {
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
+            {
+                Version = HttpVersion.Version10,
+                Content = httpContent
+            };
             try
             {
-
-                using (var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
-                {
-                    Version = HttpVersion.Version10,
-                    Content = httpContent
-                })
                 using (var response = await httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false))
                 {
                     var responseString = await response.Content.ReadAsStringAsync();
@@ -38,7 +37,7 @@ namespace FaceAnalysis
                     if (response.IsSuccessStatusCode)
                         return responseString;
                     else
-                        throw new HttpRequestException(response.ToString());
+                        throw new HttpRequestException(responseString);
                 }
             }
 
@@ -54,6 +53,10 @@ namespace FaceAnalysis
                     Debug.WriteLine(e);
                     return null;
                 }                   
+            }
+            finally
+            {
+                httpRequestMessage.Dispose();
             }
         }
         public async Task<HttpStatusCode> PostMissingPersonToApiAsync(Object missingPerson)

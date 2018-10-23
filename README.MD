@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/dogecade/ProtingaVizija.svg?branch=master)](https://travis-ci.com/dogecade/ProtingaVizija)
+
 # SmartVision
 This application helps to find missing people.
 The concept is that there are some cameras placed in the city,
@@ -20,6 +22,3 @@ persons and institutions are notified.
 
 ## License
 TBD
-
-## Build Status
-[![Build Status](https://travis-ci.com/dogecade/ProtingaVizija.svg?branch=master)](https://travis-ci.com/dogecade/ProtingaVizija)
