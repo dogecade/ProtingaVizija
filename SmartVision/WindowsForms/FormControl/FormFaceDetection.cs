@@ -209,6 +209,10 @@ namespace WindowsForms.FormControl
                         chosenImageIndex = chooseFaceForm.SelectedFace;
                         chooseFaceForm.Dispose();
                     }
+                    else
+                    {
+                        return;
+                    }
                     break;
             }
             validImage = true;

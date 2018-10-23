@@ -22,22 +22,20 @@ namespace WindowsForms.FormControl
         }
         public void InitializeImageView(IList<FaceAnalysis.Face> faces, Bitmap uploadedImage)
         {
-            int i = 0;
             string textNearFace;
-            imageListView.Columns.Add("Choose the face of the missing person", 150);
-            imageListView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.HeaderSize);
 
-
-            foreach (var face in faces)
+            for (int i = 0; i < faces.Count(); i++)
             {
                 Bitmap tempImage = new Bitmap(uploadedImage);
-                imageList.Images.Add(FaceAnalysis.HelperMethods.CropImage(tempImage, face.Face_rectangle, 25));
+                imageList.Images.Add(FaceAnalysis.HelperMethods.CropImage(tempImage, faces[i].Face_rectangle, 25));
 
                 imageListView.SmallImageList = imageList;
-                textNearFace = "Face Nr. " + (i + 1).ToString();
+                textNearFace = "      Face Nr. " + (i + 1).ToString() + "            ";
                 imageListView.Items.Add(textNearFace, i);
-                i++;
             }
+
+            if (faces.Count == 2)
+                imageListView.Columns[0].Width += SystemInformation.VerticalScrollBarWidth;
         }
 
         private void imageListView_MouseDoubleClick(object sender, MouseEventArgs e)
