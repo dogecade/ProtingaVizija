@@ -11,21 +11,18 @@ namespace FaceAnalysis
 {
     public class SearchResultHandler
     {
-        private const string normalProbabilityOutputMessage = "Decent possibility that your missing person was detected!";
         private const string normalProbabilityEmailSubject = "Decent possibility that your missing person was detected!";
         private const string normalProbabilitySmsBodyBeginning = "Good afternoon. There's a possibility that your missing person ";
         private const string normalProbabilitySmsBodyEnding = " was detected. Please check you email for more detailed information.";
         private const string normalProbabilityEmailBodyBeginning = "Good afternoon. There's a possibility that your missing person ";
         private const string normalProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
 
-        private const string highProbabilityOutputMessage = "HIGH possibility that your missing person was detected!";
         private const string highProbabilityEmailSubject = "HIGH possibility that your missing person was detected!";
         private const string highProbabilitySmsBodyBeginning ="Good afternoon. There's a HIGH possibility that your missing person ";
         private const string highProbabilitySmsBodyEnding =" was detected. Please check you email for more detailed information.";
         private const string highProbabilityEmailBodyBeginning = "Good afternoon. There's a HIGH possibility that your missing person ";
         private const string highProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
 
-        private const string veryHighProbabilityOutputMessage ="VERY HIGH possibility that your missing person was detected!";
         private const string veryHighProbabilityEmailSubject ="VERY HIGH possibility that your missing person was detected!";
         private const string veryHighProbabilitySmsBodyBeginning ="Good afternoon. There's a VERY HIGH possibility that your missing person ";
         private const string veryHighProbabilitySmsBodyEnding =" was detected. Please check you email for more detailed information.";
@@ -46,7 +43,6 @@ namespace FaceAnalysis
                 SmsBodyEnding = highProbabilitySmsBodyEnding,
                 EmailBodyBeginning = highProbabilityEmailBodyBeginning,
                 EmailBodyEnding = highProbabilityEmailBodyEnding,
-                OutputMessage = highProbabilityOutputMessage
             };
             LikelinessLevelData veryHighLevelData = new LikelinessLevelData
             {
@@ -56,7 +52,6 @@ namespace FaceAnalysis
                 SmsBodyEnding = veryHighProbabilitySmsBodyEnding,
                 EmailBodyBeginning = veryHighProbabilityEmailBodyBeginning,
                 EmailBodyEnding = veryHighProbabilityEmailBodyEnding,
-                OutputMessage = veryHighProbabilityOutputMessage
             };
             LikelinessLevelData normalLevelData = new LikelinessLevelData
             {
@@ -66,7 +61,6 @@ namespace FaceAnalysis
                 SmsBodyEnding = normalProbabilitySmsBodyEnding,
                 EmailBodyBeginning = normalProbabilityEmailBodyBeginning,
                 EmailBodyEnding = normalProbabilityEmailBodyEnding,
-                OutputMessage = normalProbabilityOutputMessage
             };
 
             likelinessLevelData.TryAdd(LikelinessConfidence.VeryHighProbability, veryHighLevelData);
@@ -135,10 +129,20 @@ namespace FaceAnalysis
         {
             NecessaryContactInformation information = GetMissingPersonData(faceToken);
             LikelinessLevelData data = likelinessLevelData[confidence];
-            Mail.SendMail(information.contactPersonEmailAddress, data.EmailSubject,
-                          data.EmailBodyBeginning + information.missingPersonFirstName + " " +
-                          information.missingPersonLastName + data.EmailBodyEnding);
-            Sms.SendSms(information.contactPersonPhoneNumber, data.SmsBodyBeginning + information.missingPersonFirstName + " " + information.missingPersonLastName + data.SmsBodyEnding);
+
+            if (Mail.SendMail(information.contactPersonEmailAddress, data.EmailSubject,
+                    data.EmailBodyBeginning + information.missingPersonFirstName + " " +
+                    information.missingPersonLastName + data.EmailBodyEnding) == null)
+            {
+                Debug.WriteLine("Mail message was not sent!");
+            }
+
+            if (Sms.SendSms(information.contactPersonPhoneNumber,
+                    data.SmsBodyBeginning + information.missingPersonFirstName + " " +
+                    information.missingPersonLastName + data.SmsBodyEnding) == null)
+            {
+                Debug.WriteLine("Sms message was not sent!");
+            }
         }
 
         /// <summary>
@@ -167,6 +171,5 @@ namespace FaceAnalysis
         public string SmsBodyEnding { get; set; }
         public string EmailBodyBeginning { get; set; } 
         public string EmailBodyEnding { get; set; }
-        public string OutputMessage { get; set; }
     }
 }
