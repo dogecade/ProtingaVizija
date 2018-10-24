@@ -304,7 +304,6 @@ namespace WindowsForms.FormControl
             using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
             {
                 Api.Models.MissingPerson missingPerson = db.MissingPersons.Find(Id);
-                //Api.Models.ContactPerson contactPerson = db.ContactPersons.FirstOrDefault(f => f.missingPersonId == stringId);
 
                 form.firstNameBox.Text = missingPerson.firstName;
                 form.lastNameBox.Text = missingPerson.lastName;
@@ -312,14 +311,6 @@ namespace WindowsForms.FormControl
                 form.lastSeenOnPicker.Text = missingPerson.lastSeenDate ?? "";
                 form.locationBox.Text = missingPerson.lastSeenLocation ?? "";
                 form.additionalInfoBox.Text = missingPerson.Additional_Information ?? "";
-                /*if (contactPerson != null)
-                {
-                    form.contactLastNameBox.Text = contactPerson.lastName;
-                    form.contactFirstNameBox.Text = contactPerson.firstName;
-                    form.contactPhoneNumberBox.Text = contactPerson.phoneNumber;
-                    form.contactEmailAddressBox.Text = contactPerson.emailAddress;
-                    
-                }*/
 
                 form.ShowDialog();
             }
