@@ -6,6 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Api.Models;
@@ -24,9 +25,9 @@ namespace Api.Controllers
 
         // GET: api/MissingPersons/5
         [ResponseType(typeof(MissingPerson))]
-        public IHttpActionResult GetMissingPerson(int id)
+        public async Task<IHttpActionResult> GetMissingPerson(int id)
         {
-            MissingPerson missingPerson = db.MissingPersons.Find(id);
+            MissingPerson missingPerson = await db.MissingPersons.FindAsync(id);
             if (missingPerson == null)
             {
                 return NotFound();
@@ -37,7 +38,7 @@ namespace Api.Controllers
 
         // PUT: api/MissingPersons/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutMissingPerson(int id, MissingPerson missingPerson)
+        public async Task<IHttpActionResult> PutMissingPerson(int id, MissingPerson missingPerson)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +54,7 @@ namespace Api.Controllers
 
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -72,7 +73,7 @@ namespace Api.Controllers
 
         // POST: api/MissingPersons
         [ResponseType(typeof(MissingPerson))]
-        public IHttpActionResult PostMissingPerson(MissingPerson missingPerson)
+        public async Task<IHttpActionResult> PostMissingPerson(MissingPerson missingPerson)
         {
             if (!ModelState.IsValid)
             {
@@ -80,23 +81,23 @@ namespace Api.Controllers
             }
 
             db.MissingPersons.Add(missingPerson);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return CreatedAtRoute("DefaultApi", new { id = missingPerson.Id }, missingPerson);
         }
 
         // DELETE: api/MissingPersons/5
         [ResponseType(typeof(MissingPerson))]
-        public IHttpActionResult DeleteMissingPerson(int id)
+        public async Task<IHttpActionResult> DeleteMissingPerson(int id)
         {
-            MissingPerson missingPerson = db.MissingPersons.Find(id);
+            MissingPerson missingPerson = await db.MissingPersons.FindAsync(id);
             if (missingPerson == null)
             {
                 return NotFound();
             }
 
             db.MissingPersons.Remove(missingPerson);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return Ok(missingPerson);
         }

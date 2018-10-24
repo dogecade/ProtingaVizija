@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using FaceAnalysis;
 using System.Linq;
 using WindowsForms.Models;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace WindowsForms.FormControl
 {
@@ -140,22 +142,33 @@ namespace WindowsForms.FormControl
                         //TODO: have some proper things to do here.
                         throw new SystemException("Invalid API Response");
                     }
-                    
-                    //add to db here.
-                    Api.Models.ContactPerson contact = InitializeContactPerson();
+                    HttpContent content = await httpClient.PostImageToApi(missingPersonImage);
+                    string response = await content.ReadAsStringAsync();
+                    //post image to api
+                    Console.WriteLine("posting image to api" + response );
 
-                    MissingPerson missing = new MissingPerson();
-                    missing.firstName = firstNameBox.Text;
-                    missing.lastName = lastNameBox.Text;
-                    missing.lastSeenDate = lastSeenOnPicker.Text;
-                    missing.lastSeenLocation = lastSeenOn.Text;
-                    missing.Additional_Information = additionalInfoBox.Text;
-                    missing.dateOfBirth = dateOfBirthPicker.Text;
-                    missing.faceImg = "asdfasdfasdfasdfasdf";
-                    missing.faceToken = faceToken;
+                    //initialize contact person
+                    ContactPerson contact = InitializeContactPerson();
 
-                    Console.WriteLine("contact" + await httpClient.PostContactPersonToApiAsync(contact));
-                    Console.WriteLine("missing" + await httpClient.PostMissingPersonToApiAsync(missing));
+                    //initialize missing person
+                    MissingPerson missing = InitializeMissingPerson(response);
+
+                    content = await httpClient.PostContactPersonToApiAsync(contact);
+                    string contact1 = await content.ReadAsStringAsync();
+                    Console.WriteLine("contact" + contact1 );
+                    content = await httpClient.PostMissingPersonToApiAsync(missing);
+                    string missing1 = await content.ReadAsStringAsync();
+                    Console.WriteLine("missing" + missing1 );
+                    MissingPerson parsedMiss = JsonConvert.DeserializeObject<MissingPerson>(missing1);
+                    ContactPerson parsedCont = JsonConvert.DeserializeObject<ContactPerson>(contact1);
+                    MissingContact misscont = new MissingContact();
+                    misscont.contactPerson = parsedCont;
+                    misscont.missingPerson = parsedMiss;
+
+
+
+                    //create a relationship between persons
+                    Console.WriteLine(await httpClient.PostRelToApi(misscont));
                 }
                 else
                     MessageBox.Show("Please upload a valid picture!");
@@ -267,21 +280,23 @@ namespace WindowsForms.FormControl
             }
         }
 
-        private Api.Models.MissingPerson InitializeMissingPerson()
+        private MissingPerson InitializeMissingPerson(string imgLocation)
         {
-            Api.Models.MissingPerson missingPerson = new Api.Models.MissingPerson();
+            MissingPerson missingPerson = new MissingPerson();
             missingPerson.firstName = firstNameBox.Text;
             missingPerson.lastName = lastNameBox.Text;
             missingPerson.lastSeenDate = lastSeenOnPicker.Value.ToString();
             missingPerson.lastSeenLocation = locationBox.Text;
             missingPerson.Additional_Information = additionalInfoBox.Text;
+            missingPerson.dateOfBirth = dateOfBirthPicker.Text;
+            missingPerson.faceImg = imgLocation;
             missingPerson.faceToken = faceToken;
-
+           
             return missingPerson;
         }
-        private Api.Models.ContactPerson InitializeContactPerson()
+        private ContactPerson InitializeContactPerson()
         {
-            Api.Models.ContactPerson contactPerson = new Api.Models.ContactPerson();
+            ContactPerson contactPerson = new ContactPerson();
             contactPerson.firstName = contactFirstNameBox.Text;
             contactPerson.lastName = contactLastNameBox.Text;
             contactPerson.phoneNumber = contactPhoneNumberBox.Text;
@@ -300,7 +315,6 @@ namespace WindowsForms.FormControl
             {
                 Api.Models.MissingPerson missingPerson = db.MissingPersons.Find(Id);
                 //Api.Models.ContactPerson contactPerson = db.ContactPersons.FirstOrDefault(f => f.missingPersonId == stringId);
-
                 //form.firstNameBox.Text = missingPerson.firstName;
                 //form.lastNameBox.Text = missingPerson.lastName;
                 //form.lastSeenOnPicker.Text = missingPerson.lastSeenDate;

@@ -208,6 +208,7 @@
       <DependentUpon>FormFaceDetection.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ContactPerson.cs" />
+    <Compile Include="Models\MissingContact.cs" />
     <Compile Include="Models\MissingPerson.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

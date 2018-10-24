@@ -206,6 +206,7 @@
     <Compile Include="Controllers\ContactPersonsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageUploadController.cs" />
+    <Compile Include="Controllers\MissingContactController.cs" />
     <Compile Include="Controllers\MissingPersonsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -213,6 +214,7 @@
     <Compile Include="Models\ContactPerson.cs">
       <DependentUpon>Tables.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MissingContact.cs" />
     <Compile Include="Models\MissingPerson.cs">
       <DependentUpon>Tables.tt</DependentUpon>
     </Compile>

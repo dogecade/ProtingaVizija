@@ -6,6 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Api.Models;
@@ -24,9 +25,9 @@ namespace Api.Controllers
 
         // GET: api/ContactPersons/5
         [ResponseType(typeof(ContactPerson))]
-        public IHttpActionResult GetContactPerson(int id)
+        public async Task<IHttpActionResult> GetContactPerson(int id)
         {
-            ContactPerson contactPerson = db.ContactPersons.Find(id);
+            ContactPerson contactPerson = await db.ContactPersons.FindAsync(id);
             if (contactPerson == null)
             {
                 return NotFound();
@@ -37,7 +38,7 @@ namespace Api.Controllers
 
         // PUT: api/ContactPersons/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutContactPerson(int id, ContactPerson contactPerson)
+        public async Task<IHttpActionResult> PutContactPerson(int id, ContactPerson contactPerson)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +54,7 @@ namespace Api.Controllers
 
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -72,7 +73,7 @@ namespace Api.Controllers
 
         // POST: api/ContactPersons
         [ResponseType(typeof(ContactPerson))]
-        public IHttpActionResult PostContactPerson(ContactPerson contactPerson)
+        public async Task<IHttpActionResult> PostContactPerson(ContactPerson contactPerson)
         {
             if (!ModelState.IsValid)
             {
@@ -80,23 +81,23 @@ namespace Api.Controllers
             }
 
             db.ContactPersons.Add(contactPerson);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return CreatedAtRoute("DefaultApi", new { id = contactPerson.Id }, contactPerson);
         }
 
         // DELETE: api/ContactPersons/5
         [ResponseType(typeof(ContactPerson))]
-        public IHttpActionResult DeleteContactPerson(int id)
+        public async Task<IHttpActionResult> DeleteContactPerson(int id)
         {
-            ContactPerson contactPerson = db.ContactPersons.Find(id);
+            ContactPerson contactPerson = await db.ContactPersons.FindAsync(id);
             if (contactPerson == null)
             {
                 return NotFound();
             }
 
             db.ContactPersons.Remove(contactPerson);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return Ok(contactPerson);
         }
