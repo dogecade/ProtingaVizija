@@ -81,7 +81,7 @@ namespace UnitTests
             var analysisResult3 = AnalyzeFrameAndVerify(Resources.TestImage3, 1);
 
             // Try to search. Should be the same person as in the 1st image
-            var searchResult = SearchFaceInFaceset(createResult.Faceset_token, analysisResult3.Faces[0].Face_token, LikelinessConfidence.HighProbability);
+            var searchResult = SearchFaceInFaceset(createResult.Faceset_token, analysisResult3.Faces[0].Face_token, analysisResult1.Faces[0].Face_token);
         }
 
         [TestMethod]
@@ -109,14 +109,14 @@ namespace UnitTests
             var analysisResult3 = AnalyzeFrameAndVerify(Resources.TestImage3, 1);
 
             // Try to search. Should be the same person as in the 1st image
-            var searchResult1 = SearchFaceInFaceset(createResult.Faceset_token, analysisResult3.Faces[0].Face_token, LikelinessConfidence.HighProbability);
+            var searchResult1 = SearchFaceInFaceset(createResult.Faceset_token, analysisResult3.Faces[0].Face_token, analysisResult1.Faces[0].Face_token);
 
 
             // Analyze search 2st image (with sunglasses)
             var analysisResult4 = AnalyzeFrameAndVerify(Resources.TestImage5, 1);
 
             // Try to search. Should be the same person as in the 1st image
-            var searchResult2 = SearchFaceInFaceset(createResult.Faceset_token, analysisResult4.Faces[0].Face_token, LikelinessConfidence.VeryHighProbability);
+            var searchResult2 = SearchFaceInFaceset(createResult.Faceset_token, analysisResult4.Faces[0].Face_token, analysisResult1.Faces[0].Face_token);
         }
 
         [TestMethod]
@@ -144,7 +144,7 @@ namespace UnitTests
             var analysisResult3 = AnalyzeFrameAndVerify(Resources.TestImage6, 1);
 
             // Try to search. Should find no matches
-            var searchResult = SearchFaceInFaceset(createResult.Faceset_token, analysisResult3.Faces[0].Face_token, LikelinessConfidence.LowProbability);
+            var searchResult = SearchFaceInFaceset(createResult.Faceset_token, analysisResult3.Faces[0].Face_token, "", 0);
         }
 
         private CreateFacesetJSON CreateFacesetAndVerify(string facesetname)
@@ -215,14 +215,12 @@ namespace UnitTests
             return result;
         }
 
-        private FoundFacesJSON SearchFaceInFaceset(string facesetToken, string faceToken, LikelinessConfidence expectedConfidence)
+        private FoundFacesJSON SearchFaceInFaceset(string facesetToken, string faceToken, string expectedFaceToken, int expectedResultCount = 1)
         {
             var result = faceApiCalls.SearchFaceInFaceset(facesetToken, faceToken).Result;
 
-            foreach (LikelinessResult likelinessResult in result.LikelinessConfidences())
-            {
-                Assert.AreEqual(expectedConfidence,likelinessResult.Confidence, "Wrong likeliness confidence");
-            }
+            Assert.AreEqual(expectedResultCount, result.Results.Count, "Should find exactly {0} similar face", expectedResultCount);
+            Assert.IsTrue(result.Results[0].Face_token.Equals(expectedFaceToken), "Found the wrong face");
 
             return result;
         }
