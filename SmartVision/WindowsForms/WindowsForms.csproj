@@ -207,6 +207,7 @@
     <Compile Include="FormControl\FormFaceDetection.Designer.cs">
       <DependentUpon>FormFaceDetection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Messages.cs" />
     <Compile Include="Models\ContactPerson.cs" />
     <Compile Include="Models\MissingContact.cs" />
     <Compile Include="Models\MissingPerson.cs" />
