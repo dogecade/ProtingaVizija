@@ -81,7 +81,7 @@ namespace FaceAnalysis
                     break;
                 foreach (var entry in notificationsToSend)
                 {
-                    if (entry.Value.Item1 < DateTime.Now)
+                    if (entry.Value.Item1 <= DateTime.Now)
                     {
                         if (entry.Value.Item2 < LikelinessConfidence.VeryHighProbability)
                             SendNotifications(confidence: entry.Value.Item2, faceToken: entry.Key);
@@ -113,7 +113,7 @@ namespace FaceAnalysis
                 likeliness.FaceToken,
                 Tuple.Create(sendTime, likeliness.Confidence),
                 (key, oldValue) => Tuple.Create(
-                    new[] { sendTime, oldValue.Item1 }.Max(),
+                    likeliness.Confidence == LikelinessConfidence.VeryHighProbability ? sendTime : new[] { sendTime, oldValue.Item1 }.Min(),
                     (LikelinessConfidence)Math.Max((int)oldValue.Item2, (int)likeliness.Confidence)
                 )
             );
