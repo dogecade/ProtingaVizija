@@ -113,7 +113,7 @@ namespace FaceAnalysis
                 likeliness.FaceToken,
                 Tuple.Create(sendTime, likeliness.Confidence),
                 (key, oldValue) => Tuple.Create(
-                    new[] { sendTime, oldValue.Item1 }.Min(),
+                    likeliness.Confidence == LikelinessConfidence.VeryHighProbability ? sendTime : new[] { sendTime, oldValue.Item1 }.Min(),
                     (LikelinessConfidence)Math.Max((int)oldValue.Item2, (int)likeliness.Confidence)
                 )
             );
