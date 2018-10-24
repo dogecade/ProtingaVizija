@@ -2,10 +2,13 @@
 using NotificationService;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Api.Models;
+using Newtonsoft.Json;
 
 namespace FaceAnalysis
 {
@@ -18,16 +21,18 @@ namespace FaceAnalysis
         private const string normalProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
 
         private const string highProbabilityEmailSubject = "HIGH possibility that your missing person was detected!";
-        private const string highProbabilitySmsBodyBeginning ="Good afternoon. There's a HIGH possibility that your missing person ";
-        private const string highProbabilitySmsBodyEnding =" was detected. Please check you email for more detailed information.";
+        private const string highProbabilitySmsBodyBeginning = "Good afternoon. There's a HIGH possibility that your missing person ";
+        private const string highProbabilitySmsBodyEnding = " was detected. Please check you email for more detailed information.";
         private const string highProbabilityEmailBodyBeginning = "Good afternoon. There's a HIGH possibility that your missing person ";
         private const string highProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
 
-        private const string veryHighProbabilityEmailSubject ="VERY HIGH possibility that your missing person was detected!";
-        private const string veryHighProbabilitySmsBodyBeginning ="Good afternoon. There's a VERY HIGH possibility that your missing person ";
-        private const string veryHighProbabilitySmsBodyEnding =" was detected. Please check you email for more detailed information.";
+        private const string veryHighProbabilityEmailSubject = "VERY HIGH possibility that your missing person was detected!";
+        private const string veryHighProbabilitySmsBodyBeginning = "Good afternoon. There's a VERY HIGH possibility that your missing person ";
+        private const string veryHighProbabilitySmsBodyEnding = " was detected. Please check you email for more detailed information.";
         private const string veryHighProbabilityEmailBodyBeginning = "Good afternoon. There's a VERY HIGH possibility that your missing person ";
         private const string veryHighProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
+
+        private const string getMisingPersonsUrl = "http://viltomas.eu/api/MissingPersons";
 
         private readonly Task notifactionSenderTask;
         private readonly ConcurrentDictionary<string, Tuple<DateTime, LikelinessConfidence>> notificationsToSend = new ConcurrentDictionary<string, Tuple<DateTime, LikelinessConfidence>>();
@@ -152,11 +157,17 @@ namespace FaceAnalysis
         /// <returns>Contact information</returns>
         private static NecessaryContactInformation GetMissingPersonData(string matchedFace)
         {
-            //TODO: Get missing person from db where identifier is facetoken
-            string missingPersonFirstName = "name";
-            string missingPersonLastName = "lastname";
-            string contactPersonPhoneNumber = "+37068959812";
-            string contactPersonEmailAddress = "deividas.brazenas@gmail.com";
+            HttpClientWrapper wrapper = new HttpClientWrapper();
+            var missingPersonsJson = wrapper.Get(getMisingPersonsUrl).Result;
+            var missingPersonsList = JsonConvert.DeserializeObject<List<Api.Models.MissingPerson>>(missingPersonsJson);
+            var foundMissingPerson = missingPersonsList.First(x => x.faceToken == matchedFace);
+
+            string missingPersonFirstName = foundMissingPerson.firstName;
+            string missingPersonLastName = foundMissingPerson.lastName;
+
+            var contactPerson = foundMissingPerson.ContactPersons.FirstOrDefault();
+            string contactPersonPhoneNumber = contactPerson.phoneNumber;
+            string contactPersonEmailAddress = contactPerson.emailAddress;
 
             return new NecessaryContactInformation(missingPersonFirstName, missingPersonLastName,
                 contactPersonPhoneNumber, contactPersonEmailAddress);
@@ -169,7 +180,7 @@ namespace FaceAnalysis
         public string EmailSubject { get; set; }
         public string SmsBodyBeginning { get; set; }
         public string SmsBodyEnding { get; set; }
-        public string EmailBodyBeginning { get; set; } 
+        public string EmailBodyBeginning { get; set; }
         public string EmailBodyEnding { get; set; }
     }
 }
