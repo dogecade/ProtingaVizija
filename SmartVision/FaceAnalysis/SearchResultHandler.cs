@@ -155,7 +155,7 @@ namespace FaceAnalysis
         /// </summary>
         /// <param name="matchedFace">ID of face to grab</param>
         /// <returns>Contact information</returns>
-        public static NecessaryContactInformation GetMissingPersonData(string matchedFace)
+        private static NecessaryContactInformation GetMissingPersonData(string matchedFace)
         {
             HttpClientWrapper wrapper = new HttpClientWrapper();
             var missingPersonsJson = wrapper.Get(getMisingPersonsUrl).Result;
