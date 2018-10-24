@@ -18,8 +18,9 @@ namespace FaceAnalysis
         private readonly BufferBlock<string> searchBuffer = new BufferBlock<string>(new DataflowBlockOptions { BoundedCapacity = BUFFER_LIMIT });
         private readonly BroadcastBlock<byte[]> buffer = new BroadcastBlock<byte[]>(item => item);
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
-        private Task searchTask;
-
+        private static readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
+        private static readonly SearchResultHandler resultHandler = new SearchResultHandler(tokenSource.Token);
+        private readonly Task searchTask;
 
         public FaceProcessor(VideoCapture capture)
         {
@@ -66,6 +67,7 @@ namespace FaceAnalysis
         {
             searchBuffer.Complete();
             await searchTask;
+            tokenSource.Cancel();
         }
 
         /// <summary>
@@ -93,7 +95,7 @@ namespace FaceAnalysis
                 FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, await searchBuffer.ReceiveAsync());
                 if (response != null)
                     foreach (LikelinessResult result in response.LikelinessConfidences())
-                        HelperMethods.HandleSearchResult(result.Confidence, result.FaceToken);
+                        resultHandler.HandleSearchResult(result);
             }
         }
 
