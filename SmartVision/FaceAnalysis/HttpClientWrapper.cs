@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace FaceAnalysis
@@ -28,14 +29,16 @@ namespace FaceAnalysis
             };
             try
             {
-                using (var response = await httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false))
+                using (var response = await httpClient.SendAsync(httpRequestMessage))
                 {
                     var responseString = await response.Content.ReadAsStringAsync();
 
                     if (response.IsSuccessStatusCode)
                         return responseString;
                     else
-                        throw new HttpRequestException(responseString);
+                    {
+                        throw new HttpRequestException(response.ToString() + '\n'+ responseString + '\n');
+                    }
                 }
             }
 

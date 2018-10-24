@@ -121,4 +121,22 @@
   <data name="TestImage1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>TestPictures\1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="TestImage2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>TestPictures\TestImage2.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TestImage3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\TestImage3.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TestImage4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\TestImage4.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TestImage5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\TestImage5.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TestImage6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\TestImage6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TestImage7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\TestImage7.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
