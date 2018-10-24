@@ -21,14 +21,14 @@ namespace FaceAnalysis
         private const string normalProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
 
         private const string highProbabilityEmailSubject = "HIGH possibility that your missing person was detected!";
-        private const string highProbabilitySmsBodyBeginning ="Good afternoon. There's a HIGH possibility that your missing person ";
-        private const string highProbabilitySmsBodyEnding =" was detected. Please check you email for more detailed information.";
+        private const string highProbabilitySmsBodyBeginning = "Good afternoon. There's a HIGH possibility that your missing person ";
+        private const string highProbabilitySmsBodyEnding = " was detected. Please check you email for more detailed information.";
         private const string highProbabilityEmailBodyBeginning = "Good afternoon. There's a HIGH possibility that your missing person ";
         private const string highProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
 
-        private const string veryHighProbabilityEmailSubject ="VERY HIGH possibility that your missing person was detected!";
-        private const string veryHighProbabilitySmsBodyBeginning ="Good afternoon. There's a VERY HIGH possibility that your missing person ";
-        private const string veryHighProbabilitySmsBodyEnding =" was detected. Please check you email for more detailed information.";
+        private const string veryHighProbabilityEmailSubject = "VERY HIGH possibility that your missing person was detected!";
+        private const string veryHighProbabilitySmsBodyBeginning = "Good afternoon. There's a VERY HIGH possibility that your missing person ";
+        private const string veryHighProbabilitySmsBodyEnding = " was detected. Please check you email for more detailed information.";
         private const string veryHighProbabilityEmailBodyBeginning = "Good afternoon. There's a VERY HIGH possibility that your missing person ";
         private const string veryHighProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
 
@@ -160,7 +160,7 @@ namespace FaceAnalysis
             HttpClientWrapper wrapper = new HttpClientWrapper();
             var missingPersonsJson = wrapper.Get(getMisingPersonsUrl).Result;
             var missingPersonsList = JsonConvert.DeserializeObject<List<Api.Models.MissingPerson>>(missingPersonsJson);
-               var foundMissingPerson = missingPersonsList.First(x => x.faceToken == matchedFace);
+            var foundMissingPerson = missingPersonsList.First(x => x.faceToken == matchedFace);
 
             string missingPersonFirstName = foundMissingPerson.firstName;
             string missingPersonLastName = foundMissingPerson.lastName;
@@ -180,7 +180,7 @@ namespace FaceAnalysis
         public string EmailSubject { get; set; }
         public string SmsBodyBeginning { get; set; }
         public string SmsBodyEnding { get; set; }
-        public string EmailBodyBeginning { get; set; } 
+        public string EmailBodyBeginning { get; set; }
         public string EmailBodyEnding { get; set; }
     }
 }
