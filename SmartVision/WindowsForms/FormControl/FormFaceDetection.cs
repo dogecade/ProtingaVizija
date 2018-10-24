@@ -15,6 +15,9 @@ namespace WindowsForms.FormControl
         private HttpClientWrapper httpClient = new HttpClientWrapper();
         private const string enabledButtonText = "Enable scan";
         private const string disabledButtonText = "Disable scan";
+        private const string nameRegex = @"^[a-zA-Z]+$";
+        private const string phoneRegex = @"^[+][0-9]+$";
+        private const string emailRegex = @"^([\w\.]+)@([\w]+)((\.(\w){2,3})+)$";
         private Color underButtonColor = Color.LightSteelBlue;
         private bool cameraEnabled = false;
         private bool validImage = false;
@@ -29,6 +32,7 @@ namespace WindowsForms.FormControl
         private void FormFaceDetection_Load(object sender, EventArgs e)
         {
             // TODO: This line of code loads data into the 'pstop2018DataSet2.MissingPersons' table. You can move, or remove it, as needed.
+
             homePanel.BringToFront();
             underHomePanel.BackColor = underButtonColor;
         }
@@ -96,39 +100,39 @@ namespace WindowsForms.FormControl
             try
             {
                 // Verify that properties are valid
-                if (!Regex.IsMatch(firstNameBox.Text, @"^[a-zA-Z]+$") || firstNameBox.Text.Equals(""))
+                if (!Regex.IsMatch(firstNameBox.Text, nameRegex) || firstNameBox.Text.Equals(""))
                 {
-                    MessageBox.Show("Missing person First name should contain only letters and cannot be empty!");
+                    MessageBox.Show(Messages.incorrectMissingFirstNamePattern);
                     return;
                 }
 
-                if (!Regex.IsMatch(lastNameBox.Text, @"^[a-zA-Z]+$") || lastNameBox.Text.Equals(""))
+                if (!Regex.IsMatch(lastNameBox.Text, nameRegex) || lastNameBox.Text.Equals(""))
                 {
-                    MessageBox.Show("Missing person Last name should contain only letters and cannot be empty!");
+                    MessageBox.Show(Messages.incorrectLastNamePattern);
                     return;
                 }
 
-                if (!Regex.IsMatch(contactFirstNameBox.Text, @"^[a-zA-Z]+$") || contactFirstNameBox.Text.Equals(""))
+                if (!Regex.IsMatch(contactFirstNameBox.Text, nameRegex) || contactFirstNameBox.Text.Equals(""))
                 {
-                    MessageBox.Show("Contact person First name should contain only letters and cannot be empty!");
+                    MessageBox.Show(Messages.incorrectContactFirstNamePattern);
                     return;
                 }
 
-                if (!Regex.IsMatch(contactLastNameBox.Text, @"^[a-zA-Z]+$") || contactLastNameBox.Text.Equals(""))
+                if (!Regex.IsMatch(contactLastNameBox.Text, nameRegex) || contactLastNameBox.Text.Equals(""))
                 {
-                    MessageBox.Show("Contact person Last name should contain only letters and cannot be empty!");
+                    MessageBox.Show(Messages.incorrectContactLastNamePattern);
                     return;
                 }
 
-                if (!Regex.IsMatch(contactPhoneNumberBox.Text, @"^[+][0-9]+$") || contactPhoneNumberBox.Text.Equals(""))
+                if (!Regex.IsMatch(contactPhoneNumberBox.Text, phoneRegex) || contactPhoneNumberBox.Text.Equals(""))
                 {
-                    MessageBox.Show("Contact person Phone number should be in a valid format(+[Country code]00...00) and cannot be empty!");
+                    MessageBox.Show(Messages.incorrectPhoneNumberPattern);
                     return;
                 }
 
-                if (!Regex.IsMatch(contactEmailAddressBox.Text, @"^([\w\.]+)@([\w]+)((\.(\w){2,3})+)$") || contactEmailAddressBox.Text.Equals(""))
+                if (!Regex.IsMatch(contactEmailAddressBox.Text, emailRegex) || contactEmailAddressBox.Text.Equals(""))
                 {
-                    MessageBox.Show("Contact person Email address should be in a valid format (foo@bar.baz) and cannot be empty!");
+                    MessageBox.Show(Messages.incorrectEmailPattern);
                     return;
                 }
 
@@ -140,7 +144,7 @@ namespace WindowsForms.FormControl
                     if (await new FaceApiCalls(new HttpClientWrapper()).AddFaceToFaceset(FaceAnalysis.Keys.facesetToken, faceToken) == null)
                     {
                         //TODO: have some proper things to do here.
-                        throw new SystemException("Invalid API Response");
+                        throw new SystemException(Messages.invalidApiResponse);
                     }
                     HttpContent content = await httpClient.PostImageToApi(missingPersonImage);
                     string response = await content.ReadAsStringAsync();
@@ -164,19 +168,16 @@ namespace WindowsForms.FormControl
                     MissingContact misscont = new MissingContact();
                     misscont.contactPerson = parsedCont;
                     misscont.missingPerson = parsedMiss;
-
-
-
                     //create a relationship between persons
                     Console.WriteLine(await httpClient.PostRelToApi(misscont));
                 }
                 else
-                    MessageBox.Show("Please upload a valid picture!");
+                    MessageBox.Show(Messages.invalidImage);
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
-                MessageBox.Show("An error occured while saving missing person, please try again later");
+                MessageBox.Show(Messages.errorWhileSavingPerson);
             }
 
         }
@@ -198,24 +199,23 @@ namespace WindowsForms.FormControl
             missingPersonPictureBox.Image = null;
             if (result == null)
             {
-                MessageBox.Show("An error occured while analysing the image, please try again later");
+                MessageBox.Show(Messages.errorWhileAnalysingImage);
                 validImage = false;
                 return;
             }
             switch (result.Faces.Count)
             {
                 case 0:
-                    MessageBox.Show("Unfortunately, no faces have been detected in the picture! \n" +
-                                    "Please try another one.");
+                    MessageBox.Show(Messages.noFacesInImage);
                     validImage = false;
-                    uploadedImage.Dispose();                  
+                    uploadedImage.Dispose();
                     return;
                 case 1:
                     break;
                 default:
-                    var chooseFaceForm = new ChooseFaceFormcs(result.Faces, uploadedImage); //foreach face in faces => face.faceRectangles[]
+                    var chooseFaceForm = new ChooseFaceFormcs(result.Faces, uploadedImage);
                     chooseFaceForm.ShowDialog();
-                    if(chooseFaceForm.DialogResult == DialogResult.OK)
+                    if (chooseFaceForm.DialogResult == DialogResult.OK)
                     {
                         chosenImageIndex = chooseFaceForm.SelectedFace;
                         chooseFaceForm.Dispose();
@@ -314,6 +314,7 @@ namespace WindowsForms.FormControl
             using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
             {
                 Api.Models.MissingPerson missingPerson = db.MissingPersons.Find(Id);
+
                 //Api.Models.ContactPerson contactPerson = db.ContactPersons.FirstOrDefault(f => f.missingPersonId == stringId);
                 //form.firstNameBox.Text = missingPerson.firstName;
                 //form.lastNameBox.Text = missingPerson.lastName;
@@ -325,6 +326,7 @@ namespace WindowsForms.FormControl
                 //form.contactLastNameBox.Text = contactPerson.lastName;
                 //form.contactFirstNameBox.Text = contactPerson.firstName;
                 //form.dateOfBirthPicker.Text = ;
+
 
                 form.ShowDialog();
             }

@@ -14,13 +14,22 @@ namespace NotificationService
 
         static Mail()
         {
-            mail = new MailMessage();
-            mail.From = new MailAddress(Credentials.mailAddress);
+            try
+            {
+                mail = new MailMessage { From = new MailAddress(Credentials.mailAddress) };
 
-            smtpServer = new SmtpClient("smtp.gmail.com");
-            smtpServer.Credentials = new System.Net.NetworkCredential(Credentials.mailAddress, Credentials.mailPassword);
-            smtpServer.Port = 587;
-            smtpServer.EnableSsl = true;
+                smtpServer = new SmtpClient("smtp.gmail.com")
+                {
+                    Credentials = new System.Net.NetworkCredential(Credentials.mailAddress, Credentials.mailPassword),
+                    Port = 587,
+                    EnableSsl = true
+                };
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+
         }
 
         /// <summary>
@@ -35,6 +44,11 @@ namespace NotificationService
         {
             try
             {
+                if (mail == null)
+                {
+                    throw new Exception("Error while creating mail message. Please check, whether your provided data is valid");
+                }
+
                 mail.To.Add(recipientMail);
                 mail.Subject = subject;
                 mail.Body = body;
