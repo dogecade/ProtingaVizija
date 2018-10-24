@@ -208,6 +208,9 @@
       <DependentUpon>FormFaceDetection.cs</DependentUpon>
     </Compile>
     <Compile Include="Messages.cs" />
+    <Compile Include="Models\ContactPerson.cs" />
+    <Compile Include="Models\MissingContact.cs" />
+    <Compile Include="Models\MissingPerson.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="pstop2018DataSet2.Designer.cs">

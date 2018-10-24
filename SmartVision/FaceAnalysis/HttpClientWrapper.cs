@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FaceAnalysis
@@ -10,6 +11,7 @@ namespace FaceAnalysis
     public class HttpClientWrapper : IHttpClientWrapper
     {
         private static readonly HttpClient httpClient;
+        private string API = "http://viltomas.eu/api/";
         static HttpClientWrapper()
         {
             httpClient = new HttpClient();
@@ -59,6 +61,32 @@ namespace FaceAnalysis
             {
                 httpRequestMessage.Dispose();
             }
+        }
+        public async Task<HttpContent> PostMissingPersonToApiAsync(Object missingPerson)
+        {
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync(new Uri(API + "/MissingPersons"),missingPerson);
+            return response.Content;
+        }
+        public async Task<HttpContent> PostContactPersonToApiAsync(Object contactPerson)
+        {
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync(new Uri(API + "/ContactPersons"), contactPerson);
+            return response.Content;
+        }
+
+        public async Task<HttpContent> PostImageToApi (Bitmap img)
+        {
+            MultipartFormDataContent form = new MultipartFormDataContent();
+            ImageConverter converter = new ImageConverter();
+            byte[] imgArray = (byte[])converter.ConvertTo(img, typeof(byte[]));
+            form.Add(new ByteArrayContent(imgArray, 0, imgArray.Length), "user_picture", "user_picture.jpg");
+            HttpResponseMessage response = await httpClient.PostAsync(new Uri(API + "/ImageUpload"), form);
+            return response.Content;
+        }
+
+        public async Task<HttpStatusCode> PostRelToApi (Object missingContact)
+        {
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync(new Uri(API + "/MissingContact"), missingContact);
+            return response.StatusCode;
         }
     }
 }

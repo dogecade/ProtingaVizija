@@ -1,37 +1,44 @@
-﻿using System;  
-using System.Collections.Generic;  
-using System.IO;  
-using System.Linq;  
-using System.Web;  
-using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Script.Serialization;
 
 namespace Api.Controllers
 {
-    public class ImageUploadController : Controller
+    public class ImageUploadController : ApiController
     {
-        // GET: ImageUpload
-        public ActionResult Index()
-        {
-            return View();
-        }
+        // post /api/ImageUpload , image in request body , multipart format
+        // if all ok - 200, file location in response JSON
         [HttpPost]
-        public ActionResult UploadFile(HttpPostedFileBase file)
+        public async Task<IHttpActionResult> UploadFile(HttpRequestMessage request)
         {
+
+            //patikrinam ar geras requestas, t.y. ar yra failas
+            if (!request.Content.IsMimeMultipartContent())
+            {
+                throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.UnsupportedMediaType);
+            }
+            string root = System.Web.HttpContext.Current.Server.MapPath("~/faces/");
+            var provider = new MultipartFormDataStreamProvider(root);
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            List<string> strings = new List<string>();
             try
             {
-                if (file.ContentLength > 0)
+                await request.Content.ReadAsMultipartAsync(provider);
+                foreach (MultipartFileData file in provider.FileData)
                 {
-                    string _FileName = Path.GetFileName(file.FileName);
-                    string _path = Path.Combine(Server.MapPath("~/"), _FileName);
-                    file.SaveAs(_path);
+                    strings.Add(file.LocalFileName);
                 }
-                ViewBag.Message = "File Uploaded Successfully!!";
-                return View();
+
+                return Ok(serializer.Serialize(strings));
             }
-            catch
+            catch (System.Exception e)
             {
-                ViewBag.Message = "File upload failed!!";
-                return View();
+                return InternalServerError();
             }
         }
     }

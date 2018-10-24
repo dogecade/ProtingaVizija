@@ -14,6 +14,12 @@ namespace Api.Models
     
     public partial class MissingPerson
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public MissingPerson()
+        {
+            this.ContactPersons = new HashSet<ContactPerson>();
+        }
+    
         public int Id { get; set; }
         public string faceToken { get; set; }
         public string firstName { get; set; }
@@ -23,5 +29,8 @@ namespace Api.Models
         public string Additional_Information { get; set; }
         public string dateOfBirth { get; set; }
         public string faceImg { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ContactPerson> ContactPersons { get; set; }
     }
 }
