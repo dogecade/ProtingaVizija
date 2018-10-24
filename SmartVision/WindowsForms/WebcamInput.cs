@@ -32,12 +32,12 @@ namespace WindowsForms
                 else
                     capture = new VideoCapture(cameraUrl);
                 if (!capture.IsOpened)
-                    throw new SystemException("Input camera was not found");
+                    throw new SystemException(Messages.cameraNotFound);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                MessageBox.Show("Input camera was not found!");
+                MessageBox.Show(Messages.cameraNotFound);
                 return false;
             }
             if (tokenSource.IsCancellationRequested)
