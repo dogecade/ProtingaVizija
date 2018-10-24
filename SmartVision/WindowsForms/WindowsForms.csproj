@@ -207,6 +207,7 @@
     <Compile Include="FormControl\FormFaceDetection.Designer.cs">
       <DependentUpon>FormFaceDetection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Messages.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="pstop2018DataSet2.Designer.cs">
