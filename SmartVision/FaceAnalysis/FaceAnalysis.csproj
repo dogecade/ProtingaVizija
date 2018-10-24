@@ -114,6 +114,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Api\Api.csproj">
+      <Project>{09e63eab-0fb5-49c3-9aa5-ea71ebc7db31}</Project>
+      <Name>Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NotificationService\NotificationService.csproj">
       <Project>{e0654466-0e6f-4a56-8972-af3d1666d780}</Project>
       <Name>NotificationService</Name>

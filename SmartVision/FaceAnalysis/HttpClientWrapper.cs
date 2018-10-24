@@ -39,7 +39,7 @@ namespace FaceAnalysis
                         return responseString;
                     else
                     {
-                        throw new HttpRequestException(response.ToString() + '\n'+ responseString + '\n');
+                        throw new HttpRequestException(response.ToString() + '\n' + responseString + '\n');
                     }
                 }
             }
@@ -50,21 +50,46 @@ namespace FaceAnalysis
                 {
                     Debug.WriteLine("Bad response, attempting to send request again");
                     return await Post(url, httpContent, true);
-                }                  
+                }
                 else
                 {
                     Debug.WriteLine(e);
                     return null;
-                }                   
+                }
             }
             finally
             {
                 httpRequestMessage.Dispose();
             }
         }
+
+        public async Task<string> Get(string url)
+        {
+            try
+            {
+                using (var response = await httpClient.GetAsync(url))
+                {
+                    var responseString = await response.Content.ReadAsStringAsync();
+
+                    if (response.IsSuccessStatusCode)
+                        return responseString;
+                    else
+                    {
+                        throw new HttpRequestException(response.ToString() + '\n' + responseString + '\n');
+                    }
+                }
+            }
+
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                return null;
+            }
+        }
+
         public async Task<HttpContent> PostMissingPersonToApiAsync(Object missingPerson)
         {
-            HttpResponseMessage response = await httpClient.PostAsJsonAsync(new Uri(API + "/MissingPersons"),missingPerson);
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync(new Uri(API + "/MissingPersons"), missingPerson);
             return response.Content;
         }
         public async Task<HttpContent> PostContactPersonToApiAsync(Object contactPerson)
@@ -73,7 +98,7 @@ namespace FaceAnalysis
             return response.Content;
         }
 
-        public async Task<HttpContent> PostImageToApi (Bitmap img)
+        public async Task<HttpContent> PostImageToApi(Bitmap img)
         {
             MultipartFormDataContent form = new MultipartFormDataContent();
             ImageConverter converter = new ImageConverter();
@@ -83,7 +108,7 @@ namespace FaceAnalysis
             return response.Content;
         }
 
-        public async Task<HttpStatusCode> PostRelToApi (Object missingContact)
+        public async Task<HttpStatusCode> PostRelToApi(Object missingContact)
         {
             HttpResponseMessage response = await httpClient.PostAsJsonAsync(new Uri(API + "/MissingContact"), missingContact);
             return response.StatusCode;
