@@ -32,8 +32,6 @@ namespace FaceAnalysis
         private const string veryHighProbabilityEmailBodyBeginning = "Good afternoon. There's a VERY HIGH possibility that your missing person ";
         private const string veryHighProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
 
-        private const string getMisingPersonsUrl = "http://viltomas.eu/api/MissingPersons";
-
         private readonly Task notifactionSenderTask;
         private readonly ConcurrentDictionary<string, Tuple<DateTime, LikelinessConfidence>> notificationsToSend = new ConcurrentDictionary<string, Tuple<DateTime, LikelinessConfidence>>();
         private readonly ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData> likelinessLevelData = new ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData>();
@@ -132,7 +130,7 @@ namespace FaceAnalysis
         /// <param name="faceToken">Face token of the missing person</param>
         private void SendNotifications(LikelinessConfidence confidence, string faceToken)
         {
-            NecessaryContactInformation information = GetMissingPersonData(faceToken);
+            NecessaryContactInformation information = new CallsToDb().GetMissingPersonData(faceToken);
             LikelinessLevelData data = likelinessLevelData[confidence];
 
             if (Mail.SendMail(information.contactPersonEmailAddress, data.EmailSubject,
@@ -148,29 +146,6 @@ namespace FaceAnalysis
             {
                 Debug.WriteLine("Sms message was not sent!");
             }
-        }
-
-        /// <summary>
-        /// Grabs missing person data from DB.
-        /// </summary>
-        /// <param name="matchedFace">ID of face to grab</param>
-        /// <returns>Contact information</returns>
-        private static NecessaryContactInformation GetMissingPersonData(string matchedFace)
-        {
-            HttpClientWrapper wrapper = new HttpClientWrapper();
-            var missingPersonsJson = wrapper.Get(getMisingPersonsUrl).Result;
-            var missingPersonsList = JsonConvert.DeserializeObject<List<Api.Models.MissingPerson>>(missingPersonsJson);
-            var foundMissingPerson = missingPersonsList.First(x => x.faceToken == matchedFace);
-
-            string missingPersonFirstName = foundMissingPerson.firstName;
-            string missingPersonLastName = foundMissingPerson.lastName;
-
-            var contactPerson = foundMissingPerson.ContactPersons.FirstOrDefault();
-            string contactPersonPhoneNumber = contactPerson.phoneNumber;
-            string contactPersonEmailAddress = contactPerson.emailAddress;
-
-            return new NecessaryContactInformation(missingPersonFirstName, missingPersonLastName,
-                contactPersonPhoneNumber, contactPersonEmailAddress);
         }
     }
 

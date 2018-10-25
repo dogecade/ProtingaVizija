@@ -7,6 +7,8 @@ using System.Linq;
 using WindowsForms.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace WindowsForms.FormControl
 {
@@ -32,7 +34,14 @@ namespace WindowsForms.FormControl
         private void FormFaceDetection_Load(object sender, EventArgs e)
         {
             // TODO: This line of code loads data into the 'pstop2018DataSet2.MissingPersons' table. You can move, or remove it, as needed.
+            try
+            {
+                this.missingPersonsTableAdapter.Fill(this.pstop2018DataSet2.MissingPersons);
+            }
+            catch (System.Data.SqlClient.SqlException)
+            {
 
+            }
             homePanel.BringToFront();
             underHomePanel.BackColor = underButtonColor;
         }
@@ -149,7 +158,7 @@ namespace WindowsForms.FormControl
                     HttpContent content = await httpClient.PostImageToApi(missingPersonImage);
                     string response = await content.ReadAsStringAsync();
                     //post image to api
-                    Console.WriteLine("posting image to api" + response );
+                    Console.WriteLine("posting image to api" + response);
 
                     //initialize contact person
                     ContactPerson contact = InitializeContactPerson();
@@ -159,10 +168,10 @@ namespace WindowsForms.FormControl
 
                     content = await httpClient.PostContactPersonToApiAsync(contact);
                     string contact1 = await content.ReadAsStringAsync();
-                    Console.WriteLine("contact" + contact1 );
+                    Console.WriteLine("contact" + contact1);
                     content = await httpClient.PostMissingPersonToApiAsync(missing);
                     string missing1 = await content.ReadAsStringAsync();
-                    Console.WriteLine("missing" + missing1 );
+                    Console.WriteLine("missing" + missing1);
                     MissingPerson parsedMiss = JsonConvert.DeserializeObject<MissingPerson>(missing1);
                     ContactPerson parsedCont = JsonConvert.DeserializeObject<ContactPerson>(contact1);
                     MissingContact misscont = new MissingContact();
@@ -291,7 +300,7 @@ namespace WindowsForms.FormControl
             missingPerson.dateOfBirth = dateOfBirthPicker.Text;
             missingPerson.faceImg = imgLocation;
             missingPerson.faceToken = faceToken;
-           
+
             return missingPerson;
         }
         private ContactPerson InitializeContactPerson()
@@ -308,28 +317,23 @@ namespace WindowsForms.FormControl
         private void missingPeopleDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             ExtraInfoForm form = new ExtraInfoForm();
-            var Id = Convert.ToInt32(missingPeopleDataGrid.CurrentRow.Cells[0].Value);
-            var stringId = Id.ToString();
+            var missingPersonsList = new CallsToDb().GetPeopleData();
+            var missingPerson = missingPersonsList.First(x => x.Id == Convert.ToInt32(missingPeopleDataGrid.CurrentRow.Cells[0].Value));
+            var contactPerson = missingPerson.ContactPersons.FirstOrDefault();
 
-            using (Api.Models.pstop2018Entities1 db = new Api.Models.pstop2018Entities1())
-            {
-                Api.Models.MissingPerson missingPerson = db.MissingPersons.Find(Id);
+            form.firstNameBox.Text = missingPerson.firstName;
+            form.lastNameBox.Text = missingPerson.lastName;
+            form.dateOfBirthPicker.Text = missingPerson.dateOfBirth;
+            form.lastSeenOnPicker.Text = missingPerson.lastSeenDate;
+            form.locationBox.Text = missingPerson.lastSeenLocation;
+            form.additionalInfoBox.Text = missingPerson.Additional_Information;
+            form.contactEmailAddressBox.Text = contactPerson.emailAddress;
+            form.contactPhoneNumberBox.Text = contactPerson.phoneNumber;
+            form.contactLastNameBox.Text = contactPerson.lastName;
+            form.contactFirstNameBox.Text = contactPerson.firstName;
+            form.missingPersonPictureBox.ImageLocation = missingPerson.faceImg;
 
-                //Api.Models.ContactPerson contactPerson = db.ContactPersons.FirstOrDefault(f => f.missingPersonId == stringId);
-                //form.firstNameBox.Text = missingPerson.firstName;
-                //form.lastNameBox.Text = missingPerson.lastName;
-                //form.lastSeenOnPicker.Text = missingPerson.lastSeenDate;
-                //form.locationBox.Text = missingPerson.lastSeenLocation;
-                //form.additionalInfoBox.Text = missingPerson.Additional_Information;
-                //form.contactEmailAddressBox.Text = contactPerson.emailAddress;
-                //form.contactPhoneNumberBox.Text = contactPerson.phoneNumber;
-                //form.contactLastNameBox.Text = contactPerson.lastName;
-                //form.contactFirstNameBox.Text = contactPerson.firstName;
-                //form.dateOfBirthPicker.Text = ;
-
-
-                form.ShowDialog();
-            }
+            form.ShowDialog();
         }
     }
 }

@@ -536,6 +536,7 @@
             this.Controls.Add(this.addPersonPanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ExtraInfoForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.addPersonPanel.ResumeLayout(false);
             this.addPersonPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.missingPersonPictureBox)).EndInit();
