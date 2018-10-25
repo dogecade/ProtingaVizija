@@ -36,7 +36,7 @@ namespace Api.Controllers
 
                 return Ok(serializer.Serialize(strings));
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
                 return InternalServerError();
             }

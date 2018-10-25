@@ -67,7 +67,7 @@ namespace FaceAnalysis
         {
             try
             {
-                using (var response = await httpClient.GetAsync(url))
+                using (var response = await httpClient.GetAsync(url).ConfigureAwait(false))
                 {
                     var responseString = await response.Content.ReadAsStringAsync();
 

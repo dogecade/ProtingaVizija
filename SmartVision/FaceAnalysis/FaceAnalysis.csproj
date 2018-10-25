@@ -86,6 +86,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CallsToDb.cs" />
     <Compile Include="FaceProcessor.cs" />
     <Compile Include="FaceApiCalls.cs" />
     <Compile Include="HelperMethods.cs" />
