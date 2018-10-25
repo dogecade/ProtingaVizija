@@ -131,6 +131,8 @@ namespace FaceAnalysis
         private void SendNotifications(LikelinessConfidence confidence, string faceToken)
         {
             NecessaryContactInformation information = new CallsToDb().GetMissingPersonData(faceToken);
+            if (information == null)
+                return;
             LikelinessLevelData data = likelinessLevelData[confidence];
 
             if (Mail.SendMail(information.contactPersonEmailAddress, data.EmailSubject,

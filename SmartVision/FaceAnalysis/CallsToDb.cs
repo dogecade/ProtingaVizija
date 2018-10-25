@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,16 @@ namespace FaceAnalysis
             HttpClientWrapper wrapper = new HttpClientWrapper();
             var missingPersonsJson = wrapper.Get(getMisingPersonsUrl).Result;
             var missingPersonsList = JsonConvert.DeserializeObject<List<Api.Models.MissingPerson>>(missingPersonsJson);
-            var foundMissingPerson = missingPersonsList.First(x => x.faceToken == matchedFace);
+            Api.Models.MissingPerson foundMissingPerson;
+            try
+            {
+               foundMissingPerson = missingPersonsList.First(x => x.faceToken == matchedFace);
+            }
+            catch (InvalidOperationException)
+            {
+                Debug.WriteLine("No matching records in DB found");
+                return null;
+            }
 
             string missingPersonFirstName = foundMissingPerson.firstName;
             string missingPersonLastName = foundMissingPerson.lastName;
