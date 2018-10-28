@@ -1,30 +1,52 @@
 ﻿@using Api.Models
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Smart Vision";
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddContactPerson</title>
+    <link rel="stylesheet" href="~/Content/Contact-Form-Clean.css">
+</head>
 
+<body>
+    <div class="contact-clean">
+        <form method="post">
+            <h2 class="text-center">Contact person details</h2>
+            @model ContactPerson
+            @{
+
+        using (Html.BeginForm("AddContactPerson", "AddPerson", FormMethod.Post))
+        {
+            <div class="form-group center" >
+                <label>First name:</label>
+                @Html.TextBoxFor(m => m.firstName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "^[a-zA-Z]+$" })
+            </div>
+            <div class="form-group center">
+                <label>Last name:</label>
+                @Html.TextBoxFor(m => m.lastName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "^[a-zA-Z]+$" })
+            </div>
+            <div class="form-group center">
+                <label>Missing person ID:</label>
+                @Html.TextBoxFor(m => m.MissingPersons, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "^[0-9]+$" })
+            </div>
+            <div class="form-group center">
+                <label>Phone number:</label>
+                @Html.TextBoxFor(m => m.phoneNumber, new { @class = "form-control", @type = "tel", @required = "", @pattern = "^[+][0-9]+$" })
+            </div>
+            <div class="form-group center">
+                <label>Email address:</label>
+                @Html.TextBoxFor(m => m.emailAddress, new { @class = "form-control", @type = "email", @required = "", @pattern = @"^([\w\.]+)&#64([\w]+)((\.(\w){2,3})+)$" })
+            </div>
+            <div class="form-group d-flex justify-content-center align-items-center align-content-center">
+                <input class="btn btn-primary d-flex align-self-center" type="submit" style="margin:0px;" value="Submit" />
+            </div>
 }
 
-
-@model ContactPerson
-@{
-    using (Html.BeginForm("AddContactPerson", "AddPerson", FormMethod.Post))
-    {
-        <label>FirstName</label>
-        @Html.TextBoxFor(m => m.firstName)
-        <br />
-        <label>LastName</label>
-        @Html.TextBoxFor(m => m.lastName)
-        <br />
-        <label>MissingPersonID</label>
-        @Html.TextBoxFor(m => m.missingPersonId)
-        <br />
-        <label>PhoneNumber</label>
-        @Html.TextBoxFor(m => m.phoneNumber)
-        <br />
-        <label>Email</label>
-        @Html.TextBoxFor(m => m.emailAddress)
-        <br />
-        <input type="submit" value="Submit" />
-    }
-}
+            }
+        </form>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>

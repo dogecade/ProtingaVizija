@@ -1,0 +1,89 @@
+﻿@using Api.Models
+@{
+    ViewBag.Title = "Smart Vision";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddMissingPerson</title>
+    <link rel="stylesheet" href="~/Content/bootstrap2.min.css">
+    <link rel="stylesheet" href="~/Content/Contact-Form-Clean.css">
+</head>
+
+
+<body>
+    <div class="contact-clean">
+        <form method="post">
+            <h2 class="text-center">Missing person details</h2>
+            @model MissingPerson
+            @{
+
+                using (Html.BeginForm("AddMissingPerson", "AddPerson", FormMethod.Post))
+                {
+                    <div class="form-group center">
+                        <label>First name:</label>
+                        @Html.TextBoxFor(m => m.firstName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "^[a-zA-Z]+$" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Last name:</label>
+                        @Html.TextBoxFor(m => m.lastName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "^[a-zA-Z]+$" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Date of birth:</label>
+                        @Html.TextBoxFor(m => m.dateOfBirth, new { @type = "date", @class = "form-control datepicker", @required = "" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Last seen location:</label>
+                        @Html.TextBoxFor(m => m.lastSeenLocation, new { @class = "form-control", @type = "text" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Last seen date:</label>
+                        @Html.TextBoxFor(m => m.lastSeenDate, new { @type = "date", @class = "form-control datepicker" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Additional information:</label>
+                        @Html.TextAreaFor(m => m.Additional_Information, new { @class = "form-control", @rows = "14" })
+                    </div>
+                    <div style="height:167px;">
+                        <div class="form-row">
+                            <div class="col offset-lg-3 d-flex flex-column justify-content-center align-self-center m-auto" style="height:132px;"><button class="btn btn-primary d-flex justify-content-center align-self-center" type="button" style="height:36px;width:118px;margin:0px;margin-top:15px;padding:0px;text-align:center;vertical-align:middle;padding-left:0px;margin-left:0px;">Upload Image</button></div>
+                            <div class="col offset-lg-0 d-flex justify-content-center align-content-center align-self-center m-auto" style="padding-right:0px;"><img src="assets/img/smartdogo.jpg" style="height:132px;"></div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary d-flex m-auto" type="submit">Submit</button>
+                }
+
+            }
+        </form>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+
+
+
+<!--<div class="form-group"><label>First name:</label><input class="form-control" type="text" required="" pattern="^[a-zA-Z]+$"></div>
+<div class="form-group"><label>Last name:</label><input class="form-control" type="text" required="" pattern="^[a-zA-Z]+$"></div>
+<div class="form-group"><label>Date of birth:</label><input class="form-control" type="date" required=""></div>
+<div class="form-group"><label>Last seen location:</label><input class="form-control" type="text"></div>
+<div class="form-group"><label>Last seen date:</label><input class="form-control" type="date"></div>
+<div class="form-group"><label>Additional information:</label><textarea class="form-control" rows="14"></textarea></div>
+<div style="height:167px;">
+    <div class="form-row">
+        <div class="col offset-lg-3 d-flex flex-column justify-content-center align-self-center m-auto" style="height:132px;"><button class="btn btn-primary d-flex justify-content-center align-self-center" type="button" style="height:36px;width:118px;margin:0px;margin-top:15px;padding:0px;text-align:center;vertical-align:middle;padding-left:0px;margin-left:0px;">upload image</button></div>
+        <div class="col offset-lg-0 d-flex justify-content-center align-content-center align-self-center m-auto" style="padding-right:0px;"><img src="assets/img/smartdogo.jpg" style="height:132px;"></div>
+    </div>
+</div>
+<button class="btn btn-primary d-flex m-auto" type="submit">Submit</button>
+    </form>
+    </div>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/js/Bootstrap-DateTime-Picker.js"></script>
+<script src="assets/js/Bootstrap-DateTime-Picker1.js"></script>
+<script src="assets/js/Bootstrap-DateTime-Picker2.js"></script>
+    </body>
+    </html>-->

@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Api.Models.MissingPerson>
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/Content/Lightbox-Gallery.css">
+</head>
+<body>
+    <div class="photo-gallery">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center">Have you seen these people?</h2>
+                <p class="text-center">You can find additional information by hovering over pictures. If you have seen these people please contact the authorities or the contact people of the missing person.</p>
+            </div>
+
+            @foreach (var item in Model)
+            {
+
+                //var sourceString = JsonConvert.Deserialize<String>(item.faceImg);
+                var sourceString = item.faceImg.Replace("[", "");
+                sourceString = sourceString.Replace("]", "");
+                sourceString = sourceString.Replace("\"", "");
+                sourceString = sourceString.Replace(@"\\\\", @"\");
+                sourceString = sourceString.Remove(0, 1);
+                sourceString = sourceString.Remove(sourceString.Length - 1, 1);
+
+                //var imgSrc = item.faceImg;
+
+                <div class="row photos">
+                    @sourceString
+                    <div class="col-sm-6 col-md-4 col-lg-3 item"><a data-lightbox="photos"><img class="img-fluid" src="@Url.Content(sourceString)"></a></div>
+                </div>
+
+                <!--<div class="col-sm-6 col-md-4 col-lg-3 item"><a href="assets/img/desk.jpg" data-lightbox="photos"><img class="img-fluid" src ='@Url.Content(@sourceString)'></a></div>-->
+            }
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
+</body>
+
+<!--<body>
+    <div class="photo-gallery">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center">Have you seen these people?</h2>
+                <p class="text-center">You can find additional information by hovering over pictures. If you have seen these people please contact the authorities or the contact people of the missing person.</p>
+            </div>
+            <div class="row photos">
+                <div class="col-sm-6 col-md-4 col-lg-3 item"><a href="assets/img/desk.jpg" data-lightbox="photos"><img class="img-fluid"></a></div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
+</body>-->
