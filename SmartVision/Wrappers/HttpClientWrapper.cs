@@ -6,12 +6,13 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FaceAnalysis
+namespace Wrappers
 {
     public class HttpClientWrapper : IHttpClientWrapper
     {
         private static readonly HttpClient httpClient;
         private string API = "http://viltomas.eu/api/";
+
         static HttpClientWrapper()
         {
             httpClient = new HttpClient();

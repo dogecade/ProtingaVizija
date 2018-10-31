@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Constants;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 
@@ -9,7 +10,7 @@ namespace NotificationService
     {
         public static string SendSms(string toNumber, string body)
         {
-            TwilioClient.Init(Credentials.smsAccountSid, Credentials.smsAuthToken);
+            TwilioClient.Init(Keys.twilioAccountSid, Keys.twilioAuthToken);
 
             try
             {
