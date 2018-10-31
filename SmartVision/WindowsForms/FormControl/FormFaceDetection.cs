@@ -9,6 +9,7 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
+using HttpHelpers;
 using Wrappers;
 
 namespace WindowsForms.FormControl
