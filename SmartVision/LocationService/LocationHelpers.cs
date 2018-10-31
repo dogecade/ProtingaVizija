@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Net;
 using Constants;
+using HttpHelpers;
 using Newtonsoft.Json;
-using Wrappers;
 
 namespace LocationService
 {
