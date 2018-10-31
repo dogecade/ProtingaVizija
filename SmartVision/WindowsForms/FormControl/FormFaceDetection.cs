@@ -152,7 +152,7 @@ namespace WindowsForms.FormControl
 
                 if (validImage)
                 {
-                    if (await new FaceApiCalls(new HttpClientWrapper()).AddFaceToFaceset(FaceAnalysis.Keys.facesetToken, faceToken) == null)
+                    if (await new FaceApiCalls(new HttpClientWrapper()).AddFaceToFaceset(Constants.Keys.facesetToken, faceToken) == null)
                     {
                         //TODO: have some proper things to do here.
                         throw new SystemException(Messages.invalidApiResponse);
