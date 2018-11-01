@@ -2,7 +2,10 @@
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Constants;
+using HttpHelpers;
 using Newtonsoft.Json;
+using Wrappers;
 
 namespace FaceAnalysis
 {
@@ -31,8 +34,8 @@ namespace FaceAnalysis
         /// <returns>FrameAnalysisJSON</returns>
         public async Task<FrameAnalysisJSON> AnalyzeFrame(byte[] image)
         {
-            HttpContent keyContent = new StringContent(Keys.apiKey);
-            HttpContent secretContent = new StringContent(Keys.apiSecret);
+            HttpContent keyContent = new StringContent(Keys.faceApiKey);
+            HttpContent secretContent = new StringContent(Keys.faceApiSecret);
             HttpContent imageContent = new StringContent(Convert.ToBase64String(image));
 
             using (var formData = new MultipartFormDataContent())
@@ -52,8 +55,8 @@ namespace FaceAnalysis
         /// <returns>CreateFacesetJSON</returns>
         public async Task<CreateFacesetJSON> CreateNewFaceset(string facesetName)
         {
-            HttpContent keyContent = new StringContent(Keys.apiKey);
-            HttpContent secretContent = new StringContent(Keys.apiSecret);
+            HttpContent keyContent = new StringContent(Keys.faceApiKey);
+            HttpContent secretContent = new StringContent(Keys.faceApiSecret);
             HttpContent facesetNameContent = new StringContent(facesetName);
 
             using (var formData = new MultipartFormDataContent())
@@ -74,8 +77,8 @@ namespace FaceAnalysis
         /// <returns>AddFaceJSON</returns>
         public async Task<AddFaceJSON> AddFaceToFaceset(string facesetToken, string faceToken)
         {
-            HttpContent keyContent = new StringContent(Keys.apiKey);
-            HttpContent secretContent = new StringContent(Keys.apiSecret);
+            HttpContent keyContent = new StringContent(Keys.faceApiKey);
+            HttpContent secretContent = new StringContent(Keys.faceApiSecret);
             HttpContent facesetTokenContent = new StringContent(facesetToken);
             HttpContent faceTokenContent = new StringContent(faceToken);
 
@@ -98,8 +101,8 @@ namespace FaceAnalysis
         /// <returns>RemoveFaceJSON</returns>
         public async Task<RemoveFaceJSON> RemoveFaceFromFaceset(string facesetToken, string faceToken)
         {
-            HttpContent keyContent = new StringContent(Keys.apiKey);
-            HttpContent secretContent = new StringContent(Keys.apiSecret);
+            HttpContent keyContent = new StringContent(Keys.faceApiKey);
+            HttpContent secretContent = new StringContent(Keys.faceApiSecret);
             HttpContent facesetTokenContent = new StringContent(facesetToken);
             HttpContent faceTokenContent = new StringContent(faceToken);
 
@@ -122,8 +125,8 @@ namespace FaceAnalysis
         /// <returns>FoundFacesJSON</returns>
         public async Task<FoundFacesJSON> SearchFaceInFaceset(string facesetToken, string faceToken)
         {
-            HttpContent keyContent = new StringContent(Keys.apiKey);
-            HttpContent secretContent = new StringContent(Keys.apiSecret);
+            HttpContent keyContent = new StringContent(Keys.faceApiKey);
+            HttpContent secretContent = new StringContent(Keys.faceApiSecret);
             HttpContent faceTokenContent = new StringContent(faceToken);
             HttpContent facesetTokenContent = new StringContent(facesetToken);
 
@@ -145,8 +148,8 @@ namespace FaceAnalysis
         /// <returns>FacesetDetailsJSON</returns>
         public async Task<FacesetDetailsJSON> GetFacesetDetail(string facesetToken)
         {
-            HttpContent keyContent = new StringContent(Keys.apiKey);
-            HttpContent secretContent = new StringContent(Keys.apiSecret);
+            HttpContent keyContent = new StringContent(Keys.faceApiKey);
+            HttpContent secretContent = new StringContent(Keys.faceApiSecret);
             HttpContent facesetTokenContent = new StringContent(facesetToken);
 
             using (var formData = new MultipartFormDataContent())
@@ -166,8 +169,8 @@ namespace FaceAnalysis
         /// <returns>DeleteFacesetJSON</returns>
         public async Task<DeleteFacesetJSON> DeleteFaceset(string facesetToken)
         {
-            HttpContent keyContent = new StringContent(Keys.apiKey);
-            HttpContent secretContent = new StringContent(Keys.apiSecret);
+            HttpContent keyContent = new StringContent(Keys.faceApiKey);
+            HttpContent secretContent = new StringContent(Keys.faceApiSecret);
             HttpContent facesetTokenContent = new StringContent(facesetToken);
 
             using (var formData = new MultipartFormDataContent())

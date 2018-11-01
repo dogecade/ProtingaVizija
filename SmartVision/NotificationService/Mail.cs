@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net.Mail;
+using Constants;
 
 namespace NotificationService
 {
@@ -40,7 +42,7 @@ namespace NotificationService
         /// <param name="body">Message</param>
         /// <param name="pictureBytes">Picture to send in byte format(optional)</param>
         /// <returns>If message is sent, returns a guid. Else, returns null</returns>
-        public static string SendMail(string recipientMail, string subject, string body, byte[] pictureBytes = null)
+        public static string SendMail(string recipientMail, string subject, string body, List<byte[]> pictureBytes = null, List<string> pictureNames = null)
         {
             try
             {
@@ -53,16 +55,20 @@ namespace NotificationService
                 mail.Subject = subject;
                 mail.Body = body;
 
-                if (pictureBytes != null)
+                for (int i = 0; i < pictureBytes.Count; i++)
                 {
-                    Bitmap picture = new Bitmap(new MemoryStream(pictureBytes));
+                    if (pictureBytes[i] != null && pictureNames[i] != null)
+                    {
+                        Bitmap picture = new Bitmap(new MemoryStream(pictureBytes[i]));
 
-                    var stream = new MemoryStream();
-                    picture.Save(stream, ImageFormat.Jpeg);
-                    stream.Position = 0;
+                        var stream = new MemoryStream();
+                        picture.Save(stream, ImageFormat.Jpeg);
+                        stream.Position = 0;
 
-                    mail.Attachments.Add(new Attachment(stream, "MissingPersonImage.jpeg"));
+                        mail.Attachments.Add(new Attachment(stream, pictureNames[i]));
+                    }
                 }
+
 
                 smtpServer.Send(mail);
 

@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using HttpHelpers;
+using Wrappers;
 
 namespace UnitTests
 {
