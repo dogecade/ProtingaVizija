@@ -9,9 +9,11 @@ persons and institutions are notified.
 
 ## Built With
 * C#
-* Face++ 
+* Face++ API
 * Entity framerwork
-* Twilio
+* Twilio API
+* Google Static Maps API
+* Google Geocoding API
 
 ## Authors
 * **Arnas Danaitis** [arnasDan](https://github.com/arnasDan)
