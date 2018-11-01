@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -18,5 +20,11 @@ namespace Api.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public JsonResult MyControllerMethod()
+        {
+            return Json("Controller Method call", JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

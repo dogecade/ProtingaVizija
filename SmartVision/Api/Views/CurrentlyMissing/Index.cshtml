@@ -25,6 +25,7 @@
                 sourceString = sourceString.Replace("]", "");
                 sourceString = sourceString.Replace("\"", "");
                 sourceString = sourceString.Replace(@"\\\\", @"\");
+                sourceString = sourceString.Replace(" ", "");
                 sourceString = sourceString.Remove(0, 1);
                 sourceString = sourceString.Remove(sourceString.Length - 1, 1);
 
@@ -32,8 +33,9 @@
 
                 <div class="row photos">
                     @sourceString
-                    <div class="col-sm-6 col-md-4 col-lg-3 item"><a data-lightbox="photos"><img class="img-fluid" src="@Url.Content(sourceString)"></a></div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 item"><a data-lightbox="photos"><img class="img-fluid" src="@Url.Content(@"~\faces\BodyPart_d5429bb4-fa46-43ae-bfce-d261ae6dbf58")"></a></div>
                 </div>
+                //@ViewBag.Image
 
                 <!--<div class="col-sm-6 col-md-4 col-lg-3 item"><a href="assets/img/desk.jpg" data-lightbox="photos"><img class="img-fluid" src ='@Url.Content(@sourceString)'></a></div>-->
             }

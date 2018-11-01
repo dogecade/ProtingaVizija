@@ -11,7 +11,7 @@ namespace FaceAnalysis
     public class HttpClientWrapper : IHttpClientWrapper
     {
         private static readonly HttpClient httpClient;
-        private string API = "http://viltomas.eu/api/";
+        private string API = "http://viltomas.eu/api/"; //localhost:portas palikti HTTP
         static HttpClientWrapper()
         {
             httpClient = new HttpClient();

@@ -8,7 +8,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AddMissingPerson</title>
-    <link rel="stylesheet" href="~/Content/bootstrap2.min.css">
     <link rel="stylesheet" href="~/Content/Contact-Form-Clean.css">
 </head>
 
@@ -19,9 +18,9 @@
             <h2 class="text-center">Missing person details</h2>
             @model MissingPerson
             @{
-
                 using (Html.BeginForm("AddMissingPerson", "AddPerson", FormMethod.Post))
                 {
+                    @Html.AntiForgeryToken()
                     <div class="form-group center">
                         <label>First name:</label>
                         @Html.TextBoxFor(m => m.firstName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "^[a-zA-Z]+$" })
@@ -48,42 +47,55 @@
                     </div>
                     <div style="height:167px;">
                         <div class="form-row">
-                            <div class="col offset-lg-3 d-flex flex-column justify-content-center align-self-center m-auto" style="height:132px;"><button class="btn btn-primary d-flex justify-content-center align-self-center" type="button" style="height:36px;width:118px;margin:0px;margin-top:15px;padding:0px;text-align:center;vertical-align:middle;padding-left:0px;margin-left:0px;">Upload Image</button></div>
-                            <div class="col offset-lg-0 d-flex justify-content-center align-content-center align-self-center m-auto" style="padding-right:0px;"><img src="assets/img/smartdogo.jpg" style="height:132px;"></div>
+                            <div class="col offset-lg-3 d-flex flex-column justify-content-center align-self-center m-auto" style="height:132px;">
+                                <input class="justify-content-center align-self-center" type="file" name="file" id="imageBrowse" accept="image/x-png,image/jpeg" />
+                            </div>
+                            <div class="col offset-lg-0 d-flex justify-content-center align-content-center align-self-center m-auto" style="padding-right:0px; display:none;">
+                                <img class="img-responsive" id="targetImg" height="120px" width="100px" />
+                            </div>
                         </div>
                     </div>
                     <button class="btn btn-primary d-flex m-auto" type="submit">Submit</button>
-                }
 
+                }
             }
         </form>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script>
+           $(document).ready(function () {
+
+               $("#imageBrowse").change(function () {
+
+                   var File = this.files;
+
+                   if (File && File[0]) {
+                        $("#myButton2").click(function () {
+                            $.getJSON('@Url.Action("MyControllerMethod")', function (data) {
+                                $("#mytext").val(data);
+                            });
+                        });
+                      ReadImage(File[0]);
+                   }
+               })
+           })
+
+           var ReadImage = function (file) {
+               var reader = new FileReader;
+               var image = new Image;
+
+               reader.readAsDataURL(file);
+               reader.onload = function (_file) {
+
+                   image.src = _file.target.result;
+                   image.onload = function () {
+
+                       $("#targetImg").attr('src', _file.target.result);
+                       $("#imgPreview").show();
+                   }
+               }
+           }
+    </script>
 </body>
-
-
-
-
-<!--<div class="form-group"><label>First name:</label><input class="form-control" type="text" required="" pattern="^[a-zA-Z]+$"></div>
-<div class="form-group"><label>Last name:</label><input class="form-control" type="text" required="" pattern="^[a-zA-Z]+$"></div>
-<div class="form-group"><label>Date of birth:</label><input class="form-control" type="date" required=""></div>
-<div class="form-group"><label>Last seen location:</label><input class="form-control" type="text"></div>
-<div class="form-group"><label>Last seen date:</label><input class="form-control" type="date"></div>
-<div class="form-group"><label>Additional information:</label><textarea class="form-control" rows="14"></textarea></div>
-<div style="height:167px;">
-    <div class="form-row">
-        <div class="col offset-lg-3 d-flex flex-column justify-content-center align-self-center m-auto" style="height:132px;"><button class="btn btn-primary d-flex justify-content-center align-self-center" type="button" style="height:36px;width:118px;margin:0px;margin-top:15px;padding:0px;text-align:center;vertical-align:middle;padding-left:0px;margin-left:0px;">upload image</button></div>
-        <div class="col offset-lg-0 d-flex justify-content-center align-content-center align-self-center m-auto" style="padding-right:0px;"><img src="assets/img/smartdogo.jpg" style="height:132px;"></div>
-    </div>
-</div>
-<button class="btn btn-primary d-flex m-auto" type="submit">Submit</button>
-    </form>
-    </div>
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-<script src="assets/js/Bootstrap-DateTime-Picker.js"></script>
-<script src="assets/js/Bootstrap-DateTime-Picker1.js"></script>
-<script src="assets/js/Bootstrap-DateTime-Picker2.js"></script>
-    </body>
-    </html>-->
