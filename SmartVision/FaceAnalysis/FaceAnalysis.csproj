@@ -90,7 +90,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CallsToDb.cs" />
     <Compile Include="FaceProcessor.cs" />
     <Compile Include="FaceApiCalls.cs" />
     <Compile Include="HelperMethods.cs" />
@@ -103,10 +102,6 @@
     <Compile Include="JSON\IApiResponseJSON.cs" />
     <Compile Include="JSON\RemoveFaceJSON.cs" />
     <Compile Include="LikelinessConfidence.cs" />
-    <Compile Include="NecessaryContactInformation.cs" />
-    <Compile Include="Persons\ContactPerson.cs" />
-    <Compile Include="Persons\MissingPerson.cs" />
-    <Compile Include="Persons\Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchResultHandler.cs" />
@@ -116,10 +111,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Api\Api.csproj">
-      <Project>{09e63eab-0fb5-49c3-9aa5-ea71ebc7db31}</Project>
-      <Name>Api</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Constants\Constants.csproj">
       <Project>{265fbc83-ec69-4a84-be40-3856b6056f64}</Project>
       <Name>Constants</Name>
@@ -132,9 +123,13 @@
       <Project>{e0654466-0e6f-4a56-8972-af3d1666d780}</Project>
       <Name>NotificationService</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wrappers\HttpHelpers.csproj">
+    <ProjectReference Include="..\Objects\Objects.csproj">
+      <Project>{2fd7541f-eac2-4888-86d7-9e6d88d4db41}</Project>
+      <Name>Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wrappers\Helpers.csproj">
       <Project>{352b57fb-2201-4bbb-baf9-60b7d62c58c3}</Project>
-      <Name>HttpHelpers</Name>
+      <Name>Helpers</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

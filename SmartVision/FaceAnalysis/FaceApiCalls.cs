@@ -3,9 +3,8 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Constants;
-using HttpHelpers;
+using Helpers;
 using Newtonsoft.Json;
-using Wrappers;
 
 namespace FaceAnalysis
 {

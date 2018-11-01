@@ -48,7 +48,6 @@
     <Compile Include="Person\ContactPerson.cs" />
     <Compile Include="Person\MissingPerson.cs" />
     <Compile Include="ContactInformation\ContactInformation.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

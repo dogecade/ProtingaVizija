@@ -2,9 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Helpers;
-using Objects;
-using Wrappers;
+using Objects.ContactInformation;
+using Objects.Person;
 
 namespace FaceAnalysis
 {
@@ -12,18 +13,17 @@ namespace FaceAnalysis
     {
         private const string getMisingPersonsUrl = "http://viltomas.eu/api/MissingPersons";
 
-
         /// <summary>
         /// Grabs missing person data from DB.
         /// </summary>
         /// <param name="matchedFace">ID of face to grab</param>
         /// <returns>Contact information</returns>
-        public NecessaryContactInformation GetMissingPersonData(string matchedFace)
+        public ContactInformation GetMissingPersonData(string matchedFace)
         {
             HttpClientWrapper wrapper = new HttpClientWrapper();
             var missingPersonsJson = wrapper.Get(getMisingPersonsUrl).Result;
-            var missingPersonsList = JsonConvert.DeserializeObject<List<Api.Models.MissingPerson>>(missingPersonsJson);
-            Api.Models.MissingPerson foundMissingPerson;
+            var missingPersonsList = JsonConvert.DeserializeObject<List<MissingPerson>>(missingPersonsJson);
+            MissingPerson foundMissingPerson;
             try
             {
                foundMissingPerson = missingPersonsList.First(x => x.faceToken == matchedFace);
@@ -41,7 +41,7 @@ namespace FaceAnalysis
             string contactPersonPhoneNumber = contactPerson.phoneNumber;
             string contactPersonEmailAddress = contactPerson.emailAddress;
 
-            return new NecessaryContactInformation(missingPersonFirstName, missingPersonLastName,
+            return new ContactInformation(missingPersonFirstName, missingPersonLastName,
                 contactPersonPhoneNumber, contactPersonEmailAddress);
         }
 
@@ -49,11 +49,11 @@ namespace FaceAnalysis
         /// Grabs missing person data from DB.
         /// </summary>
         /// <returns>A list of missing people</returns>
-        public List<Api.Models.MissingPerson> GetPeopleData()
+        public List<MissingPerson> GetPeopleData()
         {
             HttpClientWrapper wrapper = new HttpClientWrapper();
             var missingPersonsJson = wrapper.Get(getMisingPersonsUrl).Result;
-            var missingPersonsList = JsonConvert.DeserializeObject<List<Api.Models.MissingPerson>>(missingPersonsJson);
+            var missingPersonsList = JsonConvert.DeserializeObject<List<MissingPerson>>(missingPersonsJson);
 
             return missingPersonsList;
 

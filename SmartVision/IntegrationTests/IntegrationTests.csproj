@@ -122,9 +122,9 @@
       <Project>{c9dd5eb7-25cd-4f3a-901a-0f20a7f8479d}</Project>
       <Name>FaceAnalysis</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wrappers\HttpHelpers.csproj">
+    <ProjectReference Include="..\Wrappers\Helpers.csproj">
       <Project>{352b57fb-2201-4bbb-baf9-60b7d62c58c3}</Project>
-      <Name>HttpHelpers</Name>
+      <Name>Helpers</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
