@@ -10,7 +10,6 @@ namespace NotificationService
     {
         static void Main(string[] args)
         {
-
         }
     }
 }
