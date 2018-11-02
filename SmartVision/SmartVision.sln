@@ -17,7 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocationService", "Location
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Constants", "Constants\Constants.csproj", "{265FBC83-EC69-4A84-BE40-3856B6056F64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpHelpers", "Wrappers\HttpHelpers.csproj", "{352B57FB-2201-4BBB-BAF9-60B7D62C58C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Wrappers\Helpers.csproj", "{352B57FB-2201-4BBB-BAF9-60B7D62C58C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Objects", "Objects\Objects.csproj", "{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,14 @@ Global
 		{352B57FB-2201-4BBB-BAF9-60B7D62C58C3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{352B57FB-2201-4BBB-BAF9-60B7D62C58C3}.Release|x86.ActiveCfg = Release|Any CPU
 		{352B57FB-2201-4BBB-BAF9-60B7D62C58C3}.Release|x86.Build.0 = Release|Any CPU
+		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Debug|x86.Build.0 = Debug|Any CPU
+		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Release|x86.ActiveCfg = Release|Any CPU
+		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,7 +10,7 @@
     <AssemblyName>WindowsForms</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -260,7 +260,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="License-LGPL.txt" />
@@ -282,7 +284,11 @@
       <Project>{e0654466-0e6f-4a56-8972-af3d1666d780}</Project>
       <Name>NotificationService</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Wrappers\HttpHelpers.csproj">
+    <ProjectReference Include="..\Objects\Objects.csproj">
+      <Project>{2fd7541f-eac2-4888-86d7-9e6d88d4db41}</Project>
+      <Name>Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wrappers\Helpers.csproj">
       <Project>{352b57fb-2201-4bbb-baf9-60b7d62c58c3}</Project>
       <Name>HttpHelpers</Name>
     </ProjectReference>

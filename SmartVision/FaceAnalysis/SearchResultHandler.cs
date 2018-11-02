@@ -2,13 +2,11 @@
 using NotificationService;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading;
 using System.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Api.Models;
-using Newtonsoft.Json;
+using Objects.ContactInformation;
 
 namespace FaceAnalysis
 {
@@ -130,7 +128,7 @@ namespace FaceAnalysis
         /// <param name="faceToken">Face token of the missing person</param>
         private void SendNotifications(LikelinessConfidence confidence, string faceToken)
         {
-            NecessaryContactInformation information = new CallsToDb().GetMissingPersonData(faceToken);
+            ContactInformation information = new CallsToDb().GetMissingPersonData(faceToken);
             if (information == null)
                 return;
             LikelinessLevelData data = likelinessLevelData[confidence];

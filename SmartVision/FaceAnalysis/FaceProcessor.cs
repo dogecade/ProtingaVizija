@@ -9,8 +9,7 @@ using System.Threading.Tasks.Dataflow;
 using Constants;
 using Emgu.CV;
 using Emgu.CV.Structure;
-using HttpHelpers;
-using Wrappers;
+using Helpers;
 
 namespace FaceAnalysis
 {

@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace HttpHelpers
+namespace Helpers
 {
     public interface IHttpClientWrapper
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 using Constants;
-using HttpHelpers;
+using Helpers;
 using Newtonsoft.Json;
 
 namespace LocationService
