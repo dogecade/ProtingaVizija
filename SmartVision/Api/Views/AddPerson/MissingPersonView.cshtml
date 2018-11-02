@@ -84,13 +84,18 @@
                             dataType: "json",
                             data: fd,
                             success: function (data) {
-                                var result = data.result;
-                                if (result != null)
-                                    $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="data:image/jpeg;base64, ' + data.result + '" />');
-                                else
-                                {
-                                    $('#imgWrapper').empty();
-                                    alert("Please choose an image with a face");
+                                var result = data.result.facesCount;
+                                switch (result) {
+                                    case 0:
+                                        $('#imgWrapper').empty();
+                                        alert("No faces have been detected in the image!!!");
+                                        break;
+                                    case 1:
+                                        $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="data:image/jpeg;base64, ' + data.result.image + '" />');
+                                        break;
+                                    default:
+                                        $('#imgWrapper').empty();
+                                        alert("Too many faces!! Not yet implemented ─=≡Σᕕ( ͡° ͜ʖ ͡°)ᕗ");
                                 }
                             },
                             error: function () {

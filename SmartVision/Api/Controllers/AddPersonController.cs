@@ -34,11 +34,14 @@ namespace Api.Controllers
                     using (var bitmap = new Bitmap(image))
                     {
                         var uploadedImage = HelperMethods.ProcessImage(bitmap);
-                        var frameAnalysisResult = await Process(uploadedImage);
-                        var faceImage = HelperMethods.CropImage(uploadedImage, frameAnalysisResult.Faces[0].Face_rectangle, 25);
+                        FrameAnalysisJSON result = await FaceProcessor.ProcessFrame((Bitmap)uploadedImage.Clone());
+                        if (result == null || result.Faces.Count == 0)
+                            return  Json(new { result = new {facesCount = 0 } }
+                        , JsonRequestBehavior.AllowGet);
+                        var faceImage = HelperMethods.CropImage(uploadedImage, result.Faces[0].Face_rectangle, 25);
                         faceImage.Save(ms, ImageFormat.Jpeg);
                         var SigBase64 = Convert.ToBase64String(ms.GetBuffer()); //Get Base64
-                        return Json(new { result = SigBase64 }
+                        return Json(new { result = new { image = SigBase64, faceToken = result.Faces[0].Face_token, facesCount = result.Faces.Count } }
                         , JsonRequestBehavior.AllowGet);
                     }
                 }
@@ -46,11 +49,5 @@ namespace Api.Controllers
             }
             return null;
         }
-        private async Task<FrameAnalysisJSON> Process(Bitmap uploadedImage)
-        {
-            FrameAnalysisJSON result = await FaceProcessor.ProcessFrame((Bitmap)uploadedImage.Clone());
-            return result;
-        }
-
     }
 }
