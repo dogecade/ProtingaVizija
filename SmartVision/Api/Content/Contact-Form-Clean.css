@@ -95,3 +95,13 @@
     margin-right: auto;
     width: 70%;
 }
+#imgWrapper { 
+	height:120px;
+	width:100px;
+	border: gray 1px solid;
+}
+#targetImg {
+	width: 100%;
+	max-height: 100%;
+	border-style: none !important;
+}

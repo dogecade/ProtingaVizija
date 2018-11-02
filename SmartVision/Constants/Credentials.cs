@@ -2,9 +2,9 @@
 {
     public class Credentials
     {
-        public const string mailAddress = "";
-        public const string mailPassword = "";
+        public const string mailAddress = "smartvisiontop@gmail.com";
+        public const string mailPassword = "lodariai";
 
-        public const string phoneNumber = "";
+        public const string phoneNumber = "+37066802744";
     }
 }

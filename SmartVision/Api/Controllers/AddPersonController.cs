@@ -1,9 +1,12 @@
 ﻿//using FaceAnalysis;
+using FaceAnalysis;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace Api.Controllers
@@ -20,7 +23,7 @@ namespace Api.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult CheckImage()
+        public async Task<ActionResult> CheckImage()
         {
             if (System.Web.HttpContext.Current.Request.Files.AllKeys.Any())
             {
@@ -30,8 +33,10 @@ namespace Api.Controllers
                 {
                     using (var bitmap = new Bitmap(image))
                     {
-                        
-                        bitmap.Save(ms, ImageFormat.Jpeg);
+                        var uploadedImage = HelperMethods.ProcessImage(bitmap);
+                        var frameAnalysisResult = await Process(uploadedImage);
+                        var faceImage = HelperMethods.CropImage(uploadedImage, frameAnalysisResult.Faces[0].Face_rectangle, 25);
+                        faceImage.Save(ms, ImageFormat.Jpeg);
                         var SigBase64 = Convert.ToBase64String(ms.GetBuffer()); //Get Base64
                         return Json(new { result = SigBase64 }
                         , JsonRequestBehavior.AllowGet);
@@ -41,14 +46,11 @@ namespace Api.Controllers
             }
             return null;
         }
-        /*private async FrameAnalysisJSON Process(Bitmap uploadedImage)
+        private async Task<FrameAnalysisJSON> Process(Bitmap uploadedImage)
         {
-            uploadedImage = FaceAnalysis.HelperMethods.ProcessImage(uploadedImage);
             FrameAnalysisJSON result = await FaceProcessor.ProcessFrame((Bitmap)uploadedImage.Clone());
-            //HelperMethods.CropImage(uploadedImage, result.Faces[chosenImageIndex].Face_rectangle, 25);
-
             return result;
-        }*/
+        }
 
     }
 }

@@ -44,14 +44,14 @@
                     <div class="form-group center">
                         <label>Additional information:</label>
                         @Html.TextAreaFor(m => m.Additional_Information, new { @class = "form-control", @rows = "14" })
+                        @Html.HiddenFor(m => m.faceToken)
                     </div>
                     <div style="height:167px;">
                         <div class="form-row">
                             <div class="col offset-lg-3 d-flex flex-column justify-content-center align-self-center m-auto" style="height:132px;">
                                 <input class="justify-content-center align-self-center" type="file" name="file" id="imageBrowse" accept="image/*" />
                             </div>
-                            <div class="col offset-lg-0 d-flex justify-content-center align-content-center align-self-center m-auto" style="padding-right:0px; display:none;">
-                                <img class="img-responsive" id="targetImg" height="120px" width="100px"/>
+                            <div id="imgWrapper" class="col offset-lg-0 d-flex justify-content-center align-content-center align-self-center m-auto" style="">
                             </div>
                         </div>
                     </div>
@@ -84,8 +84,14 @@
                             dataType: "json",
                             data: fd,
                             success: function (data) {
-                                $("#targetImg").attr('src', 'data:image/jpeg;base64, ' + data.result);
-                                $("#imgPreview").show();
+                                var result = data.result;
+                                if (result != null)
+                                    $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="data:image/jpeg;base64, ' + data.result + '" />');
+                                else
+                                {
+                                    $('#imgWrapper').empty();
+                                    alert("Please choose an image with a face");
+                                }
                             },
                             error: function () {
                                 alert('Error');
