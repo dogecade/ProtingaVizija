@@ -7,14 +7,11 @@ using System.Linq;
 using WindowsForms.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Diagnostics;
-using HttpHelpers;
-using Wrappers;
+using Helpers;
 
 namespace WindowsForms.FormControl
 {
-    public partial class FormFaceDetection : System.Windows.Forms.Form
+    public partial class FormFaceDetection : Form
     {
         private HttpClientWrapper httpClient = new HttpClientWrapper();
         private const string enabledButtonText = "Enable scan";
