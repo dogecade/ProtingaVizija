@@ -48,10 +48,10 @@
                     <div style="height:167px;">
                         <div class="form-row">
                             <div class="col offset-lg-3 d-flex flex-column justify-content-center align-self-center m-auto" style="height:132px;">
-                                <input class="justify-content-center align-self-center" type="file" name="file" id="imageBrowse" accept="image/x-png,image/jpeg" />
+                                <input class="justify-content-center align-self-center" type="file" name="file" id="imageBrowse" accept="image/*" />
                             </div>
                             <div class="col offset-lg-0 d-flex justify-content-center align-content-center align-self-center m-auto" style="padding-right:0px; display:none;">
-                                <img class="img-responsive" id="targetImg" height="120px" width="100px" />
+                                <img class="img-responsive" id="targetImg" height="120px" width="100px"/>
                             </div>
                         </div>
                     </div>
@@ -61,41 +61,38 @@
             }
         </form>
     </div>
+
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script>
-           $(document).ready(function () {
+            $(document).ready(function () {
 
-               $("#imageBrowse").change(function () {
+                $("#imageBrowse").change(function () {
 
-                   var File = this.files;
-
-                   if (File && File[0]) {
-                        $("#myButton2").click(function () {
-                            $.getJSON('@Url.Action("MyControllerMethod")', function (data) {
-                                $("#mytext").val(data);
-                            });
+                    var File = this.files;
+                    if (File && File[0]) {
+                        var fd = new FormData;
+                        var files = $("#imageBrowse").get(0).files;
+                        var reader = new FileReader();
+                        fd.append("Image", files[0]);
+                        $.ajax({
+                            url: '@Url.Action("CheckImage", "AddPerson")',
+                            processData: false,
+                            contentType: false,
+                            type: 'POST',
+                            dataType: "json",
+                            data: fd,
+                            success: function (data) {
+                                $("#targetImg").attr('src', 'data:image/jpeg;base64, ' + data.result);
+                                $("#imgPreview").show();
+                            },
+                            error: function () {
+                                alert('Error');
+                            }
                         });
-                      ReadImage(File[0]);
-                   }
-               })
-           })
-
-           var ReadImage = function (file) {
-               var reader = new FileReader;
-               var image = new Image;
-
-               reader.readAsDataURL(file);
-               reader.onload = function (_file) {
-
-                   image.src = _file.target.result;
-                   image.onload = function () {
-
-                       $("#targetImg").attr('src', _file.target.result);
-                       $("#imgPreview").show();
-                   }
-               }
-           }
+                    }
+                })
+            })
     </script>
 </body>
