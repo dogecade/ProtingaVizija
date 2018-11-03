@@ -38,19 +38,12 @@ namespace Api.Controllers
                         return Json(new { result = new { facesCount = 0 } }
                     , JsonRequestBehavior.AllowGet);
 
-                    List<string> listOfFaces = new List<string>();
-                    List<string> faceTokens = new List<string>();
-                    foreach (var face in result.Faces)
+                    List<CroppedFace> croppedFaces = new List<CroppedFace>();
+                    foreach (var face in result.CroppedFaces(uploadedImage, 25))
                     {
-                        using (var ms = new MemoryStream())
-                        {
-                            HelperMethods.CropImage(new Bitmap(uploadedImage), face.Face_rectangle, 25).Save(ms, ImageFormat.Jpeg);
-                            listOfFaces.Add(Convert.ToBase64String(ms.GetBuffer()));
-                        }
-                        faceTokens.Add(face.Face_token);
-
+                        croppedFaces.Add(face);
                     }
-                    return Json(new { result = new { images = listOfFaces, faceToken = faceTokens, facesCount = result.Faces.Count } }
+                    return Json(new { result = croppedFaces }
                     , JsonRequestBehavior.AllowGet);
                 }
 

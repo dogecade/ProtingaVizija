@@ -86,21 +86,20 @@
                             dataType: "json",
                             data: fd,
                             success: function (data) {
-                                var result = data.result.facesCount;
-                                switch (result) {
+                                $('#imgWrapper').empty();
+                                switch (data.result.length) {
                                     case 0:
-                                        $('#imgWrapper').empty();
                                         alert("No faces have been detected in the image!!!");
                                         break;
                                     case 1:
-                                        $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="data:image/jpeg;base64, ' + data.result.images[0] + '" />');
+                                        $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="data:image/jpeg;base64, ' + data.result[0].ImageBase64 + '" />');
                                         break;
                                     default:
                                         var url = $("#facesModal").data('url');
                                         $.get(url, function (content) {
                                             $("#facesModal").html(content);
-                                            data.result.images.forEach(function (image) {
-                                                $("#facesModalBody").append('<img id = "" class="img-responsive" src="data:image/jpeg;base64, ' + image + '" />')
+                                            data.result.forEach(function (image) {
+                                                $("#facesModalBody").append('<img id = "" class="img-responsive" src="data:image/jpeg;base64, ' + image.ImageBase64 + '" />')
                                             });
                                             $("#facesModal").modal('show');
                                         });
