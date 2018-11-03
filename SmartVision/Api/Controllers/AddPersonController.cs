@@ -1,6 +1,7 @@
 ﻿//using FaceAnalysis;
 using FaceAnalysis;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -29,25 +30,38 @@ namespace Api.Controllers
             {
                 var pic = System.Web.HttpContext.Current.Request.Files["Image"];
                 Image image = Image.FromStream(pic.InputStream);
-                using (var ms = new MemoryStream())
+
+                using (var uploadedImage = HelperMethods.ProcessImage(new Bitmap(image)))
                 {
-                    using (var bitmap = new Bitmap(image))
+                    FrameAnalysisJSON result = await FaceProcessor.ProcessFrame(new Bitmap(uploadedImage)); Debug.WriteLine(result.Faces.Count);
+                    if (result == null || result.Faces.Count == 0)
+                        return Json(new { result = new { facesCount = 0 } }
+                    , JsonRequestBehavior.AllowGet);
+
+                    List<string> listOfFaces = new List<string>();
+                    List<string> faceTokens = new List<string>();
+                    foreach (var face in result.Faces)
                     {
-                        var uploadedImage = HelperMethods.ProcessImage(bitmap);
-                        FrameAnalysisJSON result = await FaceProcessor.ProcessFrame((Bitmap)uploadedImage.Clone());
-                        if (result == null || result.Faces.Count == 0)
-                            return  Json(new { result = new {facesCount = 0 } }
-                        , JsonRequestBehavior.AllowGet);
-                        var faceImage = HelperMethods.CropImage(uploadedImage, result.Faces[0].Face_rectangle, 25);
-                        faceImage.Save(ms, ImageFormat.Jpeg);
-                        var SigBase64 = Convert.ToBase64String(ms.GetBuffer()); //Get Base64
-                        return Json(new { result = new { image = SigBase64, faceToken = result.Faces[0].Face_token, facesCount = result.Faces.Count } }
-                        , JsonRequestBehavior.AllowGet);
+                        using (var ms = new MemoryStream())
+                        {
+                            HelperMethods.CropImage(new Bitmap(uploadedImage), face.Face_rectangle, 25).Save(ms, ImageFormat.Jpeg);
+                            listOfFaces.Add(Convert.ToBase64String(ms.GetBuffer()));
+                        }
+                        faceTokens.Add(face.Face_token);
+
                     }
+                    return Json(new { result = new { images = listOfFaces, faceToken = faceTokens, facesCount = result.Faces.Count } }
+                    , JsonRequestBehavior.AllowGet);
                 }
 
             }
             return null;
+        }
+
+        public ActionResult FacesModalView()
+        {
+
+            return PartialView();
         }
     }
 }

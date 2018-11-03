@@ -347,6 +347,7 @@
     <Content Include="Views\AddPerson\View.cshtml" />
     <Content Include="Views\CurrentlyMissing\Index.cshtml" />
     <Content Include="Views\AddPerson\MissingPersonView.cshtml" />
+    <Content Include="Views\AddPerson\FacesModalView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -62,6 +62,8 @@
         </form>
     </div>
 
+
+
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -91,12 +93,19 @@
                                         alert("No faces have been detected in the image!!!");
                                         break;
                                     case 1:
-                                        $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="data:image/jpeg;base64, ' + data.result.image + '" />');
+                                        $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="data:image/jpeg;base64, ' + data.result.images[0] + '" />');
                                         break;
                                     default:
-                                        $('#imgWrapper').empty();
-                                        alert("Too many faces!! Not yet implemented ─=≡Σᕕ( ͡° ͜ʖ ͡°)ᕗ");
-                                }
+                                        var url = $("#facesModal").data('url');
+                                        $.get(url, function (content) {
+                                            $("#facesModal").html(content);
+                                            data.result.images.forEach(function (image) {
+                                                $("#facesModalBody").append('<img id = "" class="img-responsive" src="data:image/jpeg;base64, ' + image + '" />')
+                                            });
+                                            $("#facesModal").modal('show');
+                                        });
+                                        //alert("Too many faces!! Not yet implemented ─=≡Σᕕ( ͡° ͜ʖ ͡°)ᕗ");
+                                }       
                             },
                             error: function () {
                                 alert('Error');
@@ -106,4 +115,5 @@
                 })
             })
     </script>
+    <div id="facesModal" class="modal hide fade" role="dialog" data-url="@Url.Action("FacesModalView", "AddPerson")"></div>
 </body>
