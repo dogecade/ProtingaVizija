@@ -16,7 +16,7 @@ namespace FaceAnalysis
     public class FaceProcessor
     {
         private const int BUFFER_LIMIT = 10000;
-        private VideoCapture capture;
+        private IList<VideoCapture> captures;
         private readonly BufferBlock<string> searchBuffer = new BufferBlock<string>(new DataflowBlockOptions { BoundedCapacity = BUFFER_LIMIT });
         private readonly BroadcastBlock<byte[]> buffer = new BroadcastBlock<byte[]>(item => item);
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
@@ -24,31 +24,31 @@ namespace FaceAnalysis
         private static readonly SearchResultHandler resultHandler = new SearchResultHandler(tokenSource.Token);
         private readonly Task searchTask;
 
-        public FaceProcessor(VideoCapture capture)
+        public FaceProcessor(IList<VideoCapture> captures)
         {
-            this.capture = capture;
+            this.captures = captures;
             searchTask = Task.Run(() => FaceSearch());
         }
+
+        public FaceProcessor(VideoCapture capture) : this(new List<VideoCapture> { capture }){}
 
         /// <summary>
         /// Gets frame camera feed
         /// </summary>
-        /// <returns>Image frame (async)</returns>
-        public async Task<Image<Bgr, byte>> GetCaptureFrame()
+        /// <returns>Capture bitmap (async)</returns>
+        public async Task<IList<Bitmap>> GetCaptureFrames()
         {
-            Image<Bgr, byte> imageFrame = null;
-            try
-            {
-                imageFrame = capture.QueryFrame().ToImage<Bgr, byte>().Clone();
-                imageFrame.Bitmap = HelperMethods.ProcessImage(imageFrame.Bitmap);
-                await buffer.SendAsync(HelperMethods.ImageToByte(imageFrame.Bitmap));
-            }
-            catch (NullReferenceException)
-            {
-                Debug.WriteLine("No new frame available in camera feed");
+            if (captures.Count == 0)
+                return null;
+            IList<Bitmap> bitmaps = new List<Bitmap>();
+            foreach (var capture in captures) //get bitmaps without any extra processing, null validation, etc
+                using (var frame = capture?.QueryFrame().ToImage<Bgr, byte>())
+                    bitmaps.Add(frame?.Bitmap == null ? null : HelperMethods.ProcessImage(new Bitmap(frame.Bitmap)));
 
-            }
-            return imageFrame;
+            //do processing for the request, though.
+            Bitmap singleBitmap = HelperMethods.ProcessImages(bitmaps);
+            await buffer.SendAsync(HelperMethods.ImageToByte(singleBitmap));
+            return bitmaps;
         }
 
         /// <summary>

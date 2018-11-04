@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 
 namespace FaceAnalysis
 {
@@ -70,12 +72,30 @@ namespace FaceAnalysis
 
             Bitmap imgClone = new Bitmap(newWidth, newHeight, PixelFormat.Format24bppRgb);
             using (Graphics gr = Graphics.FromImage(imgClone))
-            {
                 gr.DrawImage(img, 0, 0, imgClone.Width, imgClone.Height);
-            }
             img.Dispose();
             return imgClone;
         }
 
+        //does not dispose
+        public static Bitmap ProcessImages(IList<Bitmap> bitmaps)
+        {
+            const int MAX_IMAGES = 16;
+            if (bitmaps?.Any() != true)
+                throw new ArgumentException("List null or empty");
+            else if (bitmaps.Count > 16)
+                throw new ArgumentException(string.Format("Number of bitmaps exceeds limit ({0})", MAX_IMAGES));
+                int currentWidth = 0;
+            var notNullBitmaps = bitmaps.Where(bitmap => bitmap != null);
+            Bitmap conjoinedBitmap = new Bitmap(width: notNullBitmaps.Sum(bitmap => bitmap.Width),
+                                                height: notNullBitmaps.Max(bitmap => bitmap.Height));
+            using (Graphics g = Graphics.FromImage(conjoinedBitmap))
+                foreach (var bitmap in notNullBitmaps)
+                {
+                    g.DrawImage(bitmap, currentWidth, 0);
+                    currentWidth += bitmap.Width;
+                }          
+            return conjoinedBitmap;
+        }
     }
 }

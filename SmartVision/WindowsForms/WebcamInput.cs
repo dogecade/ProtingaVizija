@@ -16,7 +16,7 @@ namespace WindowsForms
         private static List<Rectangle> faceRectangles = new List<Rectangle>();
         private static CancellationTokenSource tokenSource = new CancellationTokenSource();
         private static Task taskAnalysis;
-        private static Image<Bgr, Byte> lastImage;
+        private static Bitmap lastImage;
         private static VideoCapture capture;
         private static FaceProcessor processor;
 
@@ -76,15 +76,19 @@ namespace WindowsForms
         /// </summary>
         private static async void GetFrameAsync(object sender, EventArgs e)
         {
-            var imageFrame = await processor.GetCaptureFrame();
-            if (imageFrame == null)
+            //the forms app doesn't do multiple inputs, so just use the first bitmap.
+            Bitmap image = (await processor.GetCaptureFrames())[0];
+            if (image == null)
                 return;
-            FormFaceDetection.Current.scanPictureBox.Image = imageFrame.Bitmap;
+            FormFaceDetection.Current.scanPictureBox.Image = image;
+            
             lock (faceRectangles)
-                foreach (Rectangle face in faceRectangles)
-                    imageFrame.Draw(face, new Bgr(Color.Red), 1);
+                using (Graphics g = Graphics.FromImage(image))
+                using (Pen pen = new Pen(new SolidBrush(Color.Red), 1))
+                    foreach (Rectangle face in faceRectangles)
+                        g.DrawRectangle(pen, face);
             lastImage?.Dispose();
-            lastImage = imageFrame;
+            lastImage = image;
         }
 
         /// <summary>
