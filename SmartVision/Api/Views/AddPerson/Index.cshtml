@@ -21,11 +21,11 @@
                     @Html.AntiForgeryToken()
                     <div class="form-group center">
                         <label>First name:</label>
-                        @Html.TextBoxFor(m => m.firstName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "^[a-zA-Z]+$" })
+                        @Html.TextBoxFor(m => m.firstName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "[a-zA-Z\xC0-\uFFFF ,.'-]+$" })
                     </div>
                     <div class="form-group center">
                         <label>Last name:</label>
-                        @Html.TextBoxFor(m => m.lastName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "^[a-zA-Z]+$" })
+                        @Html.TextBoxFor(m => m.lastName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "[a-zA-Z\xC0-\uFFFF ,.'-]+$" })
                     </div>
                     <div class="form-group center">
                         <label>Missing person ID:</label>
@@ -37,7 +37,7 @@
                     </div>
                     <div class="form-group center">
                         <label>Email address:</label>
-                        @Html.TextBoxFor(m => m.emailAddress, new { @class = "form-control", @type = "email", @required = "" })
+                        @Html.TextBoxFor(m => m.emailAddress, new { @class = "form-control", @type = "email", @required = "", pattern = "[^@\\s]+@[^@\\s]+\\.[^@\\s]+", title = "Please type a valid email address." })
                     </div>
                     <div class="form-group d-flex justify-content-center align-items-center align-content-center">
                         <input class="btn btn-primary d-flex align-self-center" type="submit" style="margin:0px;" value="Submit" />

@@ -23,11 +23,11 @@
                     @Html.AntiForgeryToken()
                     <div class="form-group center">
                         <label>First name:</label>
-                        @Html.TextBoxFor(m => m.firstName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "^[a-zA-Z]+$" })
+                        @Html.TextBoxFor(m => m.firstName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "[a-zA-Z\xC0-\uFFFF ,.'-]+$" })
                     </div>
                     <div class="form-group center">
                         <label>Last name:</label>
-                        @Html.TextBoxFor(m => m.lastName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "^[a-zA-Z]+$" })
+                        @Html.TextBoxFor(m => m.lastName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "[a-zA-Z\xC0-\uFFFF ,.'-]+$" })
                     </div>
                     <div class="form-group center">
                         <label>Date of birth:</label>
@@ -99,9 +99,15 @@
                                         $.get(url, function (content) {
                                             $("#facesModal").html(content);
                                             data.result.forEach(function (image) {
-                                                $("#facesModalBody").append('<img id = "" class="img-responsive" src="data:image/jpeg;base64, ' + image.ImageBase64 + '" />')
+                                                $("#facesModalBody").append('<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6"><img id = ' + image.FaceToken + ' class="img-thumbnail selectable-face" src="data:image/jpeg;base64, ' + image.ImageBase64 + '" /></div>')
                                             });
                                             $("#facesModal").modal('show');
+                                            $('.selectable-face').one('click', function () {
+                                                var imgsrc = $(this).attr('src');
+                                                $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="' + imgsrc + '" />');
+                                                $("#facesModal").modal('hide');
+                                                    
+                                            });
                                         });
                                         //alert("Too many faces!! Not yet implemented ─=≡Σᕕ( ͡° ͜ʖ ͡°)ᕗ");
                                 }       
