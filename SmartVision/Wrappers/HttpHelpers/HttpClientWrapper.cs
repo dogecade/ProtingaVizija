@@ -11,7 +11,7 @@ namespace Helpers
     public class HttpClientWrapper : IHttpClientWrapper
     {
         private static readonly HttpClient httpClient;
-        private string API = "http://viltomas.eu/api/";
+        private string API = "http://localhost:52814/"; //"http://viltomas.eu/api/"
 
         static HttpClientWrapper()
         {

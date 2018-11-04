@@ -33,9 +33,9 @@ namespace Api.Controllers
 
                 using (var uploadedImage = HelperMethods.ProcessImage(new Bitmap(image)))
                 {
-                    FrameAnalysisJSON result = await FaceProcessor.ProcessFrame(new Bitmap(uploadedImage));
+                    FrameAnalysisJSON result = await FaceProcessor.ProcessFrame(new Bitmap(uploadedImage)); Debug.WriteLine(result.Faces.Count);
                     if (result == null || result.Faces.Count == 0)
-                        return Json(new { result = new List<CroppedFace>()}
+                        return Json(new { result = new { facesCount = 0 } }
                     , JsonRequestBehavior.AllowGet);
 
                     List<CroppedFace> croppedFaces = new List<CroppedFace>();
