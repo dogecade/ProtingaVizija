@@ -23,7 +23,7 @@ namespace Helpers
             return Post(url, httpContent).Result;
         }
 
-        public async Task<string> Post(string url, MultipartFormDataContent httpContent, bool repeatedRequest = false)
+        public async Task<string> Post(string url, MultipartFormDataContent httpContent)
         {
             HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
             {
@@ -47,20 +47,8 @@ namespace Helpers
 
             catch (HttpRequestException e)
             {
-                if (e.Message == "Error while copying content to a stream." && repeatedRequest == false)
-                {
-                    Debug.WriteLine("Bad response, attempting to send request again");
-                    return await Post(url, httpContent, true);
-                }
-                else
-                {
-                    Debug.WriteLine(e);
-                    return null;
-                }
-            }
-            finally
-            {
-                httpRequestMessage.Dispose();
+                Debug.WriteLine(e);
+                return null;
             }
         }
 
