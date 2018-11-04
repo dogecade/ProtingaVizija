@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28010.2026
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsForms", "WindowsForms\WindowsForms.csproj", "{90BA7247-373C-49E3-A9B5-90828BBC8BE9}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Wrappers\Helpers.csproj", "{352B57FB-2201-4BBB-BAF9-60B7D62C58C3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Objects", "Objects\Objects.csproj", "{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminPage", "AdminPage\AdminPage.csproj", "{11347B3A-2337-4ABE-B7FB-D7C88A8086BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +103,14 @@ Global
 		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Release|x86.ActiveCfg = Release|Any CPU
 		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Release|x86.Build.0 = Release|Any CPU
+		{11347B3A-2337-4ABE-B7FB-D7C88A8086BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11347B3A-2337-4ABE-B7FB-D7C88A8086BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11347B3A-2337-4ABE-B7FB-D7C88A8086BB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{11347B3A-2337-4ABE-B7FB-D7C88A8086BB}.Debug|x86.Build.0 = Debug|Any CPU
+		{11347B3A-2337-4ABE-B7FB-D7C88A8086BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11347B3A-2337-4ABE-B7FB-D7C88A8086BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11347B3A-2337-4ABE-B7FB-D7C88A8086BB}.Release|x86.ActiveCfg = Release|Any CPU
+		{11347B3A-2337-4ABE-B7FB-D7C88A8086BB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
