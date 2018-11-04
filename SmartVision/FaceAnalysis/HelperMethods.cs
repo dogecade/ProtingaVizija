@@ -77,24 +77,33 @@ namespace FaceAnalysis
             return imgClone;
         }
 
-        //does not dispose
+        //does not dispose bitmaps
         public static Bitmap ProcessImages(IList<Bitmap> bitmaps)
         {
-            const int MAX_IMAGES = 16;
+            const int MAX_EDGE_IMAGES = 3;
             if (bitmaps?.Any() != true)
                 throw new ArgumentException("List null or empty");
-            else if (bitmaps.Count > 16)
-                throw new ArgumentException(string.Format("Number of bitmaps exceeds limit ({0})", MAX_IMAGES));
-                int currentWidth = 0;
-            var notNullBitmaps = bitmaps.Where(bitmap => bitmap != null);
-            Bitmap conjoinedBitmap = new Bitmap(width: notNullBitmaps.Sum(bitmap => bitmap.Width),
-                                                height: notNullBitmaps.Max(bitmap => bitmap.Height));
+            else if (bitmaps.Count > MAX_EDGE_IMAGES * MAX_EDGE_IMAGES)
+                throw new ArgumentException(string.Format("Number of bitmaps exceeds limit ({0})", MAX_EDGE_IMAGES));
+            Point currentPosition = new Point(0, 0);
+            var rows = bitmaps
+               .Where(bitmap => bitmap != null)
+               .Select((bitmap, i) => new { Index = i, Value = bitmap })
+               .GroupBy(bitmap => bitmap.Index / MAX_EDGE_IMAGES)
+               .Select(bitmapList => bitmapList.Select(element => element.Value));
+            Bitmap conjoinedBitmap = new Bitmap(width: rows.Max(row => row.Sum(bitmap => bitmap.Width)),
+                                                height: rows.Sum(row => row.Max(bitmap => bitmap.Height)));
             using (Graphics g = Graphics.FromImage(conjoinedBitmap))
-                foreach (var bitmap in notNullBitmaps)
+                foreach (var bitmapRow in rows)
                 {
-                    g.DrawImage(bitmap, currentWidth, 0);
-                    currentWidth += bitmap.Width;
-                }          
+                    foreach (var bitmap in bitmapRow) 
+                    {
+                        g.DrawImage(bitmap, currentPosition);
+                        currentPosition.X += bitmap.Width;
+                    }
+                    currentPosition.X = 0;
+                    currentPosition.Y += bitmapRow.Max(bitmap => bitmap.Height);
+                }      
             return conjoinedBitmap;
         }
     }
