@@ -1,0 +1,124 @@
+﻿@using Api.Models
+@{
+    ViewBag.Title = "Smart Vision";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddMissingPerson</title>
+    <link rel="stylesheet" href="~/Content/Contact-Form-Clean.css">
+</head>
+
+
+<body>
+    <div class="contact-clean">
+        <form method="post">
+            <h2 class="text-center">Missing person details</h2>
+            @model MissingPerson
+            @{
+                using (Html.BeginForm("AddMissingPerson", "AddPerson", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group center">
+                        <label>First name:</label>
+                        @Html.TextBoxFor(m => m.firstName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "[a-zA-Z\xC0-\uFFFF ,.'-]+$" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Last name:</label>
+                        @Html.TextBoxFor(m => m.lastName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "[a-zA-Z\xC0-\uFFFF ,.'-]+$" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Date of birth:</label>
+                        @Html.TextBoxFor(m => m.dateOfBirth, new { @type = "date", @class = "form-control datepicker", @required = "" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Last seen location:</label>
+                        @Html.TextBoxFor(m => m.lastSeenLocation, new { @class = "form-control", @type = "text" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Last seen date:</label>
+                        @Html.TextBoxFor(m => m.lastSeenDate, new { @type = "date", @class = "form-control datepicker" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Additional information:</label>
+                        @Html.TextAreaFor(m => m.Additional_Information, new { @class = "form-control", @rows = "14" })
+                        @Html.HiddenFor(m => m.faceToken)
+                    </div>
+                    <div style="height:167px;">
+                        <div class="form-row">
+                            <div class="col offset-lg-3 d-flex flex-column justify-content-center align-self-center m-auto" style="height:132px;">
+                                <input class="justify-content-center align-self-center" type="file" name="file" id="imageBrowse" accept="image/*" />
+                            </div>
+                            <div id="imgWrapper" class="col offset-lg-0 d-flex justify-content-center align-content-center align-self-center m-auto" style="">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary d-flex m-auto" type="submit">Submit</button>
+
+                }
+            }
+        </form>
+    </div>
+
+
+
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script>
+            $(document).ready(function () {
+
+                $("#imageBrowse").change(function () {
+
+                    var File = this.files;
+                    if (File && File[0]) {
+                        var fd = new FormData;
+                        var files = $("#imageBrowse").get(0).files;
+                        var reader = new FileReader();
+                        fd.append("Image", files[0]);
+                        $.ajax({
+                            url: '@Url.Action("CheckImage", "AddPerson")',
+                            processData: false,
+                            contentType: false,
+                            type: 'POST',
+                            dataType: "json",
+                            data: fd,
+                            success: function (data) {
+                                $('#imgWrapper').empty();
+                                switch (data.result.length) {
+                                    case 0:
+                                        alert("No faces have been detected in the image!!!");
+                                        break;
+                                    case 1:
+                                        $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="data:image/jpeg;base64, ' + data.result[0].ImageBase64 + '" />');
+                                        break;
+                                    default:
+                                        var url = $("#facesModal").data('url');
+                                        $.get(url, function (content) {
+                                            $("#facesModal").html(content);
+                                            data.result.forEach(function (image) {
+                                                $("#facesModalBody").append('<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6"><img id = ' + image.FaceToken + ' class="img-thumbnail selectable-face" src="data:image/jpeg;base64, ' + image.ImageBase64 + '" /></div>')
+                                            });
+                                            $("#facesModal").modal('show');
+                                            $('.selectable-face').one('click', function () {
+                                                var imgsrc = $(this).attr('src');
+                                                $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="' + imgsrc + '" />');
+                                                $("#facesModal").modal('hide');
+                                                    
+                                            });
+                                        });
+                                        //alert("Too many faces!! Not yet implemented ─=≡Σᕕ( ͡° ͜ʖ ͡°)ᕗ");
+                                }       
+                            },
+                            error: function () {
+                                alert('Error');
+                            }
+                        });
+                    }
+                })
+            })
+    </script>
+    <div id="facesModal" class="modal hide fade" role="dialog" data-url="@Url.Action("FacesModalView", "AddPerson")"></div>
+</body>

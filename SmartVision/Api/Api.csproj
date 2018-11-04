@@ -203,7 +203,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AddPersonController.cs" />
     <Compile Include="Controllers\ContactPersonsController.cs" />
+    <Compile Include="Controllers\CurrentlyMissingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageUploadController.cs" />
     <Compile Include="Controllers\MissingContactController.cs" />
@@ -237,12 +239,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Content\bootstrap.min2.css" />
+    <Content Include="Content\Contact-Form-Clean.css" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Footer-Dark.css" />
+    <Content Include="Content\Header-Dark.css" />
+    <Content Include="Content\Lightbox-Gallery.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Models\Tables.Context.tt">
@@ -338,6 +345,9 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\AddPerson\Index.cshtml" />
     <Content Include="Views\AddPerson\View.cshtml" />
+    <Content Include="Views\CurrentlyMissing\Index.cshtml" />
+    <Content Include="Views\AddPerson\MissingPersonView.cshtml" />
+    <Content Include="Views\AddPerson\FacesModalView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

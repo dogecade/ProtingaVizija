@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace FaceAnalysis
 {
@@ -46,6 +48,23 @@ namespace FaceAnalysis
         {
             return !(lhs == rhs);
         }
+
+        public IEnumerable<CroppedFace> CroppedFaces(Bitmap originalImage, int percentage)
+        {
+            if (Faces == null)
+                yield break;
+            foreach (Face face in Faces)
+                using (var ms = new MemoryStream())
+                {
+                    Bitmap croppedImage = HelperMethods.CropImage(new Bitmap(originalImage), face.Face_rectangle, percentage);
+                    croppedImage.Save(ms, ImageFormat.Jpeg);
+                    yield return new CroppedFace
+                    {
+                        ImageBase64 = Convert.ToBase64String(ms.GetBuffer()),
+                        FaceToken = face.Face_token
+                    };
+                }            
+        }
     }
 
     public struct FaceRectangle
@@ -62,5 +81,11 @@ namespace FaceAnalysis
     {
         public FaceRectangle Face_rectangle { get; set; }
         public string Face_token { get; set; }
+    }
+
+    public struct CroppedFace
+    {
+        public string ImageBase64 { get; set; }
+        public string FaceToken { get; set; }
     }
 }

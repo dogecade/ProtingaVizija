@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Api.Models.MissingPerson>
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/Content/Lightbox-Gallery.css">
+</head>
+<body>
+    <div class="photo-gallery">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center">Have you seen these people?</h2>
+                <p class="text-center">You can find additional information by hovering over pictures. If you have seen these people please contact the authorities or the contact people of the missing person.</p>
+            </div>
+            @foreach (var item in Model)
+            {
+                //Displaying images of missing people
+            }
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
+</body>
