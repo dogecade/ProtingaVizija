@@ -2,20 +2,26 @@
     ViewBag.Title = "Smart Vision Admin";
 }
 
-<video id="video" width="640" height="480" autoplay></video>
-<canvas id="canvas" width="640" height="480"></canvas>
+<!--><video id="video" width="640" height="480" autoplay></video>
+<canvas id="canvas" width="640" height="480"></canvas></!-->
+<body>
+    <img id='the_img_1' src='http://192.168.0.1/image.jpg'>
+    <br><br>
+    <img id='the_img_2' src='http://192.168.0.2/image.jpg'>
 
-<script>
-    // Grab elements, create settings, etc.
-var video = document.getElementById('video');
+    <a href='.'>Home</a>
+</body>
 
-// Get access to the camera!
-if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    // Not adding `{ audio: true }` since we only want video now
-    navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-        video.src = window.URL.createObjectURL(stream);
-        video.play();
-    });
-}
+<script type='text/javascript'>
+
+    function loadImage(imgID, address)
+    {
+        var now=new Date();
+        document.getElementById(imgID).src='http://' + address + '/image.jpg?'+now.getTime();
+    }
+
+    setInterval(function() {
+        loadImage("the_img_1", "192.168.0.1");
+    }, 4000); //Interval to refresh at, in milliseconds
 
 </script>
