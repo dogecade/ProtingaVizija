@@ -14,7 +14,6 @@ namespace WindowsForms
     public class WebcamInput
     {
         private static IList<Rectangle> faceRectangles = new List<Rectangle>();
-        private static CancellationTokenSource tokenSource = new CancellationTokenSource();
         private static Bitmap lastImage;
         private static IVideoSource capture;
         private static FaceProcessor processor;
@@ -29,24 +28,15 @@ namespace WindowsForms
                 if (cameraUrl == null)
                     capture = new VideoCaptureDevice(
                         new FilterInfoCollection(FilterCategory.VideoInputDevice)[0].MonikerString);
-                
-                //else
-                //    capture = new VideoCapture(cameraUrl);
+                else //assumes that it's a MJPEG stream, it's forms so whatever
+                    capture = new MJPEGStream(cameraUrl);
                 capture.Start();
-                //try catch needed for proper things
-                //if (!capture.)
-                //    throw new SystemException(Messages.cameraNotFound);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 MessageBox.Show(Messages.cameraNotFound);
                 return false;
-            }
-            if (tokenSource.IsCancellationRequested)
-            {
-                tokenSource.Dispose();
-                tokenSource = new CancellationTokenSource();
             }
             processor = new FaceProcessor(capture);
             capture.NewFrame += GetFrame;
@@ -64,7 +54,6 @@ namespace WindowsForms
                 capture.Stop();
                 capture.NewFrame -= GetFrame;
                 processor.FrameProcessed -= GetRectangles;
-                tokenSource.Cancel();
                 processor.Complete();
                 lock (faceRectangles)
                     faceRectangles.Clear();
@@ -83,7 +72,7 @@ namespace WindowsForms
         private static void GetFrame(object sender, NewFrameEventArgs e)
         {
             Bitmap image;
-            lock (e)
+            lock (sender)
                 image = new Bitmap(e.Frame);
             FormFaceDetection.Current.scanPictureBox.Image = image;
             

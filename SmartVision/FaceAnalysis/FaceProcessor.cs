@@ -28,7 +28,7 @@ namespace FaceAnalysis
 
         public FaceProcessor(IList<IVideoSource> sources)
         {
-            foreach (var source in sources)
+            foreach (var source in sources) //TODO: actually use the conjoining feature
                 source.NewFrame += QueueFrame;
             this.sources = sources;
             actionBlock = new ActionBlock<byte[]>(async byteArray => await RectanglesFromFrame(byteArray));
@@ -95,7 +95,7 @@ namespace FaceAnalysis
         private async void QueueFrame(object sender, NewFrameEventArgs e)
         {
             Bitmap bitmap;
-            lock (e)
+            lock (sender)
                 bitmap = new Bitmap(e.Frame);
             await broadcastBlock.SendAsync(bitmap);
         }
