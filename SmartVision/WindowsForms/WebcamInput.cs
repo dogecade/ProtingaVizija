@@ -77,12 +77,14 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Gets frame from processor, draws face rectangles on it.
+        /// Gets frame from source, draws face rectangles on it.
         /// Author: Arnas Danaitis
         /// </summary>
         private static void GetFrame(object sender, NewFrameEventArgs e)
         {
-            Bitmap image = new Bitmap(e.Frame);
+            Bitmap image;
+            lock (e)
+                image = new Bitmap(e.Frame);
             FormFaceDetection.Current.scanPictureBox.Image = image;
             
             lock (faceRectangles)
