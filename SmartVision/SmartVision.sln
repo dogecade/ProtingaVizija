@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Wrappers\Helpers
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Objects", "Objects\Objects.csproj", "{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusService", "BusService\BusService.csproj", "{F2279F04-2515-425A-B669-1655FEE6C28A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,14 @@ Global
 		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Release|x86.ActiveCfg = Release|Any CPU
 		{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}.Release|x86.Build.0 = Release|Any CPU
+		{F2279F04-2515-425A-B669-1655FEE6C28A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2279F04-2515-425A-B669-1655FEE6C28A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2279F04-2515-425A-B669-1655FEE6C28A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F2279F04-2515-425A-B669-1655FEE6C28A}.Debug|x86.Build.0 = Debug|Any CPU
+		{F2279F04-2515-425A-B669-1655FEE6C28A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2279F04-2515-425A-B669-1655FEE6C28A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2279F04-2515-425A-B669-1655FEE6C28A}.Release|x86.ActiveCfg = Release|Any CPU
+		{F2279F04-2515-425A-B669-1655FEE6C28A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
