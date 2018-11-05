@@ -52,6 +52,7 @@ namespace FaceAnalysis
                 source.NewFrame -= QueueFrame;
             broadcastBlock.Complete();
             searchBuffer.Complete();
+            await actionBlock.Completion;
             await searchTask;
             tokenSource.Cancel();
         }
