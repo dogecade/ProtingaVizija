@@ -6,9 +6,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using AForge.Video;
 using Constants;
-using Emgu.CV;
-using Emgu.CV.Structure;
 using Helpers;
 
 namespace FaceAnalysis
@@ -16,75 +15,63 @@ namespace FaceAnalysis
     public class FaceProcessor
     {
         private const int BUFFER_LIMIT = 10000;
-        private IList<VideoCapture> captures;
+        private IList<IVideoSource> sources;
         private readonly BufferBlock<string> searchBuffer = new BufferBlock<string>(new DataflowBlockOptions { BoundedCapacity = BUFFER_LIMIT });
-        private readonly BroadcastBlock<byte[]> buffer = new BroadcastBlock<byte[]>(item => item);
+        private readonly BroadcastBlock<Bitmap> broadcastBlock = new BroadcastBlock<Bitmap>(bitmap => bitmap);
+        private readonly TransformBlock<Bitmap, byte[]> transformBlock = new TransformBlock<Bitmap, byte[]>(bitmap => HelperMethods.ImageToByte(bitmap));
+        private readonly ActionBlock<byte[]> actionBlock;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
         private static readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
         private static readonly SearchResultHandler resultHandler = new SearchResultHandler(tokenSource.Token);
         private readonly Task searchTask;
+        public event EventHandler<FrameProcessedEventArgs> FrameProcessed;
 
-        public FaceProcessor(IList<VideoCapture> captures)
+        public FaceProcessor(IList<IVideoSource> sources)
         {
-            this.captures = captures;
+            foreach (var source in sources) //TODO: actually use the conjoining feature
+                source.NewFrame += QueueFrame;
+            this.sources = sources;
+            actionBlock = new ActionBlock<byte[]>(async byteArray => await RectanglesFromFrame(byteArray));
+            broadcastBlock.LinkTo(transformBlock, delegate { return transformBlock.InputCount == 0 && actionBlock.InputCount == 0; });
+            transformBlock.LinkTo(actionBlock);
+            broadcastBlock.Completion.ContinueWith(delegate { transformBlock.Complete(); });
+            transformBlock.Completion.ContinueWith(delegate { actionBlock.Complete(); });
             searchTask = Task.Run(() => FaceSearch());
         }
-
-        public FaceProcessor(VideoCapture capture) : this(new List<VideoCapture> { capture }){}
-
-        /// <summary>
-        /// Gets frame camera feed
-        /// </summary>
-        /// <returns>Capture bitmap (async)</returns>
-        public async Task<IList<Bitmap>> GetCaptureFrames()
-        {
-            if (captures.Count == 0)
-                return null;
-            IList<Bitmap> bitmaps = new List<Bitmap>();
-            foreach (var capture in captures) //get bitmaps without any extra processing, null validation, etc
-                using (var frame = capture?.QueryFrame().ToImage<Bgr, byte>())
-                    bitmaps.Add(frame?.Bitmap == null ? null : HelperMethods.ProcessImage(new Bitmap(frame.Bitmap)));
-
-            //do processing for the request, though.
-            Bitmap singleBitmap = HelperMethods.ProcessImages(bitmaps);
-            await buffer.SendAsync(HelperMethods.ImageToByte(singleBitmap));
-            return bitmaps;
-        }
+   
+        public FaceProcessor(IVideoSource sources) : this(new List<IVideoSource> { sources }) { }
 
         /// <summary>
-        /// Gets whether the buffer still has a frame to process.
-        /// </summary>
-        /// <returns>Buffer has frame (async)</returns>
-        public async Task<bool> HasFrames()
-        {
-            return await buffer.OutputAvailableAsync();
-        }
-
-
-        /// <summary>
-        /// "Completes" the search process -
-        /// tells the class to complete the tokens currently in buffer and not to take any more.
+        /// "Completes" the processing:
+        /// unsubscribes from sources
+        /// search process - tells the class to complete the tokens currently in buffer and not to take any more.
         /// </summary>
         public async void Complete()
         {
+            foreach (var source in sources)
+                source.NewFrame -= QueueFrame;
+            broadcastBlock.Complete();
             searchBuffer.Complete();
+            await actionBlock.Completion;
             await searchTask;
             tokenSource.Cancel();
         }
 
         /// <summary>
-        /// Analyses the frame currently in buffer (makes an API call, etc)
+        /// Analyses the given frame (makes an API call, etc)
         /// Adds any found faces to a buffer for face search.
+        /// Raises event that processing is finished (args of which contain the face rectangles)
         /// </summary>
         /// <returns>List of face rectangles from frame</returns>
-        public async Task<List<Rectangle>> GetRectanglesFromFrame()
+        public async Task RectanglesFromFrame(byte[] bitmap)
         {
-            FrameAnalysisJSON result = await ProcessFrame(await buffer.ReceiveAsync());
+            FrameAnalysisJSON result = await ProcessFrame(bitmap);
             if (result == default(FrameAnalysisJSON))
-                return null;
+                return;
             foreach (Face face in result.Faces)
                 await searchBuffer.SendAsync(face.Face_token);
-            return (from face in result.Faces select (Rectangle)face.Face_rectangle).ToList();
+            var faceRectangles = (from face in result.Faces select (Rectangle)face.Face_rectangle).ToList();
+            OnProcessingCompletion(new FrameProcessedEventArgs { FaceRectangles = faceRectangles } );
         }
 
         /// <summary>
@@ -102,6 +89,28 @@ namespace FaceAnalysis
         }
 
         /// <summary>
+        /// Event handler for "giving" a new frame to the processor.
+        /// </summary>
+        /// <param name="sender">ICapture</param>
+        /// <param name="e">Event args</param>
+        private async void QueueFrame(object sender, NewFrameEventArgs e)
+        {
+            Bitmap bitmap;
+            lock (sender)
+                bitmap = new Bitmap(e.Frame);
+            await broadcastBlock.SendAsync(bitmap);
+        }
+
+        /// <summary>
+        /// Event when processor finishes a frame
+        /// </summary>
+        /// <param name="e">Event arguments</param>
+        protected virtual void OnProcessingCompletion(FrameProcessedEventArgs e)
+        {
+            FrameProcessed?.Invoke(this, e);
+        }
+
+        /// <summary>
         /// Analyses the given byte array
         /// </summary>
         /// <returns>JSON response, null if invalid</returns>
@@ -111,7 +120,6 @@ namespace FaceAnalysis
             FrameAnalysisJSON result = await faceApiCalls.AnalyzeFrame(frameToProcess);
             if (result != null)
                 Debug.WriteLine(DateTime.Now + " " + result.Faces.Count + " face(s) found in given frame");
-
             return result;
         }
 
@@ -123,6 +131,11 @@ namespace FaceAnalysis
         {
             return await ProcessFrame(HelperMethods.ImageToByte(bitmap));
         }
-    }
 
+    }
+    public class FrameProcessedEventArgs : EventArgs
+    {
+        public IList<Rectangle> FaceRectangles { get; set; }
+    }
 }
+

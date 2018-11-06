@@ -2,22 +2,20 @@
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsForms.FormControl;
-using Emgu.CV;
-using Emgu.CV.Structure;
 using FaceAnalysis;
 using System.Threading;
 using System.Drawing;
 using System.Collections.Generic;
+using AForge.Video;
+using AForge.Video.DirectShow;
 
 namespace WindowsForms
 {
     public class WebcamInput
     {
-        private static List<Rectangle> faceRectangles = new List<Rectangle>();
-        private static CancellationTokenSource tokenSource = new CancellationTokenSource();
-        private static Task taskAnalysis;
+        private static IList<Rectangle> faceRectangles = new List<Rectangle>();
         private static Bitmap lastImage;
-        private static VideoCapture capture;
+        private static IVideoSource capture;
         private static FaceProcessor processor;
 
         /// <summary>
@@ -28,11 +26,11 @@ namespace WindowsForms
             try
             {
                 if (cameraUrl == null)
-                    capture = new VideoCapture();
-                else
-                    capture = new VideoCapture(cameraUrl);
-                if (!capture.IsOpened)
-                    throw new SystemException(Messages.cameraNotFound);
+                    capture = new VideoCaptureDevice(
+                        new FilterInfoCollection(FilterCategory.VideoInputDevice)[0].MonikerString);
+                else //assumes that it's a MJPEG stream, it's forms so whatever
+                    capture = new MJPEGStream(cameraUrl);
+                capture.Start();
             }
             catch (Exception e)
             {
@@ -40,14 +38,9 @@ namespace WindowsForms
                 MessageBox.Show(Messages.cameraNotFound);
                 return false;
             }
-            if (tokenSource.IsCancellationRequested)
-            {
-                tokenSource.Dispose();
-                tokenSource = new CancellationTokenSource();
-            }
             processor = new FaceProcessor(capture);
-            taskAnalysis = Task.Run(() => ProcessFrameAsync());
-            Application.Idle += GetFrameAsync;
+            capture.NewFrame += GetFrame;
+            processor.FrameProcessed += GetRectangles;
             return true;
         }
 
@@ -58,10 +51,12 @@ namespace WindowsForms
         {
             try
             {
-                capture.Dispose();
-                Application.Idle -= GetFrameAsync;
-                tokenSource.Cancel();
+                capture.Stop();
+                capture.NewFrame -= GetFrame;
+                processor.FrameProcessed -= GetRectangles;
                 processor.Complete();
+                lock (faceRectangles)
+                    faceRectangles.Clear();
             }
             catch (Exception e)
             {
@@ -71,15 +66,14 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Gets frame from processor, draws face rectangles on it.
+        /// Gets frame from source, draws face rectangles on it.
         /// Author: Arnas Danaitis
         /// </summary>
-        private static async void GetFrameAsync(object sender, EventArgs e)
+        private static void GetFrame(object sender, NewFrameEventArgs e)
         {
-            //the forms app doesn't do multiple inputs, so just use the first bitmap.
-            Bitmap image = (await processor.GetCaptureFrames())[0];
-            if (image == null)
-                return;
+            Bitmap image;
+            lock (sender)
+                image = new Bitmap(e.Frame);
             FormFaceDetection.Current.scanPictureBox.Image = image;
             
             lock (faceRectangles)
@@ -95,15 +89,10 @@ namespace WindowsForms
         /// Gets list of faces from processor.
         /// Author: Arnas Danaitis
         /// </summary>
-        private static async void ProcessFrameAsync()
+        private static void GetRectangles(object sender, FrameProcessedEventArgs e)
         {
-            while (await processor.HasFrames() && !tokenSource.IsCancellationRequested)
-            {
-                faceRectangles = await processor.GetRectanglesFromFrame() ?? faceRectangles;
-            }
-                
             lock (faceRectangles)
-                faceRectangles.Clear();
+                faceRectangles = e.FaceRectangles ?? faceRectangles;
         }
     }
 }
