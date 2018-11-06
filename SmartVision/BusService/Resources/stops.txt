@@ -1,5 +1,4 @@
-﻿stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,stop_url,location_type,parent_station
-9483,,"1-asis Lentvaris",,54.64437,25.06552,https://www.stops.lt/vilnius/index.html#stop/3906,,
+﻿9483,,"1-asis Lentvaris",,54.64437,25.06552,https://www.stops.lt/vilnius/index.html#stop/3906,,
 9102,,"Bijūnų st.",,54.66740,25.21588,https://www.stops.lt/vilnius/index.html#stop/1631,,
 16291,,"Geležinio Vilko st.",,54.75762,25.27183,https://www.stops.lt/vilnius/index.html#stop/2145,,
 16295,,"Geležinio Vilko st.",,54.75848,25.27229,https://www.stops.lt/vilnius/index.html#stop/2146,,
