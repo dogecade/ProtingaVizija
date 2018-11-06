@@ -2,26 +2,50 @@
     ViewBag.Title = "Smart Vision Admin";
 }
 
-<!--><video id="video" width="640" height="480" autoplay></video>
-<canvas id="canvas" width="640" height="480"></canvas></!-->
-<body>
-    <img id='the_img_1' src='http://192.168.0.1/image.jpg'>
-    <br><br>
-    <img id='the_img_2' src='http://192.168.0.2/image.jpg'>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 
-    <a href='.'>Home</a>
+<body>
+
+    <img src="/api/Video" id="stream"/>
+    // <button class="btn btn-primary" id="startStream">Start Stream</button>
 </body>
 
-<script type='text/javascript'>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script>
+    var uri = 'api/Video';
+    var cameraURL = "http://192.168.0.102:8080/video";
 
-    function loadImage(imgID, address)
-    {
-        var now=new Date();
-        document.getElementById(imgID).src='http://' + address + '/image.jpg?'+now.getTime();
-    }
-
-    setInterval(function() {
-        loadImage("the_img_1", "192.168.0.1");
-    }, 4000); //Interval to refresh at, in milliseconds
-
+    $(document).ready(function () {
+      // Send an AJAX request
+        $("#startStream").click(function(){
+             $.ajax({
+                 url: '../api/Video/SetStream',
+                type: 'POST',
+                cache: false,
+                contentType: 'application/json;charset=utf-8',
+                 data: JSON.stringify(cameraURL),
+                 success: function (data) {
+                     $.ajax({
+                    type: 'GET',
+                     contentType: 'application/json;charset=utf-8',
+                    url: '../api/Video/GetVideoContent',
+                    cache: false,
+                    dataType: 'json',
+                    success: function (bybiss) {
+    alert('sss');
+                    },
+                    error: function () {
+                        alert('Error');
+                    } });
+                 },
+                 error: function () {
+                    alert('Error');
+                 }
+             });
+        });
+    });
 </script>

@@ -62,11 +62,8 @@
         </form>
     </div>
 
-
-
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
     <script>
             $(document).ready(function () {
 
@@ -106,11 +103,11 @@
                                                 var imgsrc = $(this).attr('src');
                                                 $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="' + imgsrc + '" />');
                                                 $("#facesModal").modal('hide');
-                                                    
+
                                             });
                                         });
                                         //alert("Too many faces!! Not yet implemented ─=≡Σᕕ( ͡° ͜ʖ ͡°)ᕗ");
-                                }       
+                                }
                             },
                             error: function () {
                                 alert('Error');
