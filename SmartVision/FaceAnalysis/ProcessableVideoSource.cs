@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Drawing;
 using AForge.Video;
@@ -10,10 +11,12 @@ namespace FaceAnalysis
         private ConcurrentQueue<Rectangle> faceRectangles;
         public event NewFrameEventHandler NewFrame;
         public IVideoSource Stream { get; }
+        public Guid Id { get;  }
 
         public ProcessableVideoSource(IVideoSource videoStream)
         {
             Stream = videoStream;
+            Id = Guid.NewGuid();
         }
          
         public void Start()
