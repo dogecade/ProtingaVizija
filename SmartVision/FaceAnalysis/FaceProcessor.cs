@@ -15,7 +15,7 @@ namespace FaceAnalysis
     public class FaceProcessor
     {
         private const int BUFFER_LIMIT = 10000;
-        private IList<IVideoSource> sources;
+        private IList<ProcessableVideoSource> sources;
         private readonly BufferBlock<string> searchBuffer = new BufferBlock<string>(new DataflowBlockOptions { BoundedCapacity = BUFFER_LIMIT });
         private readonly BroadcastBlock<Bitmap> broadcastBlock = new BroadcastBlock<Bitmap>(bitmap => bitmap);
         private readonly TransformBlock<Bitmap, byte[]> transformBlock = new TransformBlock<Bitmap, byte[]>(bitmap => HelperMethods.ImageToByte(bitmap));
@@ -26,20 +26,23 @@ namespace FaceAnalysis
         private readonly Task searchTask;
         public event EventHandler<FrameProcessedEventArgs> FrameProcessed;
 
-        public FaceProcessor(IList<IVideoSource> sources)
+        public FaceProcessor(IList<ProcessableVideoSource> sources)
         {
             foreach (var source in sources) //TODO: actually use the conjoining feature
-                source.NewFrame += QueueFrame;
+            {
+                source.Stream.NewFrame += QueueFrame;
+                FrameProcessed += source.UpdateRectangles;
+            }
             this.sources = sources;
             actionBlock = new ActionBlock<byte[]>(async byteArray => await RectanglesFromFrame(byteArray));
             broadcastBlock.LinkTo(transformBlock, delegate { return transformBlock.InputCount == 0 && actionBlock.InputCount == 0; });
             transformBlock.LinkTo(actionBlock);
             broadcastBlock.Completion.ContinueWith(delegate { transformBlock.Complete(); });
             transformBlock.Completion.ContinueWith(delegate { actionBlock.Complete(); });
-            searchTask = Task.Run(() => FaceSearch());
+            //searchTask = Task.Run(() => FaceSearch());
         }
    
-        public FaceProcessor(IVideoSource sources) : this(new List<IVideoSource> { sources }) { }
+        public FaceProcessor(ProcessableVideoSource sources) : this(new List<ProcessableVideoSource> { sources }) { }
 
         /// <summary>
         /// "Completes" the processing:
@@ -49,7 +52,10 @@ namespace FaceAnalysis
         public async void Complete()
         {
             foreach (var source in sources)
-                source.NewFrame -= QueueFrame;
+            {
+                source.Stream.NewFrame += QueueFrame;
+                FrameProcessed += source.UpdateRectangles;
+            }
             broadcastBlock.Complete();
             searchBuffer.Complete();
             await actionBlock.Completion;
@@ -70,7 +76,7 @@ namespace FaceAnalysis
                 return;
             foreach (Face face in result.Faces)
                 await searchBuffer.SendAsync(face.Face_token);
-            var faceRectangles = (from face in result.Faces select (Rectangle)face.Face_rectangle).ToList();
+            var faceRectangles = from face in result.Faces select (Rectangle)face.Face_rectangle;
             OnProcessingCompletion(new FrameProcessedEventArgs { FaceRectangles = faceRectangles } );
         }
 
@@ -135,7 +141,7 @@ namespace FaceAnalysis
     }
     public class FrameProcessedEventArgs : EventArgs
     {
-        public IList<Rectangle> FaceRectangles { get; set; }
+        public IEnumerable<Rectangle> FaceRectangles { get; set; }
     }
 }
 
