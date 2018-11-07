@@ -252,6 +252,7 @@
     <Content Include="Content\Lightbox-Gallery.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="img\logo.png" />
     <Content Include="Models\Tables.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Tables.edmx</DependentUpon>
