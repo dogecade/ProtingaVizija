@@ -1,0 +1,19 @@
+﻿"Kaimelio žiedas",54.731336,25.244075
+"Vilniaus viešasis transportas. Žolyno g. 15",54.708887,25.322738
+"Senoji plytine",54.724828,25.340568
+"Antakalnio žiedas",54.722700,25.318840
+"Žirmūnų g. autobusų parkas",54.726828, 25.295682
+"Troleibusų parkas. Justiniškių g. 14",54.703654, 25.215557
+"L. Asanavičiūtės g. autobusų parkas",54.684076, 25.205889
+"Pašilaičių žiedo autobusų parkas",54.728527, 25.234508
+"Verkių g. autobusų parkas",54.720221, 25.294319
+"Verkių g. autobusų parkas",54.720983, 25.294907
+"Verkių g. autobusų parkas",54.722323, 25.294888
+"Verkių g. autobusų parkas",54.721045, 25.291177
+"Sėlių g. autobusų aikštelė",54.698377, 25.245955
+"Pramonės g. autobusų aikštelė",54.695417, 25.440327
+"Visorių autobusų aikštelė",54.757789, 25.265207
+"Justiniškių g. autobusų aikštelė",54.735113, 25.219387
+"Visorių autobusų aikštelė",54.740176, 25.240903
+"Dariaus ir Girėno g. autobusų aikštelė",54.631744, 25.271733
+"Skaidiškių žiedo autobusų aikštelė",54.609290, 25.385888

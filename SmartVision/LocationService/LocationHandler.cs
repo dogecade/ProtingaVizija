@@ -14,8 +14,8 @@ namespace LocationService
         /// Forms an URL of map picture
         /// </summary>
         /// <param name="location">Camera location</param>
-        /// <returns></returns>
-        public static string FormatLocationPicture(Location location)
+        /// <returns>Link of image</returns>
+        public static string CreateLocationPictureFromAddress(Location location)
         {
             string address = location.StreetName + "+" + location.StreetNumber + "+" + location.CityName +
                              "+" + location.CountryName + "+" + location.PostalNumber;
@@ -26,6 +26,24 @@ namespace LocationService
                    "&size=" + size +
                    "&maptype=" + mapType +
                    "&markers=color:" + markerColor + "%7C" + address + // %7C is necessary between parameters of marker
+                   "&key=" + Keys.googleApiKey;
+        }
+
+        /// <summary>
+        /// Forms an URL of map picture
+        /// </summary>
+        /// <param name="location">Camera location</param>
+        /// <returns>Link of image</returns>
+        public static string CreateLocationPictureFromCoordinates(Location location)
+        {
+            string coordinates = location.Latitude + "," + location.Longitude;
+
+            return rootUrl +
+                   "center=" + coordinates +
+                   "&zoom=" + zoom +
+                   "&size=" + size +
+                   "&maptype=" + mapType +
+                   "&markers=color:" + markerColor + "%7C" + coordinates + // %7C is necessary between parameters of marker
                    "&key=" + Keys.googleApiKey;
         }
     }
