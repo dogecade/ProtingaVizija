@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 
@@ -59,7 +58,7 @@ namespace BusService
                 var departureTime = TimeSpan.Parse(allTimes[i - 1].Split(',')[2]);
                 var arrivalTime = TimeSpan.Parse(allTimes[i].Split(',')[1]);
 
-                if (IsInRange(timeSeen, departureTime, arrivalTime))
+                if (IsInRange(timeSeen, departureTime, arrivalTime) && IsSameTrip(Convert.ToInt32(allTimes[i - 1].Split(',')[0]), Convert.ToInt32(allTimes[i].Split(',')[0])))
                 {
                     possibleStops.Add(new Tuple<int, int>(Convert.ToInt32(allTimes[i - 1].Split(',')[3]), Convert.ToInt32(allTimes[i].Split(',')[3])));
                 }
@@ -73,39 +72,59 @@ namespace BusService
             return (timeSeen.TimeOfDay >= departure && timeSeen.TimeOfDay <= arrival);
         }
 
+        private static bool IsSameTrip(int previousStopTripId, int nextStopTripId)
+        {
+            return (previousStopTripId == nextStopTripId);
+        }
+
         private static string MostProbableStops(Bus bus, List<Tuple<int, int>> possibleStopList)
         {
-            var allStops = Resource.stops.Split('\n');
+            var allRegularStops = Resource.stops.Split('\n');
 
             string previousStop;
             string nextStop;
 
-            double previousStopAbsoluteDifference;
-            double nextStopAbsoluteDifference;
-
-            List<double> differenceList = new List<double>();
+            List<double> regularStopsDifferences = new List<double>();
 
             foreach (var stops in possibleStopList)
             {
-                previousStop = allStops.First(x => Convert.ToInt32(x.Split(',')[0]) == stops.Item1);
-                nextStop = allStops.First(x => Convert.ToInt32(x.Split(',')[0]) == stops.Item2);
+                previousStop = allRegularStops.First(x => Convert.ToInt32(x.Split(',')[0]) == stops.Item1);
+                nextStop = allRegularStops.First(x => Convert.ToInt32(x.Split(',')[0]) == stops.Item2);
 
-                previousStopAbsoluteDifference = Math.Abs(bus.latitude - Convert.ToDouble(previousStop.Split(',')[4])) +
-                                                 Math.Abs(bus.longitude - Convert.ToDouble(previousStop.Split(',')[5]));
+                var previousStopAbsoluteDifference = Math.Abs(bus.latitude - Convert.ToDouble(previousStop.Split(',')[4])) +
+                                                        Math.Abs(bus.longitude - Convert.ToDouble(previousStop.Split(',')[5]));
 
-                nextStopAbsoluteDifference = Math.Abs(bus.latitude - Convert.ToDouble(nextStop.Split(',')[4])) +
-                                                 Math.Abs(bus.longitude - Convert.ToDouble(nextStop.Split(',')[5]));
+                var nextStopAbsoluteDifference = Math.Abs(bus.latitude - Convert.ToDouble(nextStop.Split(',')[4])) +
+                                                    Math.Abs(bus.longitude - Convert.ToDouble(nextStop.Split(',')[5]));
 
-                differenceList.Add(previousStopAbsoluteDifference + nextStopAbsoluteDifference);
+                regularStopsDifferences.Add(previousStopAbsoluteDifference + nextStopAbsoluteDifference);
             }
 
-            int mostProbableStops = Min(differenceList);
+            int mostProbableRegularStopsIndexes = Min(regularStopsDifferences);
 
-            previousStop = allStops.First(x => Convert.ToInt32(x.Split(',')[0]) == possibleStopList[mostProbableStops].Item1);
-            nextStop = allStops.First(x => Convert.ToInt32(x.Split(',')[0]) == possibleStopList[mostProbableStops].Item2);
+            var endStops = Resource.EndStops.Split('\n');
 
-            return string.Format(previousStop.Split(',')[2] + " - " + nextStop.Split(',')[2]);
+            List<double> endStopsDifferences = new List<double>();
+
+            foreach (var stops in endStops)
+            {
+                endStopsDifferences.Add(Math.Abs(bus.latitude - Convert.ToDouble(stops.Split(',')[1])) +
+                                        Math.Abs(bus.longitude - Convert.ToDouble(stops.Split(',')[2])));
+            }
+
+            int mostProbableEndStopIndex = Min(endStopsDifferences);
+
+            if (regularStopsDifferences[mostProbableRegularStopsIndexes] < endStopsDifferences[mostProbableEndStopIndex])
+            {
+                previousStop = allRegularStops.First(x => Convert.ToInt32(x.Split(',')[0]) == possibleStopList[mostProbableRegularStopsIndexes].Item1);
+                nextStop = allRegularStops.First(x => Convert.ToInt32(x.Split(',')[0]) == possibleStopList[mostProbableRegularStopsIndexes].Item2);
+
+                return string.Format(previousStop.Split(',')[2] + " - " + nextStop.Split(',')[2]);
+            }
+
+            return endStops[mostProbableEndStopIndex];
         }
+
 
         private static int Min(List<double> list)
         {

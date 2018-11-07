@@ -59,6 +59,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\EndStops.txt" />
     <Content Include="Resources\routes.txt" />
     <Content Include="Resources\stops.txt" />
     <Content Include="Resources\stop_times.txt" />

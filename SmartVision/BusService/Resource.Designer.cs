@@ -61,6 +61,24 @@ namespace BusService {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;Kaimelio žiedas&quot;,54.731336,25.244075
+        ///&quot;Vilniaus viešasis transportas. Žolyno g. 15&quot;,54.708887,25.322738
+        ///&quot;Senoji plytine&quot;,54.724828,25.340568
+        ///&quot;Antakalnio žiedas&quot;,54.722700,25.318840
+        ///&quot;Žirmūnų g. autobusų parkas&quot;,54.726828, 25.295682
+        ///&quot;Troleibusų parkas. Justiniškių g. 14&quot;,54.703654, 25.215557
+        ///&quot;L. Asanavičiūtės g. autobusų parkas&quot;,54.684076, 25.205889
+        ///&quot;Pašilaičių žiedo autobusų parkas&quot;,54.728527, 25.234508
+        ///&quot;Verkių g. autobusų parkas&quot;,54.720221, 25.294319
+        ///&quot;Verkių g. autobusų parkas&quot;,54.720983, 25.294907 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string EndStops {
+            get {
+                return ResourceManager.GetString("EndStops", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to route_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color
         ///vilnius_bus_1,&quot;1&quot;,&quot;Stotis–Vikingų g.–Oro uostas&quot;,,3,https://www.stops.lt/vilnius/index.html#vilnius/bus/1,0073AC,FFFFFF
         ///vilnius_expressbus_1G,&quot;1G&quot;,&quot;Stotis–Kalvarijų g.–Santariškės&quot;,,3,https://www.stops.lt/vilnius/index.html#vilnius/expressbus/1G,008000,FFFFFF
@@ -74,8 +92,7 @@ namespace BusService {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to trip_id,arrival_time,departure_time,stop_id,stop_sequence,pickup_type,drop_off_type
-        ///1,05:16:00,05:16:00,8262,1,0,0
+        ///   Looks up a localized string similar to 1,05:16:00,05:16:00,8262,1,0,0
         ///1,05:19:00,05:19:00,6650,2,0,0
         ///1,05:22:00,05:22:00,7851,3,0,0
         ///1,05:25:00,05:25:00,5173,4,0,0
@@ -88,7 +105,9 @@ namespace BusService {
         ///2,06:10:00,06:10:00,7851,3,0,0
         ///2,06:13:00,06:13:00,5173,4,0,0
         ///2,06:14:00,06:14:00,5175,5,0,0
-        ///2,06:20:0 [rest of string was truncated]&quot;;.
+        ///2,06:20:00,06:20:00,10359,6,0,0
+        ///2,06:21:00,06:21:00,9738,7,0,0
+        ///2,06:25:00,06:25:00,15589,8,0 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string stop_times {
             get {
@@ -97,12 +116,12 @@ namespace BusService {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,stop_url,location_type,parent_station
-        ///9483,,&quot;1-asis Lentvaris&quot;,,54.64437,25.06552,https://www.stops.lt/vilnius/index.html#stop/3906,,
+        ///   Looks up a localized string similar to 9483,,&quot;1-asis Lentvaris&quot;,,54.64437,25.06552,https://www.stops.lt/vilnius/index.html#stop/3906,,
         ///9102,,&quot;Bijūnų st.&quot;,,54.66740,25.21588,https://www.stops.lt/vilnius/index.html#stop/1631,,
         ///16291,,&quot;Geležinio Vilko st.&quot;,,54.75762,25.27183,https://www.stops.lt/vilnius/index.html#stop/2145,,
         ///16295,,&quot;Geležinio Vilko st.&quot;,,54.75848,25.27229,https://www.stops.lt/vilnius/index.html#stop/2146,,
-        ///8258,,&quot;Kaimelio žiedas&quot;,,54.7314 [rest of string was truncated]&quot;;.
+        ///8258,,&quot;Kaimelio žiedas&quot;,,54.73141,25.24430,https://www.stops.lt/vilnius/index.html#stop/3890,,
+        ///16305,,&quot;Kairėnai&quot;,,54.73646,25. [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string stops {
             get {
