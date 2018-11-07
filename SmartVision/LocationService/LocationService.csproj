@@ -73,7 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Location.cs" />
-    <Compile Include="LocationHandler.cs" />
     <Compile Include="LocationHelpers.cs" />
     <Compile Include="LocationJSON.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,6 +82,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BusService\BusService.csproj">
+      <Project>{f2279f04-2515-425a-b669-1655fee6c28a}</Project>
+      <Name>BusService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Constants\Constants.csproj">
       <Project>{265fbc83-ec69-4a84-be40-3856b6056f64}</Project>
       <Name>Constants</Name>

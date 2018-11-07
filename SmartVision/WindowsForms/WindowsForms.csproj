@@ -276,6 +276,10 @@
       <Project>{09e63eab-0fb5-49c3-9aa5-ea71ebc7db31}</Project>
       <Name>Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BusService\BusService.csproj">
+      <Project>{f2279f04-2515-425a-b669-1655fee6c28a}</Project>
+      <Name>BusService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Constants\Constants.csproj">
       <Project>{265fbc83-ec69-4a84-be40-3856b6056f64}</Project>
       <Name>Constants</Name>
@@ -283,6 +287,10 @@
     <ProjectReference Include="..\FaceAnalysis\FaceAnalysis.csproj">
       <Project>{c9dd5eb7-25cd-4f3a-901a-0f20a7f8479d}</Project>
       <Name>FaceAnalysis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LocationService\LocationService.csproj">
+      <Project>{aa910dbf-47f1-4309-ba09-4aa0bdaecd29}</Project>
+      <Name>LocationService</Name>
     </ProjectReference>
     <ProjectReference Include="..\NotificationService\NotificationService.csproj">
       <Project>{e0654466-0e6f-4a56-8972-af3d1666d780}</Project>
