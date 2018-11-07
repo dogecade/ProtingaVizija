@@ -105,7 +105,6 @@
     <Compile Include="JSON\IApiResponseJSON.cs" />
     <Compile Include="JSON\RemoveFaceJSON.cs" />
     <Compile Include="LikelinessConfidence.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchResultHandler.cs" />
   </ItemGroup>
