@@ -17,19 +17,34 @@ namespace FaceAnalysis
     {
         private const int MAX_FRAMES_EDGE = 3;
         private const int BUFFER_LIMIT = 10000;
-        private ConcurrentDictionary<Guid, IDisposable> links = new ConcurrentDictionary<Guid, IDisposable>();
-        private ConcurrentDictionary<ProcessableVideoSource, BroadcastBlock<GuidBitmapPair>> sources = new ConcurrentDictionary<ProcessableVideoSource, BroadcastBlock<GuidBitmapPair>>();
+        private ConcurrentDictionary<ProcessableVideoSource, SourceBlocks> sources = new ConcurrentDictionary<ProcessableVideoSource, SourceBlocks>();
         private readonly BufferBlock<string> searchBuffer = new BufferBlock<string>(new DataflowBlockOptions { BoundedCapacity = BUFFER_LIMIT });
         private readonly TransformBlock<Tuple<IList<Guid>, Bitmap>, Tuple<IList<Guid>, byte[]>> byteArrayTransformBlock;
         private readonly TransformBlock<GuidBitmapPair[], Tuple<IList<Guid>, Bitmap>> manyPicturesTransformBlock;
         private readonly ActionBlock<Tuple<IList<Guid>, byte[]>> actionBlock;
-        private readonly TransformBlock<GuidBitmapPair, GuidBitmapPair> blockPassthroughBlock;
         private readonly BatchBlock<GuidBitmapPair> batchBlock;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
         private static readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
         private static readonly SearchResultHandler resultHandler = new SearchResultHandler(tokenSource.Token);
         private readonly Task searchTask;
         public event EventHandler<FrameProcessedEventArgs> FrameProcessed;
+
+        private void RemoveLink(Guid guid)
+        {
+            var key = sources.Keys.Where(source => source.Id == guid).FirstOrDefault();
+            sources[key].Link.Dispose();
+        }
+
+        private void EstablishLinks()
+        {
+            List<ProcessableVideoSource> keys = new List<ProcessableVideoSource>(sources.Keys);
+            foreach (var key in keys)
+                sources.AddOrUpdate(
+                    key,
+                    default(SourceBlocks),
+                    (oldKey, value) => { value.Link = value.BroadcastBlock.LinkTo(value.Block); return value; }
+                );
+        }
 
         public FaceProcessor(IList<ProcessableVideoSource> sources)
         {
@@ -38,11 +53,6 @@ namespace FaceAnalysis
 
 
             //initialiase blocks.
-            blockPassthroughBlock = new TransformBlock<GuidBitmapPair, GuidBitmapPair>(tuple =>
-            {
-                RemoveLink(tuple.Guid);
-                return tuple;
-            }, blockOptions);
             byteArrayTransformBlock = new TransformBlock<Tuple<IList<Guid>, Bitmap>, Tuple<IList<Guid>, byte[]>>(tuple => new Tuple<IList<Guid>, byte[]>(tuple.Item1, HelperMethods.ImageToByte(tuple.Item2)), blockOptions);
             manyPicturesTransformBlock = new TransformBlock<GuidBitmapPair[], Tuple<IList<Guid>, Bitmap>>(tuples => HelperMethods.ProcessImages(tuples));
             actionBlock = new ActionBlock<Tuple<IList<Guid>, byte[]>>(async tuple => await RectanglesFromFrame(tuple.Item2), blockOptions);
@@ -50,16 +60,23 @@ namespace FaceAnalysis
 
             foreach (var source in sources)
             {
-                var block = new BroadcastBlock<GuidBitmapPair>(pair =>
+                var broadcastBlock = new BroadcastBlock<GuidBitmapPair>(pair =>
                 {
                     return pair;
                 }, new DataflowBlockOptions { BoundedCapacity = 1 });
-                links.TryAdd(source.Id, block.LinkTo(blockPassthroughBlock));
+                var transformBlock = new TransformBlock<GuidBitmapPair, GuidBitmapPair>(tuple =>
+                {
+                    RemoveLink(tuple.Guid);
+                    //tuple.Bitmap = HelperMethods.ProcessImage(tuple.Bitmap);
+                    return tuple;
+                }, blockOptions);
+                var blockSet = new SourceBlocks(broadcastBlock, transformBlock, broadcastBlock.LinkTo(transformBlock));
                 this.sources.AddOrUpdate(
                     source,
-                    block,
-                    (key, value) => block
+                    blockSet,
+                    (key, value) => blockSet
                 );
+                transformBlock.LinkTo(batchBlock);
                 source.Stream.NewFrame += QueueFrame;
                 FrameProcessed += source.UpdateRectangles;
             }
@@ -68,21 +85,12 @@ namespace FaceAnalysis
             batchBlock.LinkTo(manyPicturesTransformBlock, linkOptions);
             manyPicturesTransformBlock.LinkTo(byteArrayTransformBlock, linkOptions);
             byteArrayTransformBlock.LinkTo(actionBlock, linkOptions);
-            blockPassthroughBlock.LinkTo(batchBlock);
 
             //start search task.
             //searchTask = Task.Run(() => FaceSearch());
         }
 
         public FaceProcessor(ProcessableVideoSource sources) : this(new List<ProcessableVideoSource> { sources }) { }
-
-        private void RemoveLink(Guid guid)
-        {
-            links.TryGetValue(guid, out var link);
-            link?.Dispose();
-            if (link != null)
-                links.TryRemove(guid, out _);
-        }
 
         public async void Complete()
         {
@@ -109,16 +117,14 @@ namespace FaceAnalysis
             FrameAnalysisJSON result = await ProcessFrame(bitmap);
             if (result == default(FrameAnalysisJSON))
             {
-                foreach (var sourcePair in sources)
-                    links.TryAdd(sourcePair.Key.Id, sourcePair.Value.LinkTo(blockPassthroughBlock));
+                EstablishLinks();
                 return;
             }
             foreach (Face face in result.Faces)
                 await searchBuffer.SendAsync(face.Face_token);
             var faceRectangles = from face in result.Faces select (Rectangle)face.Face_rectangle;
             OnProcessingCompletion(new FrameProcessedEventArgs { FaceRectangles = faceRectangles });
-            foreach (var sourcePair in sources)
-                links.TryAdd(sourcePair.Key.Id, sourcePair.Value.LinkTo(blockPassthroughBlock));
+            EstablishLinks();
         }
 
         /// <summary>
@@ -146,7 +152,7 @@ namespace FaceAnalysis
             lock (sender)
                 bitmap = new Bitmap(e.Frame);
             var key = sources.Keys.Where(source => source.Stream == sender).FirstOrDefault();
-            await sources[key].SendAsync(new GuidBitmapPair(key.Id, bitmap));
+            await sources[key].BroadcastBlock.SendAsync(new GuidBitmapPair(key.Id, bitmap));
         }
 
         /// <summary>
@@ -191,6 +197,20 @@ namespace FaceAnalysis
 
         public Guid Guid { get; set; }
         public Bitmap Bitmap { get; set; }
+    }
+
+    public struct SourceBlocks
+    {
+        public SourceBlocks(BroadcastBlock<GuidBitmapPair> broadcastBlock, TransformBlock<GuidBitmapPair, GuidBitmapPair> block, IDisposable link) : this()
+        {
+            BroadcastBlock = broadcastBlock;
+            Block = block;
+            Link = link;
+        }
+
+        public BroadcastBlock<GuidBitmapPair> BroadcastBlock { get; }
+        public TransformBlock<GuidBitmapPair, GuidBitmapPair> Block { get; }
+        public IDisposable Link { get; set; }
     }
 
     public class FrameProcessedEventArgs : EventArgs

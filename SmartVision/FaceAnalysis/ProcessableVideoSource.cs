@@ -51,7 +51,6 @@ namespace FaceAnalysis
             faceRectangles = new ConcurrentQueue<Rectangle>(e.FaceRectangles) ?? faceRectangles;
         }
 
-        public static implicit operator Guid(ProcessableVideoSource source) => source.Id;
 
     }
 }
