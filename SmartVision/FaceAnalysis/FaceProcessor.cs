@@ -18,6 +18,7 @@ namespace FaceAnalysis
         private const int MAX_FRAMES_EDGE = 3;
         private const int BUFFER_LIMIT = 10000;
         private ConcurrentDictionary<ProcessableVideoSource, SourceBlocks> sources = new ConcurrentDictionary<ProcessableVideoSource, SourceBlocks>();
+        private bool actionRunning = false;
         private readonly BufferBlock<string> searchBuffer = new BufferBlock<string>(new DataflowBlockOptions { BoundedCapacity = BUFFER_LIMIT });
         private readonly TransformBlock<Tuple<IList<Guid>, Bitmap>, Tuple<IList<Guid>, byte[]>> byteArrayTransformBlock;
         private readonly TransformBlock<GuidBitmapPair[], Tuple<IList<Guid>, Bitmap>> manyPicturesTransformBlock;
@@ -63,7 +64,7 @@ namespace FaceAnalysis
                 var broadcastBlock = new BroadcastBlock<GuidBitmapPair>(pair =>
                 {
                     return pair;
-                }, new DataflowBlockOptions { BoundedCapacity = 1 });
+                });
                 var transformBlock = new TransformBlock<GuidBitmapPair, GuidBitmapPair>(tuple =>
                 {
                     RemoveLink(tuple.Guid);
@@ -76,7 +77,8 @@ namespace FaceAnalysis
                     blockSet,
                     (key, value) => blockSet
                 );
-                transformBlock.LinkTo(batchBlock);
+                transformBlock.LinkTo(batchBlock, delegate { return !actionRunning; });
+                transformBlock.LinkTo(DataflowBlock.NullTarget<GuidBitmapPair>());
                 source.Stream.NewFrame += QueueFrame;
                 FrameProcessed += source.UpdateRectangles;
             }
@@ -87,7 +89,7 @@ namespace FaceAnalysis
             byteArrayTransformBlock.LinkTo(actionBlock, linkOptions);
 
             //start search task.
-            //searchTask = Task.Run(() => FaceSearch());
+            searchTask = Task.Run(() => FaceSearch());
         }
 
         public FaceProcessor(ProcessableVideoSource sources) : this(new List<ProcessableVideoSource> { sources }) { }
@@ -114,9 +116,11 @@ namespace FaceAnalysis
         /// <returns>List of face rectangles from frame</returns>
         public async Task RectanglesFromFrame(byte[] bitmap)
         {
+            actionRunning = true;
             FrameAnalysisJSON result = await ProcessFrame(bitmap);
             if (result == default(FrameAnalysisJSON))
             {
+                actionRunning = false;
                 EstablishLinks();
                 return;
             }
@@ -124,6 +128,7 @@ namespace FaceAnalysis
                 await searchBuffer.SendAsync(face.Face_token);
             var faceRectangles = from face in result.Faces select (Rectangle)face.Face_rectangle;
             OnProcessingCompletion(new FrameProcessedEventArgs { FaceRectangles = faceRectangles });
+            actionRunning = false;
             EstablishLinks();
         }
 
