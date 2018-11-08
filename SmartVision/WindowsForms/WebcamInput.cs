@@ -59,7 +59,7 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Gets frame from source, draws face rectangles on it.
+        /// Gets frame from source
         /// Author: Arnas Danaitis
         /// </summary>
         private static void GetFrame(object sender, NewFrameEventArgs e)

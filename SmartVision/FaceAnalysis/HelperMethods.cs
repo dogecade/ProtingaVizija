@@ -78,8 +78,10 @@ namespace FaceAnalysis
         }
 
         //does not dispose bitmaps
-        public static Bitmap ProcessImages(IList<Bitmap> bitmaps)
+        public static Tuple<IList<Guid>, Bitmap>  ProcessImages(IList<GuidBitmapPair> pairs)
         {
+            return new Tuple<IList<Guid>, Bitmap>(new List<Guid>(), pairs[0].Bitmap);
+            /*
             const int MAX_EDGE_IMAGES = 3;
             if (bitmaps?.Any() != true)
                 throw new ArgumentException("List null or empty");
@@ -105,6 +107,7 @@ namespace FaceAnalysis
                     currentPosition.Y += bitmapRow.Max(bitmap => bitmap.Height);
                 }      
             return conjoinedBitmap;
+            */
         }
     }
 }

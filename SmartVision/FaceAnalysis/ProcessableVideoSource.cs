@@ -11,7 +11,7 @@ namespace FaceAnalysis
         private ConcurrentQueue<Rectangle> faceRectangles;
         public event NewFrameEventHandler NewFrame;
         public IVideoSource Stream { get; }
-        public Guid Id { get;  }
+        public Guid Id { get; }
 
         public ProcessableVideoSource(IVideoSource videoStream)
         {
@@ -43,11 +43,15 @@ namespace FaceAnalysis
                         g.DrawRectangle(pen, face);
 
             NewFrame?.Invoke(this, new NewFrameEventArgs(bitmap));
+            bitmap.Dispose();
         }
 
         public void UpdateRectangles(object sender, FrameProcessedEventArgs e)
         {
             faceRectangles = new ConcurrentQueue<Rectangle>(e.FaceRectangles) ?? faceRectangles;
         }
+
+        public static implicit operator Guid(ProcessableVideoSource source) => source.Id;
+
     }
 }
