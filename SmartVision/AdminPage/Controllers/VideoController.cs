@@ -20,7 +20,7 @@ namespace AdminPage.Controllers
 {
     public class VideoController : ApiController
     {
-        private static MJPEGStream mjpegStream;// = new MJPEGStream("http://192.168.0.102:8080/video");
+        private static MJPEGStream mjpegStream; //= new MJPEGStream("http://10.3.4.207:8080/video");
         private static bool frameAvailable = false;
         private static Bitmap frame = null;
         private static string BOUNDARY = "frame";
@@ -31,14 +31,14 @@ namespace AdminPage.Controllers
         VideoController()
         {
             //mjpegStream.Source = @"{{http://192.168.0.102:8080/video}}";
-            //mjpegStream = new MJPEGStream("http://192.168.0.102:8080/video");
-            //mjpegStream.NewFrame += new NewFrameEventHandler(ShowFrameEvent);
+            mjpegStream = new MJPEGStream("http://10.3.4.207:8080/video");
+            mjpegStream.NewFrame += new NewFrameEventHandler(ShowFrameEvent);
         }
 
         [System.Web.Http.HttpPost]
         public ActionResult SetStream()
         {
-            mjpegStream = new MJPEGStream("http://192.168.0.102:8080/video");
+            mjpegStream = new MJPEGStream("http://10.3.4.207:8080/video");
             mjpegStream.NewFrame += new NewFrameEventHandler(ShowFrameEvent);
             
             return new JsonResult()
@@ -52,6 +52,7 @@ namespace AdminPage.Controllers
         {
             Debug.WriteLine(mjpegStream);
             mjpegStream?.Start();
+           // Thread.Sleep(6000);
             var response = Request.CreateResponse();
             response.Content = new PushStreamContent((Action<Stream, HttpContent, TransportContext>)StartStream);
             response.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/x-mixed-replace; boundary=" + BOUNDARY);
@@ -123,7 +124,6 @@ namespace AdminPage.Controllers
                     {
                         try
                         {
-                            Debug.WriteLine("NX");
                             WriteFrame(stream, frame);
                             frame.Dispose();
                             frameAvailable = false;
@@ -146,7 +146,6 @@ namespace AdminPage.Controllers
         /// <param name="eventArgs">Data from the event, including the frame</param>
         public static void ShowFrameEvent(object sender, NewFrameEventArgs eventArgs)
         {
-            Debug.WriteLine("BBD");
             frame = new Bitmap(eventArgs.Frame);
             frameAvailable = true;
         }

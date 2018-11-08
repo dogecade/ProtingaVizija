@@ -4,77 +4,77 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="pstop2018Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="ContactPersons">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="firstName" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="lastName" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="phoneNumber" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="emailAddress" Type="nvarchar(max)" Nullable="false" />
-        </EntityType>
-        <EntityType Name="MissingPersonContactPerson">
-          <Key>
-            <PropertyRef Name="ContactPersons_Id" />
-            <PropertyRef Name="MissingPersons_Id" />
-          </Key>
-          <Property Name="ContactPersons_Id" Type="int" Nullable="false" />
-          <Property Name="MissingPersons_Id" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="MissingPersons">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="faceToken" Type="varchar(max)" />
-          <Property Name="firstName" Type="varchar(max)" />
-          <Property Name="lastName" Type="varchar(max)" />
-          <Property Name="lastSeenDate" Type="nvarchar(max)" />
-          <Property Name="lastSeenLocation" Type="nvarchar(max)" />
-          <Property Name="Additional_Information" Type="nvarchar(max)" />
-          <Property Name="dateOfBirth" Type="nvarchar(max)" />
-          <Property Name="faceImg" Type="nvarchar(max)" />
-        </EntityType>
-        <Association Name="FK_MissingPersonContactPerson_ContactPerson">
-          <End Role="ContactPersons" Type="Self.ContactPersons" Multiplicity="1" />
-          <End Role="MissingPersonContactPerson" Type="Self.MissingPersonContactPerson" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ContactPersons">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MissingPersonContactPerson">
-              <PropertyRef Name="ContactPersons_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MissingPersonContactPerson_MissingPerson">
-          <End Role="MissingPersons" Type="Self.MissingPersons" Multiplicity="1" />
-          <End Role="MissingPersonContactPerson" Type="Self.MissingPersonContactPerson" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="MissingPersons">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MissingPersonContactPerson">
-              <PropertyRef Name="MissingPersons_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="pstop2018ModelStoreContainer">
-          <EntitySet Name="ContactPersons" EntityType="Self.ContactPersons" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="MissingPersonContactPerson" EntityType="Self.MissingPersonContactPerson" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="MissingPersons" EntityType="Self.MissingPersons" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_MissingPersonContactPerson_ContactPerson" Association="Self.FK_MissingPersonContactPerson_ContactPerson">
-            <End Role="ContactPersons" EntitySet="ContactPersons" />
-            <End Role="MissingPersonContactPerson" EntitySet="MissingPersonContactPerson" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MissingPersonContactPerson_MissingPerson" Association="Self.FK_MissingPersonContactPerson_MissingPerson">
-            <End Role="MissingPersons" EntitySet="MissingPersons" />
-            <End Role="MissingPersonContactPerson" EntitySet="MissingPersonContactPerson" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema></edmx:StorageModels>
+    <Schema Namespace="pstop2018Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="pstop2018ModelStoreContainer">
+    <EntitySet Name="MissingPersons" EntityType="pstop2018Model.Store.MissingPersons" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ContactPersons" EntityType="pstop2018Model.Store.ContactPersons" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MissingPersonContactPerson" EntityType="pstop2018Model.Store.MissingPersonContactPerson" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_MissingPersonContactPerson_ContactPerson" Association="pstop2018Model.Store.FK_MissingPersonContactPerson_ContactPerson">
+      <End Role="ContactPerson" EntitySet="ContactPersons" />
+      <End Role="MissingPersonContactPerson" EntitySet="MissingPersonContactPerson" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MissingPersonContactPerson_MissingPerson" Association="pstop2018Model.Store.FK_MissingPersonContactPerson_MissingPerson">
+      <End Role="MissingPerson" EntitySet="MissingPersons" />
+      <End Role="MissingPersonContactPerson" EntitySet="MissingPersonContactPerson" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="MissingPersons">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="faceToken" Type="varchar(max)" Nullable="true" />
+    <Property Name="firstName" Type="varchar(max)" Nullable="true" />
+    <Property Name="lastName" Type="varchar(max)" Nullable="true" />
+    <Property Name="lastSeenDate" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="lastSeenLocation" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Additional_Information" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="dateOfBirth" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="faceImg" Type="nvarchar(max)" Nullable="true" />
+  </EntityType>
+  <EntityType Name="ContactPersons">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="firstName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="lastName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="phoneNumber" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="emailAddress" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MissingPersonContactPerson">
+    <Key>
+      <PropertyRef Name="ContactPersons_Id" />
+      <PropertyRef Name="MissingPersons_Id" />
+    </Key>
+    <Property Name="ContactPersons_Id" Type="int" Nullable="false" />
+    <Property Name="MissingPersons_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_MissingPersonContactPerson_ContactPerson">
+    <End Role="ContactPerson" Type="pstop2018Model.Store.ContactPersons" Multiplicity="1" />
+    <End Role="MissingPersonContactPerson" Type="pstop2018Model.Store.MissingPersonContactPerson" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ContactPerson">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MissingPersonContactPerson">
+        <PropertyRef Name="ContactPersons_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MissingPersonContactPerson_MissingPerson">
+    <End Role="MissingPersonContactPerson" Type="pstop2018Model.Store.MissingPersonContactPerson" Multiplicity="*" />
+    <End Role="MissingPerson" Type="pstop2018Model.Store.MissingPersons" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="MissingPerson">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MissingPersonContactPerson">
+        <PropertyRef Name="MissingPersons_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="pstop2018Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
