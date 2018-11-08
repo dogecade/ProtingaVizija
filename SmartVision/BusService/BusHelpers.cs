@@ -18,10 +18,10 @@ namespace BusService
 
             var busData = allBuses[rowNumber - 1].Split(',');
 
-            return new Bus(Convert.ToInt32(busData[0]), busData[1], Convert.ToDouble(busData[3]) / 1000000, Convert.ToDouble(busData[2]) / 1000000);
+            return new Bus(Convert.ToInt32(busData[0]), busData[1], Convert.ToDouble(busData[3]) / 1000000, Convert.ToDouble(busData[2]) / 1000000, Convert.ToInt32(busData[4]));
         }
 
-        public static string GetRouteName(string busNumber)
+        internal static string GetRouteName(string busNumber)
         {
             var lines = Resource.routes.Split('\n');
             string result = lines.FirstOrDefault(x => x.Contains(busNumber));
@@ -97,32 +97,37 @@ namespace BusService
                 var nextStopAbsoluteDifference = Math.Abs(bus.latitude - Convert.ToDouble(nextStop.Split(',')[4])) +
                                                     Math.Abs(bus.longitude - Convert.ToDouble(nextStop.Split(',')[5]));
 
-                regularStopsDifferences.Add(previousStopAbsoluteDifference + nextStopAbsoluteDifference);
+                regularStopsDifferences.Add((previousStopAbsoluteDifference > nextStopAbsoluteDifference) ? nextStopAbsoluteDifference : previousStopAbsoluteDifference);
             }
 
             int mostProbableRegularStopsIndexes = Min(regularStopsDifferences);
 
             var endStops = Resource.EndStops.Split('\n');
-
+            int mostProbableEndStopIndex = 0;
             List<double> endStopsDifferences = new List<double>();
 
-            foreach (var stops in endStops)
+            if (bus.speed < 50)
             {
-                endStopsDifferences.Add(Math.Abs(bus.latitude - Convert.ToDouble(stops.Split(',')[1])) +
-                                        Math.Abs(bus.longitude - Convert.ToDouble(stops.Split(',')[2])));
+                foreach (var stops in endStops)
+                {
+                    endStopsDifferences.Add(Math.Abs(bus.latitude - Convert.ToDouble(stops.Split(',')[1])) +
+                                            Math.Abs(bus.longitude - Convert.ToDouble(stops.Split(',')[2])));
+                }
+
+                mostProbableEndStopIndex = Min(endStopsDifferences);
+
+                if (regularStopsDifferences[mostProbableRegularStopsIndexes] >
+                    endStopsDifferences[mostProbableEndStopIndex])
+                {
+                    return endStops[mostProbableEndStopIndex];
+
+                }
             }
 
-            int mostProbableEndStopIndex = Min(endStopsDifferences);
+            previousStop = allRegularStops.First(x => Convert.ToInt32(x.Split(',')[0]) == possibleStopList[mostProbableRegularStopsIndexes].Item1);
+            nextStop = allRegularStops.First(x => Convert.ToInt32(x.Split(',')[0]) == possibleStopList[mostProbableRegularStopsIndexes].Item2);
 
-            if (regularStopsDifferences[mostProbableRegularStopsIndexes] < endStopsDifferences[mostProbableEndStopIndex])
-            {
-                previousStop = allRegularStops.First(x => Convert.ToInt32(x.Split(',')[0]) == possibleStopList[mostProbableRegularStopsIndexes].Item1);
-                nextStop = allRegularStops.First(x => Convert.ToInt32(x.Split(',')[0]) == possibleStopList[mostProbableRegularStopsIndexes].Item2);
-
-                return string.Format(previousStop.Split(',')[2] + " - " + nextStop.Split(',')[2]);
-            }
-
-            return endStops[mostProbableEndStopIndex];
+            return string.Format(previousStop.Split(',')[2] + " - " + nextStop.Split(',')[2]);
         }
 
 

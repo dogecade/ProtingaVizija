@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Net;
+using BusService;
 using Constants;
 
 namespace LocationService
@@ -16,7 +17,7 @@ namespace LocationService
 
 
         public Location(string StreetName, string StreetNumber, string CityName, string CountryName,
-            string PostalNumber, double Latitude = 0, double Longitude = 0)
+            string PostalNumber)
         {
             this.StreetName = StreetName;
             this.StreetNumber = StreetNumber;
@@ -25,6 +26,18 @@ namespace LocationService
             this.PostalNumber = PostalNumber;
             this.Latitude = Latitude;
             this.Longitude = Longitude;
+        }
+
+        public Location(double Latitude, double Longitude)
+        {
+            this.Latitude = Latitude;
+            this.Longitude = Longitude;
+        }
+
+        public Location(Bus bus)
+        {
+            this.Latitude = bus.latitude;
+            this.Longitude = bus.longitude;
         }
     }
 }
