@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsForms.FormControl;
 using FaceAnalysis;
-using System.Threading;
 using System.Drawing;
-using System.Collections.Generic;
 using AForge.Video;
 using AForge.Video.DirectShow;
 
@@ -13,9 +10,8 @@ namespace WindowsForms
 {
     public class WebcamInput
     {
-        private static IList<Rectangle> faceRectangles = new List<Rectangle>();
         private static Bitmap lastImage;
-        private static IVideoSource capture;
+        private static ProcessableVideoSource source;
         private static FaceProcessor processor;
 
         /// <summary>
@@ -23,6 +19,7 @@ namespace WindowsForms
         /// </summary>
         public static bool EnableWebcam(string cameraUrl = null)
         {
+            IVideoSource capture;
             try
             {
                 if (cameraUrl == null)
@@ -30,7 +27,7 @@ namespace WindowsForms
                         new FilterInfoCollection(FilterCategory.VideoInputDevice)[0].MonikerString);
                 else //assumes that it's a MJPEG stream, it's forms so whatever
                     capture = new MJPEGStream(cameraUrl);
-                capture.Start();
+                source = new ProcessableVideoSource(capture);
             }
             catch (Exception e)
             {
@@ -38,9 +35,9 @@ namespace WindowsForms
                 MessageBox.Show(Messages.cameraNotFound);
                 return false;
             }
-            processor = new FaceProcessor(capture);
-            capture.NewFrame += GetFrame;
-            processor.FrameProcessed += GetRectangles;
+            processor = new FaceProcessor(source);
+            source.NewFrame += GetFrame;
+            source.Start();
             return true;
         }
 
@@ -51,12 +48,8 @@ namespace WindowsForms
         {
             try
             {
-                capture.Stop();
-                capture.NewFrame -= GetFrame;
-                processor.FrameProcessed -= GetRectangles;
+                source.Stop();
                 processor.Complete();
-                lock (faceRectangles)
-                    faceRectangles.Clear();
             }
             catch (Exception e)
             {
@@ -66,33 +59,16 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Gets frame from source, draws face rectangles on it.
+        /// Gets frame from source
         /// Author: Arnas Danaitis
         /// </summary>
         private static void GetFrame(object sender, NewFrameEventArgs e)
         {
-            Bitmap image;
-            lock (sender)
-                image = new Bitmap(e.Frame);
+            Bitmap image = new Bitmap(e.Frame);
             FormFaceDetection.Current.scanPictureBox.Image = image;
             
-            lock (faceRectangles)
-                using (Graphics g = Graphics.FromImage(image))
-                using (Pen pen = new Pen(new SolidBrush(Color.Red), 1))
-                    foreach (Rectangle face in faceRectangles)
-                        g.DrawRectangle(pen, face);
             lastImage?.Dispose();
             lastImage = image;
-        }
-
-        /// <summary>
-        /// Gets list of faces from processor.
-        /// Author: Arnas Danaitis
-        /// </summary>
-        private static void GetRectangles(object sender, FrameProcessedEventArgs e)
-        {
-            lock (faceRectangles)
-                faceRectangles = e.FaceRectangles ?? faceRectangles;
         }
     }
 }

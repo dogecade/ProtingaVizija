@@ -110,6 +110,8 @@
     <Compile Include="LikelinessConfidence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchResultHandler.cs" />
+    <Compile Include="ProcessableVideoSource.cs" />
+    <Compile Include="VideoSourceHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
