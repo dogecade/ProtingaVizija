@@ -5,11 +5,9 @@
 </head>
 
 <body>
-
     <div id="container">
-        <video id="gum-local" autoplay playsinline></video>
-        <button id="enableStream">Open camera baby</button>
-        <button id="disableStream">Close camera baby</button>
+        <video id="video" width="300" height="300" align="left" autoplay></video>
+        <button id="enableStream" align="center" onclick="StartStreamCapturing()">Enable camera</button>
     </div>
 
     <script src="../../Scripts/GetCameraFeed.js"></script>

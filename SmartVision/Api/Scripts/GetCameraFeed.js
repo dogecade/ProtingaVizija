@@ -1,54 +1,31 @@
-﻿const constraints = window.constraints = {
-    audio: false,
-    video: true
-};
-const stream = null;
+﻿async function StartStreamCapturing() {
+    var button = document.getElementById("enableStream");
 
-function handleSuccess(stream) {
-    const video = document.querySelector('video');
-    const videoTracks = stream.getVideoTracks();
-    console.log('Got stream with constraints:', constraints);
-    console.log(`Using video device: ${videoTracks[0].label}`);
-    window.stream = stream; // make variable available to browser console
-    video.srcObject = stream;
-}
+    if (navigator.mediaDevices.getUserMedia !== null) {
+        var options = {
+            video: true,
+            audio: false
+        };
 
-function handleError(error) {
-    if (error.name === 'ConstraintNotSatisfiedError') {
-        let v = constraints.video;
-        errorMsg(`The resolution ${v.width.exact}x${v.height.exact} px is not supported by your device.`);
-    } else if (error.name === 'PermissionDeniedError') {
-        errorMsg('Permissions have not been granted to use your camera and ' +
-            'microphone, you need to allow the page access to your devices in ' +
-            'order for the demo to work.');
-    }
-    errorMsg(`getUserMedia error: ${error.name}`, error);
-}
+        if (button.innerText == "Enable camera") {
+            navigator.webkitGetUserMedia(options,
+                function (stream) {
+                    video.src = window.URL.createObjectURL(stream);
+                    window.stream = stream;
+                    video.play();
+                    console.log("Starting stream");
 
-function errorMsg(msg, error) {
-    const errorElement = document.querySelector('#errorMsg');
-    errorElement.innerHTML += `<p>${msg}</p>`;
-    if (typeof error !== 'undefined') {
-        console.error(error);
+                    button.innerText = "Disable camera";
+                }, function (e) {
+                    console.log("background error : " + e.name);
+                });
+        } else {
+            video.pause();
+            video.src = "";
+            stream.getTracks().forEach(track => track.stop());
+            console.log("Stopping stream");
+
+            button.innerText = "Enable camera";
+        }
     }
 }
-
-async function init(e) {
-    try {
-        stream = await navigator.mediaDevices.getUserMedia(constraints);
-        handleSuccess(stream);
-        e.target.disabled = true;
-    } catch (e) {
-        handleError(e);
-    }
-}
-
-async function dispose() {
-    stream = null;
-    stream.getTracks().forEach(track => track.stop());
-    window.stream = null;
-    video.srcObject = null;
-}
-
-document.querySelector('#enableStream').addEventListener('click', e => init(e));
-document.querySelector('#disableStream').addEventListener('click', stream => dispose(stream));
