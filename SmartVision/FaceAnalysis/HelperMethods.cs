@@ -78,9 +78,9 @@ namespace FaceAnalysis
         }
 
         //does not dispose bitmaps
-        public static Tuple<IList<Guid>, Bitmap>  ProcessImages(IList<GuidBitmapPair> pairs)
+        public static Tuple<IList<IdentifierType>, Bitmap>  ProcessImages<IdentifierType>(IEnumerable<Tuple<IdentifierType, Bitmap>> tuples)
         {
-            return new Tuple<IList<Guid>, Bitmap>(new List<Guid>(), pairs[0].Bitmap);
+            return new Tuple<IList<IdentifierType>, Bitmap>(new List<IdentifierType>(), tuples.FirstOrDefault().Item2);
             /*
             const int MAX_EDGE_IMAGES = 3;
             if (bitmaps?.Any() != true)

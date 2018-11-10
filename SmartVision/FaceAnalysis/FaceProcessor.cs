@@ -17,35 +17,18 @@ namespace FaceAnalysis
     {
         private const int MAX_FRAMES_EDGE = 3;
         private const int BUFFER_LIMIT = 10000;
-        private ConcurrentDictionary<ProcessableVideoSource, SourceBlocks> sources = new ConcurrentDictionary<ProcessableVideoSource, SourceBlocks>();
+        private ConcurrentDictionary<ProcessableVideoSource, IPropagatorBlock<SourceBitmapPair, SourceBitmapPair>> sources = new ConcurrentDictionary<ProcessableVideoSource, IPropagatorBlock<SourceBitmapPair, SourceBitmapPair>>();
         private bool actionRunning = false;
         private readonly BufferBlock<string> searchBuffer = new BufferBlock<string>(new DataflowBlockOptions { BoundedCapacity = BUFFER_LIMIT });
-        private readonly TransformBlock<Tuple<IList<Guid>, Bitmap>, Tuple<IList<Guid>, byte[]>> byteArrayTransformBlock;
-        private readonly TransformBlock<GuidBitmapPair[], Tuple<IList<Guid>, Bitmap>> manyPicturesTransformBlock;
-        private readonly ActionBlock<Tuple<IList<Guid>, byte[]>> actionBlock;
-        private readonly BatchBlock<GuidBitmapPair> batchBlock;
+        private readonly TransformBlock<Tuple<IList<ProcessableVideoSource>, Bitmap>, Tuple<IList<ProcessableVideoSource>, byte[]>> byteArrayTransformBlock;
+        private readonly TransformBlock<SourceBitmapPair[], Tuple<IList<ProcessableVideoSource>, Bitmap>> manyPicturesTransformBlock;
+        private readonly ActionBlock<Tuple<IList<ProcessableVideoSource>, byte[]>> actionBlock;
+        private readonly BatchBlock<SourceBitmapPair> batchBlock;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
         private static readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
         private static readonly SearchResultHandler resultHandler = new SearchResultHandler(tokenSource.Token);
         private readonly Task searchTask;
         public event EventHandler<FrameProcessedEventArgs> FrameProcessed;
-
-        private void RemoveLink(Guid guid)
-        {
-            var key = sources.Keys.Where(source => source.Id == guid).FirstOrDefault();
-            sources[key].Link.Dispose();
-        }
-
-        private void EstablishLinks()
-        {
-            List<ProcessableVideoSource> keys = new List<ProcessableVideoSource>(sources.Keys);
-            foreach (var key in keys)
-                sources.AddOrUpdate(
-                    key,
-                    default(SourceBlocks),
-                    (oldKey, value) => { value.Link = value.BroadcastBlock.LinkTo(value.Block); return value; }
-                );
-        }
 
         public FaceProcessor(IList<ProcessableVideoSource> sources)
         {
@@ -54,31 +37,28 @@ namespace FaceAnalysis
 
 
             //initialiase blocks.
-            byteArrayTransformBlock = new TransformBlock<Tuple<IList<Guid>, Bitmap>, Tuple<IList<Guid>, byte[]>>(tuple => new Tuple<IList<Guid>, byte[]>(tuple.Item1, HelperMethods.ImageToByte(tuple.Item2)), blockOptions);
-            manyPicturesTransformBlock = new TransformBlock<GuidBitmapPair[], Tuple<IList<Guid>, Bitmap>>(tuples => HelperMethods.ProcessImages(tuples));
-            actionBlock = new ActionBlock<Tuple<IList<Guid>, byte[]>>(async tuple => await RectanglesFromFrame(tuple.Item2), blockOptions);
-            batchBlock = new BatchBlock<GuidBitmapPair>(sources.Count);
+            byteArrayTransformBlock = new TransformBlock<Tuple<IList<ProcessableVideoSource>, Bitmap>, Tuple<IList<ProcessableVideoSource>, byte[]>>(tuple => new Tuple<IList<ProcessableVideoSource>, byte[]>(tuple.Item1, HelperMethods.ImageToByte(tuple.Item2)), blockOptions);
+            manyPicturesTransformBlock = new TransformBlock<SourceBitmapPair[], Tuple<IList<ProcessableVideoSource>, Bitmap>>(pairs =>
+            {
+                return HelperMethods.ProcessImages(pairs.Select(pair => (Tuple<ProcessableVideoSource, Bitmap>) pair));
+            });
+            actionBlock = new ActionBlock<Tuple<IList<ProcessableVideoSource>, byte[]>>(async tuple => await RectanglesFromFrame(tuple.Item2), blockOptions);
+            batchBlock = new BatchBlock<SourceBitmapPair>(sources.Count);
 
             foreach (var source in sources)
             {
-                var broadcastBlock = new BroadcastBlock<GuidBitmapPair>(pair =>
+                var broadcastBlock = BlockFactory.CreateDisposingBroadcastBlock<SourceBitmapPair>(item => 
                 {
-                    return pair;
+                    var key = this.sources.Keys.Where(src => src == item.Source).FirstOrDefault();
+                    return new SourceBitmapPair(item.Source, HelperMethods.ProcessImage(new Bitmap(item.Bitmap)));
                 });
-                var transformBlock = new TransformBlock<GuidBitmapPair, GuidBitmapPair>(tuple =>
-                {
-                    RemoveLink(tuple.Guid);
-                    //tuple.Bitmap = HelperMethods.ProcessImage(tuple.Bitmap);
-                    return tuple;
-                }, blockOptions);
-                var blockSet = new SourceBlocks(broadcastBlock, transformBlock, broadcastBlock.LinkTo(transformBlock));
-                this.sources.AddOrUpdate(
-                    source,
-                    blockSet,
-                    (key, value) => blockSet
+                broadcastBlock.LinkTo(batchBlock, delegate { return !actionRunning; });
+                this.sources.AddOrUpdate
+                (
+                    key: source,
+                    addValue: broadcastBlock,
+                    updateValueFactory: (key, value) => value
                 );
-                transformBlock.LinkTo(batchBlock, delegate { return !actionRunning; });
-                transformBlock.LinkTo(DataflowBlock.NullTarget<GuidBitmapPair>());
                 source.Stream.NewFrame += QueueFrame;
                 FrameProcessed += source.UpdateRectangles;
             }
@@ -89,7 +69,7 @@ namespace FaceAnalysis
             byteArrayTransformBlock.LinkTo(actionBlock, linkOptions);
 
             //start search task.
-            searchTask = Task.Run(() => FaceSearch());
+            //searchTask = Task.Run(() => FaceSearch());
         }
 
         public FaceProcessor(ProcessableVideoSource sources) : this(new List<ProcessableVideoSource> { sources }) { }
@@ -121,7 +101,6 @@ namespace FaceAnalysis
             if (result == default(FrameAnalysisJSON))
             {
                 actionRunning = false;
-                EstablishLinks();
                 return;
             }
             foreach (Face face in result.Faces)
@@ -129,7 +108,6 @@ namespace FaceAnalysis
             var faceRectangles = from face in result.Faces select (Rectangle)face.Face_rectangle;
             OnProcessingCompletion(new FrameProcessedEventArgs { FaceRectangles = faceRectangles });
             actionRunning = false;
-            EstablishLinks();
         }
 
         /// <summary>
@@ -157,7 +135,7 @@ namespace FaceAnalysis
             lock (sender)
                 bitmap = new Bitmap(e.Frame);
             var key = sources.Keys.Where(source => source.Stream == sender).FirstOrDefault();
-            await sources[key].BroadcastBlock.SendAsync(new GuidBitmapPair(key.Id, bitmap));
+            await sources[key].SendAsync(new SourceBitmapPair(key, bitmap));
         }
 
         /// <summary>
@@ -192,30 +170,20 @@ namespace FaceAnalysis
         }
 
     }
-    public struct GuidBitmapPair
+    internal class SourceBitmapPair : IDisposable
     {
-        public GuidBitmapPair(Guid guid, Bitmap bitmap) : this()
+        public SourceBitmapPair(ProcessableVideoSource source, Bitmap bitmap)
         {
-            Guid = guid;
+            Source = source;
             Bitmap = bitmap;
         }
 
-        public Guid Guid { get; set; }
+        public ProcessableVideoSource Source { get; }
         public Bitmap Bitmap { get; set; }
-    }
+        public void Dispose() => Bitmap?.Dispose();
 
-    public struct SourceBlocks
-    {
-        public SourceBlocks(BroadcastBlock<GuidBitmapPair> broadcastBlock, TransformBlock<GuidBitmapPair, GuidBitmapPair> block, IDisposable link) : this()
-        {
-            BroadcastBlock = broadcastBlock;
-            Block = block;
-            Link = link;
-        }
-
-        public BroadcastBlock<GuidBitmapPair> BroadcastBlock { get; }
-        public TransformBlock<GuidBitmapPair, GuidBitmapPair> Block { get; }
-        public IDisposable Link { get; set; }
+        public static implicit operator Tuple<ProcessableVideoSource, Bitmap>(SourceBitmapPair pair) => 
+            new Tuple<ProcessableVideoSource, Bitmap>(pair.Source, pair.Bitmap);
     }
 
     public class FrameProcessedEventArgs : EventArgs
