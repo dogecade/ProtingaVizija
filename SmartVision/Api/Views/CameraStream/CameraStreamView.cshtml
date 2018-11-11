@@ -1,15 +1,22 @@
-﻿<!DOCTYPE html>
+﻿@using Api.Models
+@{
+    ViewBag.Title = "Smart Vision";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/Content/Contact-Form-Clean.css">
 </head>
 
 <body>
     <div id="container">
-        <video id="video" width="300" height="300" align="left" autoplay></video>
-        <button id="enableStream" align="center" onclick="StartStreamCapturing()">Enable camera</button>
+        <video id="video" style="display:block; margin: 0 auto; margin-top: 30px;" width="300" height="400" autoplay></video>
+        <button id="enableStream" style="display:block; margin: 0 auto; margin-top: 20px; height: 70px;width: 200px" onclick="StartStreamCapturing()">Enable camera</button>
     </div>
 
-    <script src="../../Scripts/GetCameraFeed.js"></script>
+    <script src="~/Scripts/GetCameraFeed.js"></script>
 </body>
 </html>
