@@ -49,7 +49,8 @@ namespace FaceAnalysis
 
         public void UpdateRectangles(object sender, FrameProcessedEventArgs e)
         {
-            faceRectangles = new ConcurrentQueue<Rectangle>(e.FaceRectangles) ?? faceRectangles;
+            if(e.RectangleDictionary.ContainsKey(this))
+                faceRectangles = new ConcurrentQueue<Rectangle>(e.RectangleDictionary[this]) ?? faceRectangles;
         }
 
         public override bool Equals(object obj)

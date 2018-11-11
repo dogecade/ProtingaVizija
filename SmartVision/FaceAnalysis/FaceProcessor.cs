@@ -15,15 +15,16 @@ namespace FaceAnalysis
 {
     public class FaceProcessor
     {
-        private const int MAX_FRAMES_EDGE = 3;
+        private const int MAX_SOURCES = 9;
         private const int BUFFER_LIMIT = 10000;
-        private ConcurrentDictionary<ProcessableVideoSource, IPropagatorBlock<SourceBitmapPair, SourceBitmapPair>> sources =
-            new ConcurrentDictionary<ProcessableVideoSource, IPropagatorBlock<SourceBitmapPair, SourceBitmapPair>>();
+        private ConcurrentDictionary<ProcessableVideoSource, BroadcastBlock<SourceBitmapPair>> sources =
+            new ConcurrentDictionary<ProcessableVideoSource, BroadcastBlock<SourceBitmapPair>>();
         private bool actionRunning = false;
         private readonly BufferBlock<string> searchBuffer = new BufferBlock<string>(new DataflowBlockOptions { BoundedCapacity = BUFFER_LIMIT });
-        private readonly TransformBlock<Tuple<IList<ProcessableVideoSource>, Bitmap>, Tuple<IList<ProcessableVideoSource>, byte[]>> byteArrayTransformBlock;
-        private readonly TransformBlock<SourceBitmapPair[], Tuple<IList<ProcessableVideoSource>, Bitmap>> manyPicturesTransformBlock;
-        private readonly ActionBlock<Tuple<IList<ProcessableVideoSource>, byte[]>> actionBlock;
+        //TODO: split this one into two blocks, joinBlock then (tuple useless when converting.)
+        private readonly TransformBlock<Tuple<Dictionary<ProcessableVideoSource, Rectangle>, Bitmap>, Tuple<Dictionary<ProcessableVideoSource, Rectangle>, byte[]>> byteArrayTransformBlock;
+        private readonly TransformBlock<SourceBitmapPair[], Tuple<Dictionary<ProcessableVideoSource, Rectangle>, Bitmap>> manyPicturesTransformBlock;
+        private readonly ActionBlock<Tuple<Dictionary<ProcessableVideoSource, Rectangle>, byte[]>> actionBlock;
         private readonly IPropagatorBlock<SourceBitmapPair, SourceBitmapPair[]> batchBlock;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
         private static readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
@@ -37,13 +38,19 @@ namespace FaceAnalysis
             var blockOptions = new ExecutionDataflowBlockOptions { BoundedCapacity = 1 };
             
             //initialiase blocks.
-            byteArrayTransformBlock = new TransformBlock<Tuple<IList<ProcessableVideoSource>, Bitmap>, Tuple<IList<ProcessableVideoSource>, byte[]>>(tuple =>
-                new Tuple<IList<ProcessableVideoSource>, byte[]>(tuple.Item1, HelperMethods.ImageToByte(tuple.Item2)), blockOptions);
-            manyPicturesTransformBlock = new TransformBlock<SourceBitmapPair[], Tuple<IList<ProcessableVideoSource>, Bitmap>>(pairs =>
+            byteArrayTransformBlock = new TransformBlock<Tuple<Dictionary<ProcessableVideoSource, Rectangle>, Bitmap>, Tuple<Dictionary<ProcessableVideoSource, Rectangle>, byte[]>>(tuple =>
+                new Tuple<Dictionary<ProcessableVideoSource, Rectangle>, byte[]>(tuple.Item1, HelperMethods.ImageToByte(tuple.Item2)), blockOptions);
+            manyPicturesTransformBlock = new TransformBlock<SourceBitmapPair[], Tuple<Dictionary<ProcessableVideoSource, Rectangle>, Bitmap>>(pairs =>
             {
+
                 return HelperMethods.ProcessImages(pairs.Select(pair => (Tuple<ProcessableVideoSource, Bitmap>)pair));
             });
-            actionBlock = new ActionBlock<Tuple<IList<ProcessableVideoSource>, byte[]>>(async tuple => await RectanglesFromFrame(tuple.Item2), blockOptions);
+            actionBlock =
+                new ActionBlock<Tuple<Dictionary<ProcessableVideoSource, Rectangle>, byte[]>>
+                (
+                    async tuple => await RectanglesFromFrame(tuple),
+                    blockOptions
+                );
             batchBlock = BlockFactory.CreateDistinctConditionalBatchBlock(delegate
             {
                 return !actionRunning;
@@ -71,8 +78,11 @@ namespace FaceAnalysis
 
         public void AddSource(ProcessableVideoSource source)
         {
-            var broadcastBlock = BlockFactory.CreateDisposingBroadcastBlock<SourceBitmapPair>(item =>
-                new SourceBitmapPair(item.Source, HelperMethods.ProcessImage(new Bitmap(item.Bitmap))));
+            if (source?.Stream == null)
+                throw new ArgumentException("Source and its stream cannot be null");
+            if (sources.Count + 1 > MAX_SOURCES * MAX_SOURCES)
+                throw new ArgumentException(string.Format("Number of sources exceeds limit ({0})", MAX_SOURCES));
+            var broadcastBlock = new BroadcastBlock<SourceBitmapPair>(item => item);
             broadcastBlock.LinkTo(batchBlock);
             sources.AddOrUpdate
             (
@@ -112,19 +122,33 @@ namespace FaceAnalysis
         /// Raises event that processing is finished (args of which contain the face rectangles)
         /// </summary>
         /// <returns>List of face rectangles from frame</returns>
-        public async Task RectanglesFromFrame(byte[] bitmap)
+        public async Task RectanglesFromFrame(Tuple<Dictionary<ProcessableVideoSource, Rectangle>, byte[]> tuple)
         {
             actionRunning = true;
-            FrameAnalysisJSON result = await ProcessFrame(bitmap);
+            FrameAnalysisJSON result = await ProcessFrame(tuple.Item2);
+            Dictionary<ProcessableVideoSource, List<Rectangle>> results = new Dictionary<ProcessableVideoSource, List<Rectangle>>();
             if (result == default(FrameAnalysisJSON))
             {
                 actionRunning = false;
                 return;
             }
             foreach (Face face in result.Faces)
+            {
                 await searchBuffer.SendAsync(face.Face_token);
+                foreach (var pair in tuple.Item1)
+                    if (pair.Value.Contains(face.Face_rectangle))
+                    {
+                        if (!results.TryGetValue(pair.Key, out _))
+                            results[pair.Key] = new List<Rectangle>();
+                        var rectangle = (Rectangle)face.Face_rectangle;
+                        rectangle.Location = new Point(0, 0);
+                        results[pair.Key].Add(face.Face_rectangle);
+                    }
+
+            }
+
             var faceRectangles = from face in result.Faces select (Rectangle)face.Face_rectangle;
-            OnProcessingCompletion(new FrameProcessedEventArgs { FaceRectangles = faceRectangles });
+            OnProcessingCompletion(new FrameProcessedEventArgs { RectangleDictionary = results });
             actionRunning = false;
         }
 
@@ -205,7 +229,7 @@ namespace FaceAnalysis
 
     public class FrameProcessedEventArgs : EventArgs
     {
-        public IEnumerable<Rectangle> FaceRectangles { get; set; }
+        public Dictionary<ProcessableVideoSource, List<Rectangle>> RectangleDictionary { get; set; }
     }
 }
 
