@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace FaceAnalysis
 {
-    public class HelperMethods
+    public static class HelperMethods
     {
         /// <summary>
         /// Converts bitmap to byte array

@@ -36,6 +36,7 @@ namespace FaceAnalysis
             Bitmap bitmap;
             lock (sender)
                 bitmap = new Bitmap(e.Frame);
+            bitmap = HelperMethods.ProcessImage(bitmap);
             if (faceRectangles != null)
                 using (Graphics g = Graphics.FromImage(bitmap))
                 using (Pen pen = new Pen(new SolidBrush(Color.Red), 1))
@@ -51,6 +52,22 @@ namespace FaceAnalysis
             faceRectangles = new ConcurrentQueue<Rectangle>(e.FaceRectangles) ?? faceRectangles;
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is ProcessableVideoSource && ((ProcessableVideoSource)obj).Id == Id;
+        }
+
+        public static bool operator ==(ProcessableVideoSource lhs, ProcessableVideoSource rhs)
+        {
+            if (lhs is null)
+                return rhs is null;
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(ProcessableVideoSource lhs, ProcessableVideoSource rhs)
+        {
+            return lhs == rhs;
+        }
 
     }
 }
