@@ -31,7 +31,7 @@ namespace AdminPage.Controllers
         VideoController()
         {
             //mjpegStream.Source = @"{{http://192.168.0.102:8080/video}}";
-            mjpegStream = new MJPEGStream("http://10.3.4.207:8080/video");
+            mjpegStream = new MJPEGStream("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi");
             mjpegStream.NewFrame += new NewFrameEventHandler(ShowFrameEvent);
         }
 
