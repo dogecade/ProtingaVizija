@@ -8,9 +8,12 @@
 </head>
 
 <body>
-    <img src="/api/Video" id="stream" />
+    <img src="/api/Video/https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi" id="stream" />
     <!-- <button class="btn btn-primary" id="startStream">Start Stream</button>-->
 </body>
+<!-- <body>
+    <img src="/api/Video" id="stream" />
+</body>-->
 
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
@@ -19,31 +22,32 @@
     var cameraURL = "http://192.168.0.102:8080/video";
 
     $(document).ready(function () {
-      // Send an AJAX request
-        $("#startStream").click(function(){
-             $.ajax({
-                 url: '../api/Video/SetStream',
+        // Send an AJAX request
+        $("#startStream").click(function () {
+            $.ajax({
+                url: '../api/Video/SetStream',
                 type: 'POST',
                 cache: false,
                 contentType: 'application/json;charset=utf-8',
-                 data: JSON.stringify(cameraURL),
-                 success: function (data) {
-                     $.ajax({
-                    type: 'GET',
-                     contentType: 'application/json;charset=utf-8',
-                    url: '../api/Video/GetVideoContent',
-                    cache: false,
-                    dataType: 'json',
-                    success: function (response) {
-                    },
-                    error: function () {
-                        alert('Error GET');
-                    } });
-                 },
-                 error: function () {
+                data: JSON.stringify(cameraURL),
+                success: function (data) {
+                    $.ajax({
+                        type: 'GET',
+                        contentType: 'application/json;charset=utf-8',
+                        url: '../api/Video/GetVideoContent',
+                        cache: false,
+                        dataType: 'json',
+                        success: function (response) {
+                        },
+                        error: function () {
+                            alert('Error GET');
+                        }
+                    });
+                },
+                error: function () {
                     alert('Error POST');
-                 }
-             });
+                }
+            });
         });
     });
 </script>

@@ -13,7 +13,7 @@ namespace FaceAnalysis
         {
             processor?.Complete();
         }
-        public static List<ProcessableVideoSource> Sources { get; set; } = new List<ProcessableVideoSource>();
+        public static List<ProcessableVideoSource> Sources { get; } = new List<ProcessableVideoSource>();
         public static void AddSource(ProcessableVideoSource source)
         {
             Sources.Add(source);
