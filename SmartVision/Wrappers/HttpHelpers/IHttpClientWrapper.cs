@@ -5,7 +5,7 @@ namespace Helpers
 {
     public interface IHttpClientWrapper
     {
-        Task<string> Post(string url, MultipartFormDataContent httpContent, bool repeatedRequest = false);
+        Task<string> Post(string url, MultipartFormDataContent httpContent);
         Task<string> Get(string url);
     }
 }

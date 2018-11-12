@@ -9,11 +9,11 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#mainNavBar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="/Home/Index">Smart vision</a>
-        <div class="collapse navbar-collapse">
+        <a class="navbar-brand" href="/Home/Index"><img src="../../img/logo.png" height="40" width="70"/></a>
+        <div class="collapse navbar-collapse" id ="mainNavBar">
             <ul class="navbar-nav mr-auto">
                 <li>
                     <a class="nav-link" href="/AddPerson/MissingPersonView">Add a missing person</a>
@@ -25,10 +25,6 @@
                     <a class="nav-link" href="/CurrentlyMissing/Index">Currently missing</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
             <ul class="navbar-nav">
                 <li>
                     <a class="nav-link" href="#">Log in</a>

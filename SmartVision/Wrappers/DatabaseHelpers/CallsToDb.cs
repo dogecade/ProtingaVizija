@@ -22,6 +22,11 @@ namespace FaceAnalysis
         {
             HttpClientWrapper wrapper = new HttpClientWrapper();
             var missingPersonsJson = wrapper.Get(getMisingPersonsUrl).Result;
+            if (missingPersonsJson == null)
+            {
+                Debug.WriteLine("Cannot access DB endpoint");
+                return null;
+            }
             var missingPersonsList = JsonConvert.DeserializeObject<List<MissingPerson>>(missingPersonsJson);
             MissingPerson foundMissingPerson;
             try
