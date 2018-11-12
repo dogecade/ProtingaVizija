@@ -1,31 +1,60 @@
-﻿async function StartStreamCapturing() {
-    var button = document.getElementById("enableStream");
+﻿const videoSelect = document.querySelector("select#videoSource");
+const videoLabel = document.querySelector("select#videoSourceLabel");
+const selectors = [videoSelect];
 
-    if (navigator.mediaDevices.getUserMedia !== null) {
-        var options = {
-            video: true,
-            audio: false
-        };
-
-        if (button.innerText == "Enable camera") {
-            navigator.webkitGetUserMedia(options,
-                function (stream) {
-                    video.src = window.URL.createObjectURL(stream);
-                    window.stream = stream;
-                    video.play();
-                    console.log("Starting stream");
-
-                    button.innerText = "Disable camera";
-                }, function (e) {
-                    console.log("background error : " + e.name);
-                });
-        } else {
-            video.pause();
-            video.src = "";
-            stream.getTracks().forEach(track => track.stop());
-            console.log("Stopping stream");
-
-            button.innerText = "Enable camera";
+function gotDevices(deviceInfos) {
+    // Handles being called several times to update labels. Preserve values.
+    const values = selectors.map(select => select.value);
+    selectors.forEach(select => {
+        while (select.firstChild) {
+            select.removeChild(select.firstChild);
+        }
+    });
+    for (let i = 0; i !== deviceInfos.length; ++i) {
+        const deviceInfo = deviceInfos[i];
+        const option = document.createElement("option");
+        option.value = deviceInfo.deviceId;
+        if (deviceInfo.kind === "videoinput") {
+            option.text = deviceInfo.label;
+            videoSelect.appendChild(option);
         }
     }
+    selectors.forEach((select, selectorIndex) => {
+        if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+            select.value = values[selectorIndex];
+        }
+    });
+}
+
+function gotStream(stream) {
+    window.stream = stream; // make stream available to console
+    video.srcObject = stream;
+    // Refresh button list in case labels have become available
+    return navigator.mediaDevices.enumerateDevices();
+}
+
+function handleError(error) {
+    console.log("navigator.getUserMedia error: ", error);
+}
+
+function start() {
+    video.style.visibility = "visible";
+    videoSelect.style.visibility = "visible";
+
+    const videoSource = videoSelect.value;
+    const constraints = {
+        video: { deviceId: videoSource ? { exact: videoSource } : undefined }
+    };
+    navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
+}
+
+function stop() {
+    video.style.visibility = "hidden";
+    videoSelect.style.visibility = "hidden";
+
+    video.pause();
+    video.src = "";
+    stream.getTracks().forEach(track => track.stop());
+    console.log("Stopping stream");
+
 }

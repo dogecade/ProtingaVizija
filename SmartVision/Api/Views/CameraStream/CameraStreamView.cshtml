@@ -4,6 +4,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .parent {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .child {
+        display: inline-block;
+    }
+</style>
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -12,10 +24,14 @@
 </head>
 
 <body>
-    <div id="container">
-        <video id="video" style="display:block; margin: 0 auto; margin-top: 30px;" width="300" height="400" autoplay></video>
-        <button id="enableStream" style="display:block; margin: 0 auto; margin-top: 20px; height: 70px;width: 200px" onclick="StartStreamCapturing()">Enable camera</button>
+<div>
+    <video id="video" style="visibility: hidden; display: block; margin: 0 auto; margin-top: 30px;" width="300" height="400" autoplay></video>
+    <select id="videoSource" onchange="start()" style="visibility: hidden; display: block; margin: 0 auto; margin-top: 20px"></select>
+    <div id="container" class="parent">
+        <button id="enableStream" class="child" style="margin-top: 20px; height: 70px; width: 200px" onclick="start()">Enable camera</button>
+        <button id="disableStream" class="child" style="margin-top: 20px; height: 70px; width: 200px" onclick="stop()">Disable camera</button>
     </div>
+</div>
 
     <script src="~/Scripts/GetCameraFeed.js"></script>
 </body>
