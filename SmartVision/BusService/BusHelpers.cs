@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 
 namespace BusService
 {
     public class BusHelpers
     {
-        public static Bus GetBusData(int rowNumber)
+        public static string GetBusLocation(Bus bus)
         {
-            var allBuses = new List<string>();
-            using (var client = new WebClient())
-            {
-                string result = client.DownloadString("https://www.stops.lt/vilnius/gps.txt");
-                allBuses = result.Split('\n').ToList();
-            }
+            string location = BusLocation(bus);
 
-            var busData = allBuses[rowNumber - 1].Split(',');
+            if (location.Contains("Bus is currently standing at this location"))
+                return location;
 
-            return new Bus(Convert.ToInt32(busData[0]), busData[1], Convert.ToDouble(busData[3]) / 1000000, Convert.ToDouble(busData[2]) / 1000000, Convert.ToInt32(busData[4]));
+            return string.Format(
+                "Your missing person was spotted between these stops: {0}. Accurate location: {1}, {2}", location,
+                bus.Latitude, bus.Longitude);
         }
 
         internal static string GetRouteName(string busNumber)
@@ -28,21 +25,25 @@ namespace BusService
             return result.Split(',')[2];
         }
 
-        public static string BusStops(Bus bus, DateTime timeSeen)
+        private static string BusLocation(Bus bus)
         {
             string routeId;
 
-            if (bus.busType == BusType.Trolley)
-                routeId = String.Format("vilnius_trol_" + bus.busNumber);
-
-            else if (bus.busType == BusType.Bus && bus.busNumber.Contains("G"))
-                routeId = String.Format("vilnius_expressbus_" + bus.busNumber);
-
-            else if (bus.busType == BusType.Bus && bus.busNumber.Contains("N"))
-                routeId = String.Format("vilnius_nightbus_" + bus.busNumber);
-
-            else
-                routeId = String.Format("vilnius_bus_" + bus.busNumber);
+            switch (bus.BusType)
+            {
+                case BusType.Trolley:
+                    routeId = String.Format("vilnius_trol_" + bus.BusNumber);
+                    break;
+                case BusType.Bus when bus.BusNumber.Contains("G"):
+                    routeId = String.Format("vilnius_expressbus_" + bus.BusNumber);
+                    break;
+                case BusType.Bus when bus.BusNumber.Contains("N"):
+                    routeId = String.Format("vilnius_nightbus_" + bus.BusNumber);
+                    break;
+                default:
+                    routeId = String.Format("vilnius_bus_" + bus.BusNumber);
+                    break;
+            }
 
             var trips = Resource.trips.Split('\n');
 
@@ -58,7 +59,7 @@ namespace BusService
                 var departureTime = TimeSpan.Parse(allTimes[i - 1].Split(',')[2]);
                 var arrivalTime = TimeSpan.Parse(allTimes[i].Split(',')[1]);
 
-                if (IsInRange(timeSeen, departureTime, arrivalTime) && IsSameTrip(Convert.ToInt32(allTimes[i - 1].Split(',')[0]), Convert.ToInt32(allTimes[i].Split(',')[0])))
+                if (IsInRange(bus.BusTime, departureTime, arrivalTime) && IsSameTrip(Convert.ToInt32(allTimes[i - 1].Split(',')[0]), Convert.ToInt32(allTimes[i].Split(',')[0])))
                 {
                     possibleStops.Add(new Tuple<int, int>(Convert.ToInt32(allTimes[i - 1].Split(',')[3]), Convert.ToInt32(allTimes[i].Split(',')[3])));
                 }
@@ -67,9 +68,9 @@ namespace BusService
             return MostProbableStops(bus, possibleStops);
         }
 
-        private static bool IsInRange(DateTime timeSeen, TimeSpan departure, TimeSpan arrival)
+        private static bool IsInRange(TimeSpan timeSeen, TimeSpan departure, TimeSpan arrival)
         {
-            return (timeSeen.TimeOfDay >= departure && timeSeen.TimeOfDay <= arrival);
+            return (timeSeen >= departure && timeSeen <= arrival);
         }
 
         private static bool IsSameTrip(int previousStopTripId, int nextStopTripId)
@@ -79,6 +80,11 @@ namespace BusService
 
         private static string MostProbableStops(Bus bus, List<Tuple<int, int>> possibleStopList)
         {
+            if (bus.RouteId.Equals(""))
+            {
+                return $"Bus is currently standing at this location: {bus.Latitude},{bus.Longitude}";
+            }
+
             var allRegularStops = Resource.stops.Split('\n');
 
             string previousStop;
@@ -91,37 +97,33 @@ namespace BusService
                 previousStop = allRegularStops.First(x => Convert.ToInt32(x.Split(',')[0]) == stops.Item1);
                 nextStop = allRegularStops.First(x => Convert.ToInt32(x.Split(',')[0]) == stops.Item2);
 
-                var previousStopAbsoluteDifference = Math.Abs(bus.latitude - Convert.ToDouble(previousStop.Split(',')[4])) +
-                                                        Math.Abs(bus.longitude - Convert.ToDouble(previousStop.Split(',')[5]));
+                var previousStopAbsoluteDifference = Math.Abs(bus.Latitude - Convert.ToDouble(previousStop.Split(',')[4])) +
+                                                        Math.Abs(bus.Longitude - Convert.ToDouble(previousStop.Split(',')[5]));
 
-                var nextStopAbsoluteDifference = Math.Abs(bus.latitude - Convert.ToDouble(nextStop.Split(',')[4])) +
-                                                    Math.Abs(bus.longitude - Convert.ToDouble(nextStop.Split(',')[5]));
+                var nextStopAbsoluteDifference = Math.Abs(bus.Latitude - Convert.ToDouble(nextStop.Split(',')[4])) +
+                                                    Math.Abs(bus.Longitude - Convert.ToDouble(nextStop.Split(',')[5]));
 
                 regularStopsDifferences.Add((previousStopAbsoluteDifference > nextStopAbsoluteDifference) ? nextStopAbsoluteDifference : previousStopAbsoluteDifference);
             }
 
             int mostProbableRegularStopsIndexes = Min(regularStopsDifferences);
-
             var endStops = Resource.EndStops.Split('\n');
             int mostProbableEndStopIndex = 0;
             List<double> endStopsDifferences = new List<double>();
 
-            if (bus.speed < 50)
+            foreach (var stops in endStops)
             {
-                foreach (var stops in endStops)
-                {
-                    endStopsDifferences.Add(Math.Abs(bus.latitude - Convert.ToDouble(stops.Split(',')[1])) +
-                                            Math.Abs(bus.longitude - Convert.ToDouble(stops.Split(',')[2])));
-                }
+                endStopsDifferences.Add(Math.Abs(bus.Latitude - Convert.ToDouble(stops.Split(',')[1])) +
+                                        Math.Abs(bus.Longitude - Convert.ToDouble(stops.Split(',')[2])));
+            }
 
-                mostProbableEndStopIndex = Min(endStopsDifferences);
+            mostProbableEndStopIndex = Min(endStopsDifferences);
 
-                if (regularStopsDifferences[mostProbableRegularStopsIndexes] >
-                    endStopsDifferences[mostProbableEndStopIndex])
-                {
-                    return endStops[mostProbableEndStopIndex];
+            if (regularStopsDifferences[mostProbableRegularStopsIndexes] >
+                endStopsDifferences[mostProbableEndStopIndex])
+            {
+                return endStops[mostProbableEndStopIndex];
 
-                }
             }
 
             previousStop = allRegularStops.First(x => Convert.ToInt32(x.Split(',')[0]) == possibleStopList[mostProbableRegularStopsIndexes].Item1);

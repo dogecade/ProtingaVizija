@@ -36,8 +36,8 @@ namespace LocationService
 
         public Location(Bus bus)
         {
-            this.Latitude = bus.latitude;
-            this.Longitude = bus.longitude;
+            this.Latitude = bus.Latitude;
+            this.Longitude = bus.Longitude;
         }
     }
 }
