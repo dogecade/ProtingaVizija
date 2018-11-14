@@ -14,7 +14,7 @@ namespace BusService
                 return location;
 
             return string.Format(
-                "Your missing person was spotted between these stops: {0}. Accurate location: {1}, {2}", location,
+                "Your missing person was spotted in the {0} {1} ({1} ID - {2}) between these stops: {3}. Accurate location: {4}, {5}", bus.BusNumber, bus.BusType.ToString(), bus.BusId, location,
                 bus.Latitude, bus.Longitude);
         }
 
