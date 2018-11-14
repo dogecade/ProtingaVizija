@@ -57,7 +57,7 @@ namespace FaceAnalysis
             NewFrame?.Invoke(this, new NewFrameEventArgs(bitmap));
             lock (latestFrameLock)
             {
-                latestFrame.Dispose();
+                latestFrame?.Dispose();
                 latestFrame = bitmap;
             }
         }
