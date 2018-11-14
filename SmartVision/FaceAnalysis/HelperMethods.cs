@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace FaceAnalysis
 {
-    public static class HelperMethods
+    public class HelperMethods
     {
         /// <summary>
         /// Converts bitmap to byte array
@@ -77,39 +77,37 @@ namespace FaceAnalysis
             return imgClone;
         }
 
-        public static Tuple<Dictionary<IdentifierType, Rectangle>, Bitmap>  ProcessImages<IdentifierType>(IEnumerable<Tuple<IdentifierType, Bitmap>> tuples)
+        //does not dispose bitmaps
+        public static Tuple<IList<Guid>, Bitmap>  ProcessImages(IList<GuidBitmapPair> pairs)
         {
+            return new Tuple<IList<Guid>, Bitmap>(new List<Guid>(), pairs[0].Bitmap);
+            /*
             const int MAX_EDGE_IMAGES = 3;
-            if (tuples?.Any() != true)
+            if (bitmaps?.Any() != true)
                 throw new ArgumentException("List null or empty");
-            else if (tuples.Count() > MAX_EDGE_IMAGES * MAX_EDGE_IMAGES)
+            else if (bitmaps.Count > MAX_EDGE_IMAGES * MAX_EDGE_IMAGES)
                 throw new ArgumentException(string.Format("Number of bitmaps exceeds limit ({0})", MAX_EDGE_IMAGES));
             Point currentPosition = new Point(0, 0);
-            var idsRectangles = new Dictionary<IdentifierType, Rectangle>();
-            var rows = tuples
-               .Where(tuple => tuple?.Item2 != null)
-               .Select((tuple, i) => new { Index = i, Value = tuple})
-               .GroupBy(tuple => tuple.Index / MAX_EDGE_IMAGES)
-               .Select(tupleList => tupleList.Select(element => element.Value));
-            Bitmap conjoinedBitmap = new Bitmap(width: rows.Max(row => row.Sum(tuple => tuple.Item2.Width)),
-                                                height: rows.Sum(row => row.Max(tuple => tuple.Item2.Height)));
+            var rows = bitmaps
+               .Where(bitmap => bitmap != null)
+               .Select((bitmap, i) => new { Index = i, Value = bitmap })
+               .GroupBy(bitmap => bitmap.Index / MAX_EDGE_IMAGES)
+               .Select(bitmapList => bitmapList.Select(element => element.Value));
+            Bitmap conjoinedBitmap = new Bitmap(width: rows.Max(row => row.Sum(bitmap => bitmap.Width)),
+                                                height: rows.Sum(row => row.Max(bitmap => bitmap.Height)));
             using (Graphics g = Graphics.FromImage(conjoinedBitmap))
-                foreach (var tupleRow in rows)
+                foreach (var bitmapRow in rows)
                 {
-                    int maxHeight = 0;
-                    foreach (var tuple in tupleRow) 
+                    foreach (var bitmap in bitmapRow) 
                     {
-                        g.DrawImage(tuple.Item2, currentPosition);
-                        idsRectangles[tuple.Item1] = new Rectangle(currentPosition, new Size(tuple.Item2.Width, tuple.Item2.Height));
-                        currentPosition.X += tuple.Item2.Width;
-                        maxHeight = maxHeight > tuple.Item2.Height ? maxHeight : tuple.Item2.Height;
-                        tuple.Item2.Dispose();
+                        g.DrawImage(bitmap, currentPosition);
+                        currentPosition.X += bitmap.Width;
                     }
                     currentPosition.X = 0;
-                    currentPosition.Y += maxHeight;
+                    currentPosition.Y += bitmapRow.Max(bitmap => bitmap.Height);
                 }      
-            return new Tuple<Dictionary<IdentifierType, Rectangle>, Bitmap>(idsRectangles, conjoinedBitmap);
-            
+            return conjoinedBitmap;
+            */
         }
     }
 }

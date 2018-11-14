@@ -27,7 +27,7 @@ namespace LocationService
         /// <returns>Link of image</returns>
         public static string CreateLocationPictureFromAddress(Location location)
         {
-            string address = location.StreetName + "+" + location.HouseNumber + "+" + location.CityName +
+            string address = location.StreetName + "+" + location.StreetNumber + "+" + location.CityName +
                              "+" + location.CountryName + "+" + location.PostalNumber;
 
             return mapRootUrl +
@@ -75,12 +75,6 @@ namespace LocationService
                                 result.results[0].address_components[2].long_name,
                                 result.results[0].address_components[5].long_name,
                                 result.results[0].address_components[6].long_name);
-        }
-
-        public static string GetLocationName(Location location)
-        {
-            return string.Format(location.StreetName + " " + location.HouseNumber + ", " + location.CityName + ", " +
-                                 location.CountryName);
         }
 
 

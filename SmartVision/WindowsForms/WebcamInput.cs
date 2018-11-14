@@ -5,7 +5,6 @@ using FaceAnalysis;
 using System.Drawing;
 using AForge.Video;
 using AForge.Video.DirectShow;
-using Objects.Camera;
 
 namespace WindowsForms
 {
@@ -36,7 +35,7 @@ namespace WindowsForms
                 MessageBox.Show(Messages.cameraNotFound);
                 return false;
             }
-            processor = new FaceProcessor(source, new CameraProperties(cameraUrl, 1119));
+            processor = new FaceProcessor(source);
             source.NewFrame += GetFrame;
             source.Start();
             return true;
@@ -67,7 +66,7 @@ namespace WindowsForms
         {
             Bitmap image = new Bitmap(e.Frame);
             FormFaceDetection.Current.scanPictureBox.Image = image;
-
+            
             lastImage?.Dispose();
             lastImage = image;
         }
