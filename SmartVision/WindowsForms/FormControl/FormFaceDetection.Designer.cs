@@ -206,7 +206,7 @@
             this.cameraUrlLabel.Name = "cameraUrlLabel";
             this.cameraUrlLabel.Size = new System.Drawing.Size(98, 19);
             this.cameraUrlLabel.TabIndex = 4;
-            this.cameraUrlLabel.Text = "IP camera URL";
+            this.cameraUrlLabel.Text = "IP cameraProperties URL";
             // 
             // activateScanButton
             // 

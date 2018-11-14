@@ -2,10 +2,15 @@
 using NotificationService;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Linq;
 using System.Diagnostics;
+using System.Net;
 using System.Threading.Tasks;
+using BusService;
+using LocationService;
+using Objects.Camera;
 using Objects.ContactInformation;
 
 namespace FaceAnalysis
@@ -16,23 +21,24 @@ namespace FaceAnalysis
         private const string normalProbabilitySmsBodyBeginning = "Good afternoon. There's a possibility that your missing person ";
         private const string normalProbabilitySmsBodyEnding = " was detected. Please check you email for more detailed information.";
         private const string normalProbabilityEmailBodyBeginning = "Good afternoon. There's a possibility that your missing person ";
-        private const string normalProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
+        private const string normalProbabilityEmailBodyEnding = " was detected at this location - ";
 
         private const string highProbabilityEmailSubject = "HIGH possibility that your missing person was detected!";
         private const string highProbabilitySmsBodyBeginning = "Good afternoon. There's a HIGH possibility that your missing person ";
         private const string highProbabilitySmsBodyEnding = " was detected. Please check you email for more detailed information.";
         private const string highProbabilityEmailBodyBeginning = "Good afternoon. There's a HIGH possibility that your missing person ";
-        private const string highProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
+        private const string highProbabilityEmailBodyEnding = " was detected at this location - ";
 
         private const string veryHighProbabilityEmailSubject = "VERY HIGH possibility that your missing person was detected!";
         private const string veryHighProbabilitySmsBodyBeginning = "Good afternoon. There's a VERY HIGH possibility that your missing person ";
         private const string veryHighProbabilitySmsBodyEnding = " was detected. Please check you email for more detailed information.";
         private const string veryHighProbabilityEmailBodyBeginning = "Good afternoon. There's a VERY HIGH possibility that your missing person ";
-        private const string veryHighProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
+        private const string veryHighProbabilityEmailBodyEnding = " was detected at this location - ";
 
         private readonly Task notifactionSenderTask;
         private readonly ConcurrentDictionary<string, Tuple<DateTime, LikelinessConfidence>> notificationsToSend = new ConcurrentDictionary<string, Tuple<DateTime, LikelinessConfidence>>();
         private readonly ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData> likelinessLevelData = new ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData>();
+        private CameraProperties CameraProperties { get; set; }
 
         public SearchResultHandler(CancellationToken token)
         {
@@ -97,8 +103,10 @@ namespace FaceAnalysis
         /// Handles an incoming search result.
         /// </summary>
         /// <param name="likeliness">Search result to handle</param>
-        public void HandleSearchResult(LikelinessResult likeliness)
+        public void HandleSearchResult(CameraProperties cameraProperties, LikelinessResult likeliness)
         {
+            CameraProperties = cameraProperties;
+
             Debug.WriteLine(likeliness.Confidence);
             switch (likeliness.Confidence)
             {
@@ -128,24 +136,65 @@ namespace FaceAnalysis
         /// <param name="faceToken">Face token of the missing person</param>
         private void SendNotifications(LikelinessConfidence confidence, string faceToken)
         {
+            DateTime time = DateTime.Now;
+
             ContactInformation information = new CallsToDb().GetMissingPersonData(faceToken);
-            if (information == null)
-                return;
+            //if (information == null)
+            //    return;
             LikelinessLevelData data = likelinessLevelData[confidence];
 
-            if (Mail.SendMail(information.contactPersonEmailAddress, data.EmailSubject,
-                    data.EmailBodyBeginning + information.missingPersonFirstName + " " +
-                    information.missingPersonLastName + data.EmailBodyEnding) == null)
+            string place = "";
+            byte[] locationPicture = null;
+
+            if (CameraProperties != null)
+            {
+                Bus bus = (CameraProperties.IsBus) ? new Bus(CameraProperties.BusId, time) : null;
+
+                Location location = (CameraProperties.IsBus)
+                    ? new Location(bus)
+                    : new Location(CameraProperties.StreetName, CameraProperties.HouseNumber, CameraProperties.CityName, CameraProperties.CountryName, CameraProperties.PostalNumber);
+
+                place = (CameraProperties.IsBus)
+                    ? BusHelpers.GetBusLocation(bus)
+                    : LocationHelpers.GetLocationName(location);
+
+                string locationPictureUrl = (CameraProperties.IsBus)
+                    ? LocationHelpers.CreateLocationPictureFromCoordinates(location)
+                    : LocationHelpers.CreateLocationPictureFromAddress(location);
+
+                using (WebClient client = new WebClient())
+                {
+                    locationPicture = client.DownloadData(locationPictureUrl);
+                }
+            }
+
+            if (Mail.SendMail("deividas.brazenas@gmail.com", data.EmailSubject,
+                    data.EmailBodyBeginning + "deividas" + " " +
+                    "B" + data.EmailBodyEnding + place, new List<byte[]>() { locationPicture }, new List<string>() { "Location.jpeg" }) == null)
             {
                 Debug.WriteLine("Mail message was not sent!");
             }
 
-            if (Sms.SendSms(information.contactPersonPhoneNumber,
-                    data.SmsBodyBeginning + information.missingPersonFirstName + " " +
-                    information.missingPersonLastName + data.SmsBodyEnding) == null)
+            //if (Mail.SendMail(information.contactPersonEmailAddress, data.EmailSubject,
+            //        data.EmailBodyBeginning + information.missingPersonFirstName + " " +
+            //        information.missingPersonLastName + data.EmailBodyEnding + place, new List<byte[]>() { locationPicture }, new List<string>() { "Location" }) == null)
+            //{
+            //    Debug.WriteLine("Mail message was not sent!");
+            //}
+
+            if (Sms.SendSms("+37068959812",
+                    data.SmsBodyBeginning + "D" + " " +
+                    "B" + data.SmsBodyEnding) == null)
             {
                 Debug.WriteLine("Sms message was not sent!");
             }
+
+            //if (Sms.SendSms(information.contactPersonPhoneNumber,
+            //        data.SmsBodyBeginning + information.missingPersonFirstName + " " +
+            //        information.missingPersonLastName + data.SmsBodyEnding) == null)
+            //{
+            //    Debug.WriteLine("Sms message was not sent!");
+            //}
         }
     }
 

@@ -9,9 +9,20 @@ namespace FaceAnalysis
     public class ProcessableVideoSource
     {
         private ConcurrentQueue<Rectangle> faceRectangles;
+        private object latestFrameLock = new object();
         public event NewFrameEventHandler NewFrame;
         public IVideoSource Stream { get; }
         public Guid Id { get; }
+        public Bitmap LatestFrameCopy
+        {
+            get
+            {
+                lock(latestFrameLock)
+                    return new Bitmap(latestFrame);
+            }
+        }
+
+        private Bitmap latestFrame;
 
         public ProcessableVideoSource(IVideoSource videoStream)
         {
@@ -36,6 +47,7 @@ namespace FaceAnalysis
             Bitmap bitmap;
             lock (sender)
                 bitmap = new Bitmap(e.Frame);
+            bitmap = HelperMethods.ProcessImage(bitmap);
             if (faceRectangles != null)
                 using (Graphics g = Graphics.FromImage(bitmap))
                 using (Pen pen = new Pen(new SolidBrush(Color.Red), 1))
@@ -43,14 +55,35 @@ namespace FaceAnalysis
                         g.DrawRectangle(pen, face);
 
             NewFrame?.Invoke(this, new NewFrameEventArgs(bitmap));
-            bitmap.Dispose();
+            lock (latestFrameLock)
+            {
+                latestFrame?.Dispose();
+                latestFrame = bitmap;
+            }
         }
 
         public void UpdateRectangles(object sender, FrameProcessedEventArgs e)
         {
-            faceRectangles = new ConcurrentQueue<Rectangle>(e.FaceRectangles) ?? faceRectangles;
+            if(e.RectangleDictionary.ContainsKey(this))
+                faceRectangles = new ConcurrentQueue<Rectangle>(e.RectangleDictionary[this]) ?? faceRectangles;
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is ProcessableVideoSource && ((ProcessableVideoSource)obj).Id == Id;
+        }
+
+        public static bool operator ==(ProcessableVideoSource lhs, ProcessableVideoSource rhs)
+        {
+            if (lhs is null)
+                return rhs is null;
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(ProcessableVideoSource lhs, ProcessableVideoSource rhs)
+        {
+            return lhs == rhs;
+        }
 
     }
 }

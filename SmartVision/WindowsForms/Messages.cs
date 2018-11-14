@@ -21,6 +21,6 @@ namespace WindowsForms
         public const string errorWhileSavingPerson = "An error occured while saving missing person, please try again later";
         public const string errorWhileAnalysingImage = "An error occured while analysing the image, please try again later";
         public const string noFacesInImage = "Unfortunately, no faces have been detected in the picture! \n" + "Please try another one.";
-        public const string cameraNotFound = "Input camera was not found!";
+        public const string cameraNotFound = "Input cameraProperties was not found!";
     }
 }
