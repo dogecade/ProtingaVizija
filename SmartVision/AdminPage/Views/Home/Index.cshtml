@@ -6,36 +6,39 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-
 <body>
     <div class="row">
-        <div  class="col-sm-8" id="streamDiv">
+        <div class="col-sm-8" id="streamDiv">
         </div>
         <div class="col-sm-4">
-            <h3 class="text-center">Add A New Camera Feed</h3>
-            <div>
-                @Html.Label("Video camera stream URL: ")
-                @Html.TextBox("streamURL", null, new { @class = "form-control", @type = "text", @id = "streamURL", @required = "" })
-                @Html.Label("The camera is located in a bus: ")
-                @Html.CheckBox("isBuss", false, new { @id = "isBuss" })
+            <div class="contact-clean">
+                <h3 class="text-center">Add A New Camera Feed</h3>
+                <div class="form-group center">
+                    @Html.Label("Video camera stream URL: ")
+                    @Html.TextBox("streamURL", null, new { @class = "form-control", @type = "text", @id = "streamURL" })
+                    @Html.Label("The camera is located in a bus: ")
+                    @Html.CheckBox("isBuss", false, new { @id = "isBuss" })
+                </div>
+                <div id="cameraForm" class="form-group center">
+                    @Html.Label("Street name:")
+                    @Html.TextBox("streetName", null, new { @class = "form-control", @type = "text", @id = "streetName" })
+                    @Html.Label("House number:")
+                    @Html.TextBox("houseNumber", null, new { @class = "form-control", @type = "text", @id = "houseNumber" })
+                    @Html.Label("City:")
+                    @Html.TextBox("city", null, new { @class = "form-control", @type = "text", @id = "city" })
+                    @Html.Label("Country:")
+                    @Html.TextBox("country", null, new { @class = "form-control", @type = "text", @id = "country" })
+                    @Html.Label("Post code:")
+                    @Html.TextBox("postCode", null, new { @class = "form-control", @type = "text", @id = "postCode" })
+                </div>
+                <div id="bussForm" style="display: none;" class="form-group center">
+                    @Html.Label("Buss number:")
+                    @Html.TextBox("streamURL", null, new { @class = "form-control", @type = "text", @id = "bussNumber" })
+                </div>
+                <div class="form-group center">
+                    <input class="btn btn-primary d-flex m-auto" type="submit" id="submit" value="Submit">
+                </div>
             </div>
-            <div id="cameraForm">
-                @Html.Label("Street name:")
-                @Html.TextBox("streetName", null, new { @class = "form-control", @type = "text", @id = "streetName", @required = "" })
-                @Html.Label("House number:")
-                @Html.TextBox("houseNumber", null, new { @class = "form-control", @type = "text", @id = "houseNumber", @required = "" })
-                @Html.Label("City:")
-                @Html.TextBox("city", null, new { @class = "form-control", @type = "text", @id = "city", @required = "" })
-                @Html.Label("Country:")
-                @Html.TextBox("country", null, new { @class = "form-control", @type = "text", @id = "country", @required = "" })
-                @Html.Label("Post code:")
-                @Html.TextBox("postCode", null, new { @class = "form-control", @type = "text", @id = "postCode", @required = "" })
-            </div>
-            <div id="bussForm" style="display: none;">
-                @Html.Label("Buss number:")
-                @Html.TextBox("streamURL", null, new { @class = "form-control", @type = "text", @id = "bussNumber" })
-            </div>
-            <input class="btn btn-primary" type="submit" id="submit" value="Submit">
         </div>
     </div>
 </body>
@@ -52,29 +55,6 @@
 
     $("#submit").click(function () {
         $('#streamDiv').prepend('<img id = "stream" height = "300" width = "450" src="../api/Video" />');
-        $.ajax({
-            url: '../api/Video/SetStream',
-            type: 'POST',
-            cache: false,
-            contentType: 'application/json;charset=utf-8',
-            data: JSON.stringify(cameraURL),
-            success: function (data) {
-                $.ajax({
-                    type: 'GET',
-                    contentType: 'application/json;charset=utf-8',
-                    url: '../api/Video/GetVideoContent',
-                    cache: false,
-                    dataType: 'json',
-                    success: function (response) {
-                    },
-                    error: function () {
-                        alert('Error GET');
-                    }
-                });
-            },
-            error: function () {
-                alert('Error POST');
-            }
-        });
+        
     });
 </script>

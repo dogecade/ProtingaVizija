@@ -31,35 +31,19 @@ namespace AdminPage.Controllers
         /// </summary>
         VideoController()
         {
-            //mjpegStream.Source = @"{{http://192.168.0.102:8080/video}}";
-            //mjpegStream = new MJPEGStream("http://192.168.0.102:8080/video");
-            //mjpegStream.NewFrame += new NewFrameEventHandler(ShowFrameEvent);
-            mjpegStream = new MJPEGStream("http://192.168.0.102:8080/video");
+            mjpegStream = new MJPEGStream("http://10.3.4.207:8080/video");
 
             ProcessableVideoSource videoSource = new ProcessableVideoSource(mjpegStream);
-            //ProcessableVideoSource videoSource2 = new ProcessableVideoSource(new MJPEGStream("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi"));
 
             videoSource.NewFrame += ShowFrameEvent;
             videoSource.Start();
-            //videoSource2.NewFrame += ShowFrameEvent;
-            //videoSource2.Start();
 
             VideoSourceHandler.AddSource(videoSource);
-           // VideoSourceHandler.AddSource(videoSource2);
         }
 
         [System.Web.Http.HttpPost]
-        public ActionResult SetStream()
+        public ActionResult SetStream([FromUri]string streamURL)
         {
-            mjpegStream = new MJPEGStream("http://192.168.0.102:8080/video");
-
-            ProcessableVideoSource videoSource = new ProcessableVideoSource(mjpegStream);
-            //ProcessableVideoSource videoSource2 = new ProcessableVideoSource(new MJPEGStream("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi"));
-
-            videoSource.NewFrame += ShowFrameEvent;
-            videoSource.Start();
-
-            VideoSourceHandler.AddSource(videoSource);
             return new JsonResult()
             {
                 Data = 5,
