@@ -8,46 +8,73 @@
 </head>
 
 <body>
-    <img src="/api/Video/https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi" id="stream" />
-    <!-- <button class="btn btn-primary" id="startStream">Start Stream</button>-->
+    <div class="row">
+        <div  class="col-sm-8" id="streamDiv">
+        </div>
+        <div class="col-sm-4">
+            <h3 class="text-center">Add A New Camera Feed</h3>
+            <div>
+                @Html.Label("Video camera stream URL: ")
+                @Html.TextBox("streamURL", null, new { @class = "form-control", @type = "text", @id = "streamURL", @required = "" })
+                @Html.Label("The camera is located in a bus: ")
+                @Html.CheckBox("isBuss", false, new { @id = "isBuss" })
+            </div>
+            <div id="cameraForm">
+                @Html.Label("Street name:")
+                @Html.TextBox("streetName", null, new { @class = "form-control", @type = "text", @id = "streetName", @required = "" })
+                @Html.Label("House number:")
+                @Html.TextBox("houseNumber", null, new { @class = "form-control", @type = "text", @id = "houseNumber", @required = "" })
+                @Html.Label("City:")
+                @Html.TextBox("city", null, new { @class = "form-control", @type = "text", @id = "city", @required = "" })
+                @Html.Label("Country:")
+                @Html.TextBox("country", null, new { @class = "form-control", @type = "text", @id = "country", @required = "" })
+                @Html.Label("Post code:")
+                @Html.TextBox("postCode", null, new { @class = "form-control", @type = "text", @id = "postCode", @required = "" })
+            </div>
+            <div id="bussForm" style="display: none;">
+                @Html.Label("Buss number:")
+                @Html.TextBox("streamURL", null, new { @class = "form-control", @type = "text", @id = "bussNumber" })
+            </div>
+            <input class="btn btn-primary" type="submit" id="submit" value="Submit">
+        </div>
+    </div>
 </body>
-<!-- <body>
-    <img src="/api/Video" id="stream" />
-</body>-->
+
 
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
 <script>
-    var uri = 'api/Video';
-    var cameraURL = "http://192.168.0.102:8080/video";
+    $('#isBuss').change(function () {
+        $('#cameraForm').toggle();
+        $('#bussForm').toggle();
+    });
 
-    $(document).ready(function () {
-        // Send an AJAX request
-        $("#startStream").click(function () {
-            $.ajax({
-                url: '../api/Video/SetStream',
-                type: 'POST',
-                cache: false,
-                contentType: 'application/json;charset=utf-8',
-                data: JSON.stringify(cameraURL),
-                success: function (data) {
-                    $.ajax({
-                        type: 'GET',
-                        contentType: 'application/json;charset=utf-8',
-                        url: '../api/Video/GetVideoContent',
-                        cache: false,
-                        dataType: 'json',
-                        success: function (response) {
-                        },
-                        error: function () {
-                            alert('Error GET');
-                        }
-                    });
-                },
-                error: function () {
-                    alert('Error POST');
-                }
-            });
+
+    $("#submit").click(function () {
+        $('#streamDiv').prepend('<img id = "stream" height = "300" width = "450" src="../api/Video" />');
+        $.ajax({
+            url: '../api/Video/SetStream',
+            type: 'POST',
+            cache: false,
+            contentType: 'application/json;charset=utf-8',
+            data: JSON.stringify(cameraURL),
+            success: function (data) {
+                $.ajax({
+                    type: 'GET',
+                    contentType: 'application/json;charset=utf-8',
+                    url: '../api/Video/GetVideoContent',
+                    cache: false,
+                    dataType: 'json',
+                    success: function (response) {
+                    },
+                    error: function () {
+                        alert('Error GET');
+                    }
+                });
+            },
+            error: function () {
+                alert('Error POST');
+            }
         });
     });
 </script>

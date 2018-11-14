@@ -21,20 +21,20 @@ namespace AdminPage.Controllers
 {
     public class VideoController : ApiController
     {
-        private MJPEGStream mjpegStream; //= new MJPEGStream("http://10.3.4.207:8080/video");
-        private bool frameAvailable = false;
-        private Bitmap frame = null;
-        private string BOUNDARY = "frame";
+        private static MJPEGStream mjpegStream; //= new MJPEGStream("http://10.3.4.207:8080/video");
+        private static bool frameAvailable = false;
+        private static Bitmap frame = null;
+        private static string BOUNDARY = "frame";
 
         /// <summary>
         /// Initializer for the MJPEGstream
         /// </summary>
-        VideoController(string streamURL)
+        VideoController()
         {
             //mjpegStream.Source = @"{{http://192.168.0.102:8080/video}}";
             //mjpegStream = new MJPEGStream("http://192.168.0.102:8080/video");
             //mjpegStream.NewFrame += new NewFrameEventHandler(ShowFrameEvent);
-            mjpegStream = new MJPEGStream(streamURL);
+            mjpegStream = new MJPEGStream("http://192.168.0.102:8080/video");
 
             ProcessableVideoSource videoSource = new ProcessableVideoSource(mjpegStream);
             //ProcessableVideoSource videoSource2 = new ProcessableVideoSource(new MJPEGStream("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi"));
@@ -51,9 +51,15 @@ namespace AdminPage.Controllers
         [System.Web.Http.HttpPost]
         public ActionResult SetStream()
         {
-            mjpegStream = new MJPEGStream("http://10.3.4.207:8080/video");
-            mjpegStream.NewFrame += new NewFrameEventHandler(ShowFrameEvent);
-            
+            mjpegStream = new MJPEGStream("http://192.168.0.102:8080/video");
+
+            ProcessableVideoSource videoSource = new ProcessableVideoSource(mjpegStream);
+            //ProcessableVideoSource videoSource2 = new ProcessableVideoSource(new MJPEGStream("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi"));
+
+            videoSource.NewFrame += ShowFrameEvent;
+            videoSource.Start();
+
+            VideoSourceHandler.AddSource(videoSource);
             return new JsonResult()
             {
                 Data = 5,
@@ -154,7 +160,7 @@ namespace AdminPage.Controllers
         /// </summary>
         /// <param name="sender">Object that is sending the event</param>
         /// <param name="eventArgs">Data from the event, including the frame</param>
-        public void ShowFrameEvent(object sender, NewFrameEventArgs eventArgs)
+        public static void ShowFrameEvent(object sender, NewFrameEventArgs eventArgs)
         {
             frame = new Bitmap(eventArgs.Frame);
             frameAvailable = true;
