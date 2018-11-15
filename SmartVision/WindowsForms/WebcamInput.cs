@@ -5,6 +5,7 @@ using FaceAnalysis;
 using System.Drawing;
 using AForge.Video;
 using AForge.Video.DirectShow;
+using Objects.CameraProperties;
 
 namespace WindowsForms
 {
@@ -13,7 +14,7 @@ namespace WindowsForms
         private static Bitmap lastImage;
         private static ProcessableVideoSource source;
         private static FaceProcessor processor;
-
+        private static int BusId = 744;
         /// <summary>
         /// Enables the input of the webcam
         /// </summary>
@@ -35,7 +36,7 @@ namespace WindowsForms
                 MessageBox.Show(Messages.cameraNotFound);
                 return false;
             }
-            processor = new FaceProcessor(source);
+            processor = new FaceProcessor(source, new CameraProperties(cameraUrl, BusId));
             source.NewFrame += GetFrame;
             source.Start();
             return true;
@@ -66,7 +67,7 @@ namespace WindowsForms
         {
             Bitmap image = new Bitmap(e.Frame);
             FormFaceDetection.Current.scanPictureBox.Image = image;
-            
+
             lastImage?.Dispose();
             lastImage = image;
         }

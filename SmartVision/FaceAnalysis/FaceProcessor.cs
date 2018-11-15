@@ -10,6 +10,7 @@ using System.Threading.Tasks.Dataflow;
 using AForge.Video;
 using Constants;
 using Helpers;
+using Objects.CameraProperties;
 
 namespace FaceAnalysis
 {
@@ -31,12 +32,15 @@ namespace FaceAnalysis
         private static readonly SearchResultHandler resultHandler = new SearchResultHandler(tokenSource.Token);
         private readonly Task searchTask;
         public event EventHandler<FrameProcessedEventArgs> FrameProcessed;
+        private CameraProperties CameraProperties;
 
-        public FaceProcessor()
+        public FaceProcessor(CameraProperties cameraProperties = null)
         {
+            CameraProperties = cameraProperties;
+
             var linkOptions = new DataflowLinkOptions { PropagateCompletion = true };
             var blockOptions = new ExecutionDataflowBlockOptions { BoundedCapacity = 1 };
-            
+
             //initialiase blocks.
             byteArrayTransformBlock = new TransformBlock<Tuple<Dictionary<ProcessableVideoSource, Rectangle>, Bitmap>, Tuple<Dictionary<ProcessableVideoSource, Rectangle>, byte[]>>(tuple =>
                 new Tuple<Dictionary<ProcessableVideoSource, Rectangle>, byte[]>(tuple.Item1, HelperMethods.ImageToByte(tuple.Item2)), blockOptions);
@@ -65,13 +69,13 @@ namespace FaceAnalysis
             searchTask = Task.Run(() => FaceSearch());
         }
 
-        public FaceProcessor(IList<ProcessableVideoSource> sources) : this()
+        public FaceProcessor(IList<ProcessableVideoSource> sources, CameraProperties cameraProperties = null) : this(cameraProperties)
         {
             foreach (var source in sources)
                 AddSource(source);
         }
 
-        public FaceProcessor(ProcessableVideoSource source) : this()
+        public FaceProcessor(ProcessableVideoSource source, CameraProperties cameraProperties = null) : this(cameraProperties)
         {
             AddSource(source);
         }
@@ -162,7 +166,7 @@ namespace FaceAnalysis
                 FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, await searchBuffer.ReceiveAsync());
                 if (response != null)
                     foreach (LikelinessResult result in response.LikelinessConfidences())
-                        resultHandler.HandleSearchResult(result);
+                        resultHandler.HandleSearchResult(CameraProperties,result);
             }
         }
 
@@ -223,7 +227,7 @@ namespace FaceAnalysis
         public Bitmap Bitmap { get; set; }
         public void Dispose() => Bitmap?.Dispose();
 
-        public static implicit operator Tuple<ProcessableVideoSource, Bitmap>(SourceBitmapPair pair) => 
+        public static implicit operator Tuple<ProcessableVideoSource, Bitmap>(SourceBitmapPair pair) =>
             new Tuple<ProcessableVideoSource, Bitmap>(pair.Source, pair.Bitmap);
     }
 

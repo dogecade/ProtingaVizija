@@ -34,10 +34,14 @@
     </nav>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Sharpy bois</p>
-        </footer>
+        <div id="footer">
+            <div class="container">
+                <footer style="position: fixed; left: 0; bottom: 0; width: 100%;">
+                    <hr />
+                    <p>&copy; @DateTime.Now.Year - Smart Vision</p>
+                </footer>
+            </div>
+        </div>
     </div>
 
     @Scripts.Render("~/bundles/jquery")

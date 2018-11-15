@@ -8,22 +8,22 @@ namespace LocationService
     public class Location
     {
         public string StreetName { get; set; }
-        public string StreetNumber { get; set; }
+        public string HouseNumber { get; set; }
         public string CityName { get; set; }
         public string CountryName { get; set; }
-        public string PostalNumber { get; set; }
+        public string PostalCode { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
 
-        public Location(string StreetName, string StreetNumber, string CityName, string CountryName,
-            string PostalNumber)
+        public Location(string StreetName, string houseNumber, string CityName, string CountryName,
+            string postalCode)
         {
             this.StreetName = StreetName;
-            this.StreetNumber = StreetNumber;
+            this.HouseNumber = houseNumber;
             this.CityName = CityName;
             this.CountryName = CountryName;
-            this.PostalNumber = PostalNumber;
+            this.PostalCode = postalCode;
             this.Latitude = Latitude;
             this.Longitude = Longitude;
         }
@@ -36,8 +36,8 @@ namespace LocationService
 
         public Location(Bus bus)
         {
-            this.Latitude = bus.latitude;
-            this.Longitude = bus.longitude;
+            this.Latitude = bus.Latitude;
+            this.Longitude = bus.Longitude;
         }
     }
 }
