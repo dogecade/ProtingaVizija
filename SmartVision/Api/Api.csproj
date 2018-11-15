@@ -206,6 +206,7 @@
     <Compile Include="Controllers\AddPersonController.cs" />
     <Compile Include="Controllers\ContactPersonsController.cs" />
     <Compile Include="Controllers\CurrentlyMissingController.cs" />
+    <Compile Include="Controllers\CameraStreamController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageUploadController.cs" />
     <Compile Include="Controllers\MissingContactController.cs" />
@@ -317,6 +318,7 @@
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\GetCameraFeed.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -330,7 +332,9 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -349,6 +353,7 @@
     <Content Include="Views\CurrentlyMissing\Index.cshtml" />
     <Content Include="Views\AddPerson\MissingPersonView.cshtml" />
     <Content Include="Views\AddPerson\FacesModalView.cshtml" />
+    <Content Include="Views\CameraStream\CameraStreamView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -414,6 +419,8 @@
           <DevelopmentServerPort>52814</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:52814/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:52814/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
