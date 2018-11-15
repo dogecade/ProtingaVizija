@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Helpers
@@ -97,10 +96,10 @@ namespace Helpers
             return response.Content;
         }
 
-        public async Task<HttpStatusCode> PostRelToApi(Object missingContact)
+        public async Task<HttpContent> PostRelToApi(Object missingContact)
         {
             HttpResponseMessage response = await httpClient.PostAsJsonAsync(new Uri(API + "/MissingContact"), missingContact);
-            return response.StatusCode;
+            return response.Content;
         }
     }
 }

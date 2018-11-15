@@ -1,5 +1,6 @@
 ﻿//using FaceAnalysis;
 using FaceAnalysis;
+using Objects.Person;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,6 +10,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Net.Http;
+using Helpers;
 
 namespace Api.Controllers
 {
@@ -17,11 +20,11 @@ namespace Api.Controllers
         // GET: AddPerson
         public ActionResult Index()
         {
-            return View();
+            return View("AddContactPerson");
         }
         public ActionResult MissingPersonView()
         {
-            return View();
+            return View("AddMissingPerson");
         }
         [HttpPost]
         public async Task<ActionResult> CheckImage()
@@ -50,7 +53,30 @@ namespace Api.Controllers
             }
             return null;
         }
-
+        [HttpPost]
+        public async Task<string> AddMissingPerson (MissingPerson missingPersons)
+        {
+            HttpClientWrapper httpClient = new HttpClientWrapper();
+            HttpContent content = await httpClient.PostMissingPersonToApiAsync(missingPersons);
+            string missing1 = await content.ReadAsStringAsync();
+            return missing1;
+        }
+        [HttpPost]
+        public async Task<string> AddContactPerson (ContactPerson contactPersons)
+        {
+            HttpClientWrapper httpClient = new HttpClientWrapper();
+            HttpContent content = await httpClient.PostContactPersonToApiAsync(contactPersons);
+            string contact1 = await content.ReadAsStringAsync();
+            return contact1;
+        }
+        [HttpPost]
+        public async Task<string> AddRelationship(MissingContact missing)
+        {
+            HttpClientWrapper httpClient = new HttpClientWrapper();
+            HttpContent content = await httpClient.PostRelToApi(missing);
+            string contact1 = await content.ReadAsStringAsync();
+            return contact1;
+        }
         public ActionResult FacesModalView()
         {
 
