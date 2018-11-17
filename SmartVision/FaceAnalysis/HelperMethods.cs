@@ -77,33 +77,33 @@ namespace FaceAnalysis
             return imgClone;
         }
 
-        public static Tuple<Dictionary<IdentifierType, Rectangle>, Bitmap>  ProcessImages<IdentifierType>(IEnumerable<Tuple<IdentifierType, Bitmap>> tuples)
+        public static Tuple<Dictionary<IdentifierType, Rectangle>, Bitmap>  ProcessImages<IdentifierType>(IDictionary<IdentifierType, Bitmap> dictionary)
         {
             const int MAX_EDGE_IMAGES = 3;
-            if (tuples?.Any() != true)
+            if (dictionary?.Any() != true)
                 throw new ArgumentException("List null or empty");
-            else if (tuples.Count() > MAX_EDGE_IMAGES * MAX_EDGE_IMAGES)
+            else if (dictionary.Count() > MAX_EDGE_IMAGES * MAX_EDGE_IMAGES)
                 throw new ArgumentException(string.Format("Number of bitmaps exceeds limit ({0})", MAX_EDGE_IMAGES));
             Point currentPosition = new Point(0, 0);
             var idsRectangles = new Dictionary<IdentifierType, Rectangle>();
-            var rows = tuples
-               .Where(tuple => tuple?.Item2 != null)
-               .Select((tuple, i) => new { Index = i, Value = tuple})
-               .GroupBy(tuple => tuple.Index / MAX_EDGE_IMAGES)
-               .Select(tupleList => tupleList.Select(element => element.Value));
-            Bitmap conjoinedBitmap = new Bitmap(width: rows.Max(row => row.Sum(tuple => tuple.Item2.Width)),
-                                                height: rows.Sum(row => row.Max(tuple => tuple.Item2.Height)));
+            var rows = dictionary
+               .Where(pair => pair.Value != null)
+               .Select((pair, i) => new { Index = i, Value = pair})
+               .GroupBy(pair => pair.Index / MAX_EDGE_IMAGES)
+               .Select(pairList => pairList.Select(element => element.Value));
+            Bitmap conjoinedBitmap = new Bitmap(width: rows.Max(row => row.Sum(pair => pair.Value.Width)),
+                                                height: rows.Sum(row => row.Max(pair => pair.Value.Height)));
             using (Graphics g = Graphics.FromImage(conjoinedBitmap))
-                foreach (var tupleRow in rows)
+                foreach (var pairRow in rows)
                 {
                     int maxHeight = 0;
-                    foreach (var tuple in tupleRow) 
+                    foreach (var pair in pairRow) 
                     {
-                        g.DrawImage(tuple.Item2, currentPosition);
-                        idsRectangles[tuple.Item1] = new Rectangle(currentPosition, new Size(tuple.Item2.Width, tuple.Item2.Height));
-                        currentPosition.X += tuple.Item2.Width;
-                        maxHeight = maxHeight > tuple.Item2.Height ? maxHeight : tuple.Item2.Height;
-                        tuple.Item2.Dispose();
+                        g.DrawImage(pair.Value, currentPosition);
+                        idsRectangles[pair.Key] = new Rectangle(currentPosition, new Size(pair.Value.Width, pair.Value.Height));
+                        currentPosition.X += pair.Value.Width;
+                        maxHeight = maxHeight > pair.Value.Height ? maxHeight : pair.Value.Height;
+                        pair.Value.Dispose();
                     }
                     currentPosition.X = 0;
                     currentPosition.Y += maxHeight;
