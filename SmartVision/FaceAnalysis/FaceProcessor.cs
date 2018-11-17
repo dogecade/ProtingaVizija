@@ -123,28 +123,26 @@ namespace FaceAnalysis
         {
             actionRunning = true;
             FrameAnalysisJSON result = await ProcessFrame(tuple.Item2);
-            Dictionary<ProcessableVideoSource, List<Rectangle>> results = new Dictionary<ProcessableVideoSource, List<Rectangle>>();
             if (result == default(FrameAnalysisJSON))
             {
                 actionRunning = false;
                 return;
             }
-            foreach (Face face in result.Faces)
+            Dictionary<ProcessableVideoSource, List<Rectangle>> results = new Dictionary<ProcessableVideoSource, List<Rectangle>>();
+            foreach (var pair in tuple.Item1)
             {
-                await searchBuffer.SendAsync(face.Face_token);
-                foreach (var pair in tuple.Item1)
-                    if (pair.Value.Contains(face.Face_rectangle))
+                results[pair.Key] = result.Faces
+                    .Where(face => pair.Value.IntersectsWith(face.Face_rectangle))
+                    .Select(face =>
                     {
-                        if (!results.TryGetValue(pair.Key, out _))
-                            results[pair.Key] = new List<Rectangle>();
                         var rectangle = (Rectangle)face.Face_rectangle;
-                        rectangle.Location = new Point(0, 0);
-                        results[pair.Key].Add(face.Face_rectangle);
-                    }
-
+                        rectangle.Location = Point.Subtract(pair.Value.Location, (Size) rectangle.Location);
+                        return (Rectangle)face.Face_rectangle;
+                    })
+                    .ToList();
             }
+            //TODO: send to search, in a seperate method.
 
-            var faceRectangles = from face in result.Faces select (Rectangle)face.Face_rectangle;
             OnProcessingCompletion(new FrameProcessedEventArgs { RectangleDictionary = results });
             actionRunning = false;
         }
