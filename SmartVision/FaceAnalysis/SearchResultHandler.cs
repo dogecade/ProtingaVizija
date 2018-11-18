@@ -38,9 +38,9 @@ namespace FaceAnalysis
         private readonly Task notifactionSenderTask;
         private readonly ConcurrentDictionary<string, Tuple<DateTime, LikelinessConfidence>> notificationsToSend = new ConcurrentDictionary<string, Tuple<DateTime, LikelinessConfidence>>();
         private readonly ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData> likelinessLevelData = new ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData>();
-        private CameraProperties CameraProperties;
+        private readonly CameraProperties cameraProperties;
 
-        public SearchResultHandler(CancellationToken token)
+        public SearchResultHandler(CancellationToken token, CameraProperties cameraProperties)
         {
             LikelinessLevelData highLevelData = new LikelinessLevelData
             {
@@ -74,6 +74,7 @@ namespace FaceAnalysis
             likelinessLevelData.TryAdd(LikelinessConfidence.NormalProbability, normalLevelData);
             likelinessLevelData.TryAdd(LikelinessConfidence.HighProbability, highLevelData);
 
+            this.cameraProperties = cameraProperties;
             notifactionSenderTask = Task.Run(() => SenderTask(token));
         }
 
@@ -103,10 +104,8 @@ namespace FaceAnalysis
         /// Handles an incoming search result.
         /// </summary>
         /// <param name="likeliness">Search result to handle</param>
-        public void HandleSearchResult(CameraProperties cameraProperties, LikelinessResult likeliness)
+        public void HandleSearchResult(LikelinessResult likeliness)
         {
-            CameraProperties = cameraProperties;
-
             Debug.WriteLine(likeliness.Confidence);
             switch (likeliness.Confidence)
             {
@@ -145,20 +144,20 @@ namespace FaceAnalysis
             byte[] locationPicture = null;
             string locationString = "";
 
-            if (CameraProperties != null)
+            if (cameraProperties != null)
             {
-                var bus = (CameraProperties.IsBus) ? new Bus(CameraProperties.BusId, DateTime.Now) : null;
+                var bus = (cameraProperties.IsBus) ? new Bus(cameraProperties.BusId, DateTime.Now) : null;
 
-                var location = (CameraProperties.IsBus)
+                var location = (cameraProperties.IsBus)
                     ? new Location(bus)
-                    : new Location(CameraProperties.StreetName, CameraProperties.HouseNumber, CameraProperties.CityName,
-                        CameraProperties.CountryName, CameraProperties.PostalCode);
+                    : new Location(cameraProperties.StreetName, cameraProperties.HouseNumber, cameraProperties.CityName,
+                        cameraProperties.CountryName, cameraProperties.PostalCode);
 
-                locationString = (CameraProperties.IsBus)
+                locationString = (cameraProperties.IsBus)
                     ? BusHelpers.GetBusLocation(bus)
                     : LocationHelpers.LocationString(location);
 
-                string locationPicUrl = (CameraProperties.IsBus)
+                string locationPicUrl = (cameraProperties.IsBus)
                     ? LocationHelpers.CreateLocationPictureFromCoordinates(location)
                     : LocationHelpers.CreateLocationPictureFromAddress(location);
 

@@ -18,55 +18,71 @@ namespace FaceAnalysis
         private const int MAX_SOURCES = 9;
         private const int BUFFER_LIMIT = 10000;
         private SynchronizedCollection<ProcessableVideoSource> sources = new SynchronizedCollection<ProcessableVideoSource>();
-        private bool actionRunning = false;
-        private readonly BufferBlock<string> searchBuffer = new BufferBlock<string>(new DataflowBlockOptions { BoundedCapacity = BUFFER_LIMIT });
-        //TODO: split this one into two blocks, joinBlock then (tuple useless when converting.)
-        private readonly TransformBlock<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, Bitmap>,
-                                        Tuple<IDictionary<ProcessableVideoSource, Rectangle>, byte[]>> byteArrayTransformBlock;
+        private bool processingRunning = false;
+        private readonly BroadcastBlock<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>> broadcastBlock;
+        private readonly ActionBlock<string> searchActionBlock;
+        private readonly ActionBlock<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>> faceRectanglesBlock;
+        private readonly TransformManyBlock<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>, string> faceTokenBlock;
+        private readonly BufferBlock<string> searchBufferBlock = new BufferBlock<string>(new DataflowBlockOptions { BoundedCapacity = BUFFER_LIMIT });
         private readonly TransformBlock<IDictionary<ProcessableVideoSource, Bitmap>,
-                                        Tuple<IDictionary<ProcessableVideoSource, Rectangle>, Bitmap>> manyPicturesTransformBlock;
-        private readonly ActionBlock<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, byte[]>> actionBlock;
+                                        Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>> manyPicturesAnalysisBlock;
         private readonly IPropagatorBlock<Tuple<ProcessableVideoSource, Bitmap>, IDictionary<ProcessableVideoSource, Bitmap>> batchBlock;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
-        private static readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
-        private static readonly SearchResultHandler resultHandler = new SearchResultHandler(tokenSource.Token);
-        private readonly Task searchTask;
+        private readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
+        private readonly SearchResultHandler resultHandler;
         public event EventHandler<FrameProcessedEventArgs> FrameProcessed;
-        private CameraProperties CameraProperties;
 
         public FaceProcessor(CameraProperties cameraProperties = null)
         {
-            CameraProperties = cameraProperties;
 
             var linkOptions = new DataflowLinkOptions { PropagateCompletion = true };
             var blockOptions = new ExecutionDataflowBlockOptions { BoundedCapacity = 1 };
 
             //initialiase blocks.
-            byteArrayTransformBlock = new TransformBlock<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, Bitmap>, Tuple<IDictionary<ProcessableVideoSource, Rectangle>, byte[]>>(tuple =>
-                new Tuple<IDictionary<ProcessableVideoSource, Rectangle>, byte[]>(tuple.Item1, HelperMethods.ImageToByte(tuple.Item2)), blockOptions);
-            manyPicturesTransformBlock = new TransformBlock<IDictionary<ProcessableVideoSource, Bitmap>,
-                                                            Tuple<IDictionary<ProcessableVideoSource, Rectangle>, Bitmap>>
-                                                            (
-                                                                dict => HelperMethods.ProcessImages(dict)
-                                                            );
-            actionBlock =
-                new ActionBlock<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, byte[]>>
-                (
-                    async tuple => await RectanglesFromFrame(tuple),
-                    blockOptions
-                );
+            searchActionBlock = new ActionBlock<string>
+            (
+                faceToken => FaceSearch(faceToken),
+                //this value can be changed to adjust how many API search requests are being sent.
+                new ExecutionDataflowBlockOptions { BoundedCapacity = 1 }
+            );
+            faceRectanglesBlock = new ActionBlock<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>>
+            (
+                tuple => RectanglesFromAnalysis(tuple)
+            );
+            faceTokenBlock = new TransformManyBlock<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>, string>
+            (
+                tuple => tuple.Item2.Faces.Select(face => face.Face_token)
+            );
+            manyPicturesAnalysisBlock =
+                new TransformBlock<IDictionary<ProcessableVideoSource, Bitmap>,
+                                   Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>>
+            (async dict => {
+                processingRunning = true;
+                var tuple = HelperMethods.ProcessImages(dict);
+                var processedFrame = await ProcessFrame(tuple.Item2);
+                processingRunning = false;
+                return new Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>(tuple.Item1, processedFrame);
+            });
+            broadcastBlock = new BroadcastBlock<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>>(item => item);
             batchBlock = BlockFactory.CreateConditionalDictionaryBlock<ProcessableVideoSource, Bitmap>(delegate
             {
-                return !actionRunning;
+                return !processingRunning;
             });
 
-            //establish links between them.
-            batchBlock.LinkTo(manyPicturesTransformBlock, linkOptions);
-            manyPicturesTransformBlock.LinkTo(byteArrayTransformBlock, linkOptions);
-            byteArrayTransformBlock.LinkTo(actionBlock, linkOptions);
+            /*establish links between them.
+              batchBlock => manyPicturesAnalysisBlock => broadcastBlock => faceTokenBlock
+                                                                        => searchBufferBlock => searchActionBlock
+            */
+            batchBlock.LinkTo(manyPicturesAnalysisBlock, linkOptions);
+            manyPicturesAnalysisBlock.LinkTo(broadcastBlock, linkOptions, item => item != null);
+            manyPicturesAnalysisBlock.LinkTo(DataflowBlock.NullTarget<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>>());
+            broadcastBlock.LinkTo(faceTokenBlock, linkOptions);
+            broadcastBlock.LinkTo(faceRectanglesBlock, linkOptions);
+            faceTokenBlock.LinkTo(searchBufferBlock, linkOptions);
+            searchBufferBlock.LinkTo(searchActionBlock, linkOptions);
 
-            //start search task.
-            searchTask = Task.Run(() => FaceSearch());
+            //initialise search result handler.
+            resultHandler = new SearchResultHandler(tokenSource.Token, cameraProperties);
         }
 
         public FaceProcessor(IList<ProcessableVideoSource> sources, CameraProperties cameraProperties = null) : this(cameraProperties)
@@ -107,9 +123,8 @@ namespace FaceAnalysis
             foreach (var source in sourcesCopy)
                 RemoveSource(source);
             batchBlock.Complete();
-            searchBuffer.Complete();
-            await actionBlock.Completion;
-            await searchTask;
+            searchBufferBlock.Complete();
+            await searchActionBlock.Completion;
             tokenSource.Cancel();
         }
 
@@ -119,17 +134,12 @@ namespace FaceAnalysis
         /// Raises event that processing is finished (args of which contain the face rectangles)
         /// </summary>
         /// <returns>List of face rectangles from frame</returns>
-        private async Task RectanglesFromFrame(Tuple<IDictionary<ProcessableVideoSource, Rectangle>, byte[]> tuple)
+        private void RectanglesFromAnalysis(Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON> tuple)
         {
-            actionRunning = true;
-            FrameAnalysisJSON result = await ProcessFrame(tuple.Item2);
-            if (result == default(FrameAnalysisJSON))
-            {
-                actionRunning = false;
-                return;
-            }
+            var dictionary = tuple.Item1;
+            var result = tuple.Item2;
             Dictionary<ProcessableVideoSource, List<Rectangle>> results = new Dictionary<ProcessableVideoSource, List<Rectangle>>();
-            foreach (var pair in tuple.Item1)
+            foreach (var pair in dictionary)
             {
                 results[pair.Key] = result.Faces
                     .Where(face => pair.Value.IntersectsWith(face.Face_rectangle))
@@ -141,23 +151,21 @@ namespace FaceAnalysis
                     })
                     .ToList();
             }
-            //TODO: send to search, in a seperate method.
 
             OnProcessingCompletion(new FrameProcessedEventArgs(results));
-            actionRunning = false;
         }
 
         /// <summary>
-        /// Main task for face search - executes API call, etc.
+        /// Task for face search - executes API call, etc.
         /// </summary>
-        private async void FaceSearch()
+        private async Task FaceSearch(string faceToken)
         {
-            while (await searchBuffer.OutputAvailableAsync())
+            while (await searchBufferBlock.OutputAvailableAsync())
             {
-                FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, await searchBuffer.ReceiveAsync());
+                FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, faceToken);
                 if (response != null)
                     foreach (LikelinessResult result in response.LikelinessConfidences())
-                        resultHandler.HandleSearchResult(CameraProperties,result);
+                        resultHandler.HandleSearchResult(result);
             }
         }
 
