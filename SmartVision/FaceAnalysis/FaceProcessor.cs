@@ -28,7 +28,6 @@ namespace FaceAnalysis
                                         Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>> manyPicturesAnalysisBlock;
         private readonly IPropagatorBlock<Tuple<ProcessableVideoSource, Bitmap>, IDictionary<ProcessableVideoSource, Bitmap>> batchBlock;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
-        private readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
         private readonly SearchResultHandler resultHandler;
         public event EventHandler<FrameProcessedEventArgs> FrameProcessed;
 
@@ -43,7 +42,7 @@ namespace FaceAnalysis
             (
                 faceToken => FaceSearch(faceToken),
                 //this value can be changed to adjust how many API search requests are being sent.
-                new ExecutionDataflowBlockOptions { BoundedCapacity = 1 }
+                new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 1 }
             );
             faceRectanglesBlock = new ActionBlock<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>>
             (
@@ -61,7 +60,7 @@ namespace FaceAnalysis
                 var tuple = HelperMethods.ProcessImages(dict);
                 var processedFrame = await ProcessFrame(tuple.Item2);
                 processingRunning = false;
-                return new Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>(tuple.Item1, processedFrame);
+                return Tuple.Create(tuple.Item1, processedFrame);
             });
             broadcastBlock = new BroadcastBlock<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>>(item => item);
             batchBlock = BlockFactory.CreateConditionalDictionaryBlock<ProcessableVideoSource, Bitmap>(delegate
@@ -80,9 +79,8 @@ namespace FaceAnalysis
             broadcastBlock.LinkTo(faceRectanglesBlock, linkOptions);
             faceTokenBlock.LinkTo(searchBufferBlock, linkOptions);
             searchBufferBlock.LinkTo(searchActionBlock, linkOptions);
-
             //initialise search result handler.
-            resultHandler = new SearchResultHandler(tokenSource.Token, cameraProperties);
+            resultHandler = new SearchResultHandler(cameraProperties);
         }
 
         public FaceProcessor(IList<ProcessableVideoSource> sources, CameraProperties cameraProperties = null) : this(cameraProperties)
@@ -125,7 +123,7 @@ namespace FaceAnalysis
             batchBlock.Complete();
             searchBufferBlock.Complete();
             await searchActionBlock.Completion;
-            tokenSource.Cancel();
+            resultHandler.Complete();
         }
 
         /// <summary>
@@ -160,13 +158,10 @@ namespace FaceAnalysis
         /// </summary>
         private async Task FaceSearch(string faceToken)
         {
-            while (await searchBufferBlock.OutputAvailableAsync())
-            {
-                FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, faceToken);
-                if (response != null)
-                    foreach (LikelinessResult result in response.LikelinessConfidences())
-                        resultHandler.HandleSearchResult(result);
-            }
+            FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, faceToken);
+            if (response != null)
+                foreach (LikelinessResult result in response.LikelinessConfidences())
+                    await resultHandler.HandleSearchResult(result);
         }
 
         /// <summary>
@@ -180,7 +175,7 @@ namespace FaceAnalysis
             lock (sender)
                 bitmap = new Bitmap(e.Frame);
             var source = sources.Where(src => src.Stream == sender).FirstOrDefault();
-            await batchBlock.SendAsync(new Tuple<ProcessableVideoSource, Bitmap>(source, bitmap));
+            await batchBlock.SendAsync(Tuple.Create(source, bitmap));
         }
 
         /// <summary>

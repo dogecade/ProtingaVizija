@@ -77,7 +77,7 @@ namespace FaceAnalysis
             return imgClone;
         }
 
-        //TODO: should probably add padding to help prevent "phantom" face rectangles.
+        //TODO: should probably attempt to add padding to help prevent "phantom" face rectangles.
         public static Tuple<IDictionary<IdentifierType, Rectangle>, Bitmap>  ProcessImages<IdentifierType>(IDictionary<IdentifierType, Bitmap> dictionary)
         {
             const int MAX_EDGE_IMAGES = 3;

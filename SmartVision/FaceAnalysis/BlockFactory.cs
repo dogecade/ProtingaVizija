@@ -21,6 +21,7 @@ namespace FaceAnalysis
                 if (dictionary.TryGetValue(item.Item1, out ValueType value) && value is IDisposable disposableValue)
                     disposableValue.Dispose();
                 dictionary[item.Item1] = item.Item2;
+                //TODO: would probably be nice to trigger earlier than when latest item arrives.
                 if (batchCondition())
                 {
                     var oldDictionary = dictionary;
