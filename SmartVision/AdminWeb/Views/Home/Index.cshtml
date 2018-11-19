@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="row">
-        <div class="col-sm-8" id="streamDiv">
+        <div class="col-sm-8" id="streamWrapper">
         </div>
         <div class="col-sm-4">
             <div class="contact-clean">
@@ -52,9 +52,36 @@
         $('#bussForm').toggle();
     });
 
+    $(document).ready(function() {
+        $.ajax({
+            url: '@Url.Action("GetStreamList", "Home")',
+            type: 'GET',
+            dataType: "json",
+            success: function (data) {
+                data.result.forEach(function (image) {
+                    $("#streamWrapper").prepend('<img src="' + image + '" height="200" width="300" />');
+                    console.log(image);
+                });
+            },
+            error: function () {
+                alert('Error POST');
+            }
+        });
+    });
 
-   /* $("#submit").click(function () {
-        $('#streamDiv').prepend('<img id = "stream" height = "300" width = "450" src="../api/Video" />');
-
-    });*/
+    $("#submit").click(function () {
+        var streamUrl = document.getElementById('streamURL').value;;
+        $.ajax({
+            url: '@Url.Action("AddCamera", "Home")',
+            type: 'POST',
+            dataType: "json",
+            data: {streamUrl : JSON.stringify(streamUrl)},
+            success: function (data) {
+                location.reload(); // location.reload(forceGet) - By default, the reload() method reloads the page from the cache, but you can force it to reload the page from the server by setting the forceGet parameter to true: location.reload(true).
+            },
+            error: function () {
+                alert('Error POST');
+            }
+        });
+    });
 </script>
