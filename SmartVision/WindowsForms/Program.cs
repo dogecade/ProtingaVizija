@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using WindowsForms.FormControl;
+using Helpers;
+using FaceAnalysis;
 
 namespace WindowsForms
 {

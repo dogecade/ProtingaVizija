@@ -8,6 +8,7 @@ using WindowsForms.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Helpers;
+using System.Threading.Tasks;
 
 namespace WindowsForms.FormControl
 {
@@ -313,10 +314,10 @@ namespace WindowsForms.FormControl
             return contactPerson;
         }
 
-        private void missingPeopleDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private async void missingPeopleDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             ExtraInfoForm form = new ExtraInfoForm();
-            var missingPersonsList = new CallsToDb().GetPeopleData();
+            var missingPersonsList = await new CallsToDb().GetPeopleData();
             var missingPerson = missingPersonsList.First(x => x.Id == Convert.ToInt32(missingPeopleDataGrid.CurrentRow.Cells[0].Value));
             var contactPerson = missingPerson.ContactPersons.FirstOrDefault();
 
