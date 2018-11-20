@@ -31,6 +31,17 @@ namespace AdminWeb.Controllers
         {
             return Json(new { result = URLlist }, JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
+        public ActionResult RemoveStream(String streamUrl)
+        {
+            Debug.WriteLine(streamUrl);
+            if (!streamUrl.Equals(""))
+            {
+                streamUrl = streamUrl.Replace(@"""", string.Empty);
+                URLlist.Remove(streamUrl);
+            }
+            return Json(new { result = "succ" }, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

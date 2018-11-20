@@ -17,7 +17,7 @@
                     @Html.Label("Video camera stream URL: ")
                     @Html.TextBox("streamURL", null, new { @class = "form-control", @type = "text", @id = "streamURL" })
                     @Html.Label("The camera is located in a bus: ")
-                    @Html.CheckBox("isBuss", false, new { @id = "isBus" })
+                    @Html.CheckBox("isBus", false, new { @id = "isBus" })
                 </div>
                 <div id="cameraForm" class="form-group center">
                     @Html.Label("Street name:")
@@ -42,7 +42,52 @@
         </div>
     </div>
 </body>
+<style>
+      .hoverContainer {
+        position: relative;
+        margin-top: 50px;
+        width: 300px;
+        height: 200px;
+    }
 
+    .overlayHover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0);
+        transition: background 0.5s ease;
+    }
+
+    .hoverContainer:hover #overlay {
+        display: block;
+        background: rgba(0, 0, 0, .3);
+    }
+
+    .hoverableButton {
+        position: absolute;
+        width: 15%;
+        left: 85%;
+        top: 0%;
+        opacity: 0;
+        transition: opacity .35s ease;
+        border-radius: 0;
+    }
+
+    .hoverableButton a {
+        width: 10%;
+        text-align: center;
+        color: white;
+        border: solid 2px white;
+        z-index: 1;
+    }
+
+    .hoverContainer:hover .hoverableButton {
+        opacity: 1;
+    }
+
+</style>
 
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
@@ -59,8 +104,13 @@
             dataType: "json",
             success: function (data) {
                 data.result.forEach(function (image) {
-                    $("#streamWrapper").prepend('<img src="' + image + '" height="200" width="300" />');
-                    console.log(image);
+                    $("#streamWrapper").append('<div class="hoverContainer">' +
+                                                    '<img src="' + image + '" height="200" width="300" /> ' +
+                                                    '<div class="overlay"></div>  ' +
+                                                    '<button id="' + image + '"class="btn btn-square btn-danger hoverableButton" onclick="removeStream(this.id)">' +
+                                                    'X' +
+                                                    '</button>' +
+                                                '</div>');
                 });
             },
             error: function () {
@@ -68,6 +118,21 @@
             }
         });
     });
+
+     function removeStream (element) {
+        $.ajax({
+            url: '@Url.Action("RemoveStream", "Home")',
+            type: 'POST',
+            dataType: "json",
+            data: { streamUrl: JSON.stringify(element) },
+            success: function (data) {
+                location.reload();
+            },
+            error: function () {
+                alert('Error remove POST');
+            }
+        });
+     };
 
     $("#submit").click(function () {
         var streamUrl = document.getElementById('streamURL').value;;
@@ -80,7 +145,7 @@
                 location.reload(); // location.reload(forceGet) - By default, the reload() method reloads the page from the cache, but you can force it to reload the page from the server by setting the forceGet parameter to true: location.reload(true).
             },
             error: function () {
-                alert('Error POST');
+                alert('Error add POST');
             }
         });
     });
