@@ -85,6 +85,8 @@ namespace FaceAnalysis
                 throw new ArgumentException("List null or empty");
             else if (dictionary.Count() > MAX_EDGE_IMAGES * MAX_EDGE_IMAGES)
                 throw new ArgumentException(string.Format("Number of bitmaps exceeds limit ({0})", MAX_EDGE_IMAGES));
+            foreach (var key in dictionary.Keys)
+                dictionary[key] = ProcessImage(dictionary[key]);
             Point currentPosition = new Point(0, 0);
             var idsRectangles = new Dictionary<IdentifierType, Rectangle>();
             var rows = dictionary

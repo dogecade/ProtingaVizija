@@ -73,7 +73,7 @@ namespace FaceAnalysis
                                                                         => searchBufferBlock => searchActionBlock
             */
             batchBlock.LinkTo(manyPicturesAnalysisBlock, linkOptions);
-            manyPicturesAnalysisBlock.LinkTo(broadcastBlock, linkOptions, item => item != null);
+            manyPicturesAnalysisBlock.LinkTo(broadcastBlock, linkOptions, item => item.Item2 != null);
             manyPicturesAnalysisBlock.LinkTo(DataflowBlock.NullTarget<Tuple<IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON>>());
             broadcastBlock.LinkTo(faceTokenBlock, linkOptions);
             broadcastBlock.LinkTo(faceRectanglesBlock, linkOptions);

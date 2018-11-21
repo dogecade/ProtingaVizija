@@ -302,7 +302,7 @@
     </ProjectReference>
     <ProjectReference Include="..\Wrappers\Helpers.csproj">
       <Project>{352b57fb-2201-4bbb-baf9-60b7d62c58c3}</Project>
-      <Name>HttpHelpers</Name>
+      <Name>Helpers</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
