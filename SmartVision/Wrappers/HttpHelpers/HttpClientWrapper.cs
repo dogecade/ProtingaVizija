@@ -95,6 +95,15 @@ namespace Helpers
             HttpResponseMessage response = await httpClient.PostAsync(new Uri(API + "/ImageUpload"), form);
             return response.Content;
         }
+        public async Task<string> PostImageToApiString(Bitmap img)
+        {
+            MultipartFormDataContent form = new MultipartFormDataContent();
+            ImageConverter converter = new ImageConverter();
+            byte[] imgArray = (byte[])converter.ConvertTo(img, typeof(byte[]));
+            form.Add(new ByteArrayContent(imgArray, 0, imgArray.Length), "user_picture", "user_picture.jpg");
+            HttpResponseMessage response = await httpClient.PostAsync(new Uri(API + "/ImageUpload"), form);
+            return await response.Content.ReadAsStringAsync();
+        }
 
         public async Task<HttpContent> PostRelToApi(Object missingContact)
         {

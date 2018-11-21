@@ -23,7 +23,7 @@ namespace Api.Controllers
             {
                 throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.UnsupportedMediaType);
             }
-            string root = System.Web.HttpContext.Current.Server.MapPath("~/");
+            string root = System.Web.HttpContext.Current.Server.MapPath("~/img");
             var provider = new MultipartFormDataStreamProvider(root);
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             List<string> strings = new List<string>();
@@ -37,9 +37,9 @@ namespace Api.Controllers
 
                 return Ok(serializer.Serialize(strings));
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
-                return InternalServerError();
+                return BadRequest(e.StackTrace);
             }
         }
     }

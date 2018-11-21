@@ -57,9 +57,16 @@ namespace Api.Controllers
         public async Task<string> AddMissingPerson (MissingPerson missingPersons)
         {
             HttpClientWrapper httpClient = new HttpClientWrapper();
-            HttpContent content = await httpClient.PostMissingPersonToApiAsync(missingPersons);
-            string missing1 = await content.ReadAsStringAsync();
-            return missing1;
+            byte[] byteArray = Convert.FromBase64String(missingPersons.faceImg);
+            using (var ms = new MemoryStream(byteArray, 0, byteArray.Length))
+            {
+                Bitmap image = (Bitmap)Bitmap.FromStream(ms);
+                string imgLoc = await httpClient.PostImageToApiString(image);
+                missingPersons.faceImg = imgLoc;
+                HttpContent content = await httpClient.PostMissingPersonToApiAsync(missingPersons);
+                string missing1 = await content.ReadAsStringAsync();
+                return missing1;
+            }
         }
         [HttpPost]
         public async Task<string> AddContactPerson (ContactPerson contactPersons)

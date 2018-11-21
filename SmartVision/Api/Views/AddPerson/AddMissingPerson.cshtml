@@ -11,87 +11,155 @@
 @using (Html.BeginForm("AddMissingPerson", "AddPerson", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>MissingPerson</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.faceToken, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.faceToken, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.faceToken, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.firstName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
-            </div>
+<div class="form-horizontal">
+    <h4>MissingPerson</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.faceToken, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.faceToken, new { htmlAttributes = new { @id = "faceToken" ,@class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.faceToken, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.lastName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.lastName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.lastName, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.firstName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.lastSeenDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.lastSeenDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.lastSeenDate, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.lastName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.lastName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.lastName, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.lastSeenLocation, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.lastSeenLocation, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.lastSeenLocation, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.lastSeenDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.lastSeenDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.lastSeenDate, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Additional_Information, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Additional_Information, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Additional_Information, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.lastSeenLocation, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.lastSeenLocation, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.lastSeenLocation, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.dateOfBirth, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.dateOfBirth, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.dateOfBirth, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Additional_Information, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Additional_Information, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Additional_Information, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.faceImg, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.faceImg, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.faceImg, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.dateOfBirth, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.dateOfBirth, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.dateOfBirth, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+    <div class="form-group">
+        @Html.LabelFor(model => model.faceImg, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.faceImg, new { htmlAttributes = new { @id = "faceImg", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.faceImg, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div style="height:167px;">
+        <div class="form-row">
+            <div class="col offset-lg-3 d-flex flex-column justify-content-center align-self-center m-auto" style="height:132px;">
+                <input class="justify-content-center align-self-center" type="file" name="file" id="imageBrowse" accept="image/*" />
+            </div>
+            <div id="imgWrapper" class="col offset-lg-0 d-flex justify-content-center align-content-center align-self-center m-auto" style="">
             </div>
         </div>
     </div>
-}
 
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script>
+            $(document).ready(function () {
+
+                $("#imageBrowse").change(function () {
+
+                    var File = this.files;
+                    if (File && File[0]) {
+                        var fd = new FormData;
+                        var files = $("#imageBrowse").get(0).files;
+                        fd.append("Image", files[0]);
+                        $.ajax({
+                            url: '@Url.Action("CheckImage", "AddPerson")',
+                            processData: false,
+                            contentType: false,
+                            type: 'POST',
+                            dataType: "json",
+                            data: fd,
+                            success: function (data) {
+                                $('#imgWrapper').empty();
+                                switch (data.result.length) {
+                                    case 0:
+                                        alert("No faces have been detected in the image!!!");
+                                        break;
+                                    case 1:
+                                        $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="data:image/jpeg;base64, ' + data.result[0].ImageBase64 + '" />');
+                                        $('#faceToken').attr("value", data.result[0].FaceToken);
+                                        $('#faceImg').attr("value", data.result[0].ImageBase64);
+                                        break;
+                                    default:
+                                        var url = $("#facesModal").data('url');
+                                        $.get(url, function (content) {
+                                            $("#facesModal").html(content);
+                                            data.result.forEach(function (image) {
+                                                $("#facesModalBody").append('<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6"><img id = ' + image.FaceToken + ' class="img-thumbnail selectable-face" src="data:image/jpeg;base64, ' + image.ImageBase64 + '" /></div>')
+                                            });
+                                            $("#facesModal").modal('show');
+                                            $('.selectable-face').one('click', function () {
+                                                var imgsrc = $(this).attr('src');
+                                                var imgid = $(this).attr('id');
+                                                $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="' + imgsrc + '" />');
+                                                $('#faceToken').attr("value", imgid);
+                                                $('#faceImg').attr("value", imgsrc);
+                                                $("#facesModal").modal('hide');
+                                            });
+                                            
+                                            
+                                        });
+                                        //alert("Too many faces!! Not yet implemented ─=≡Σᕕ( ͡° ͜ʖ ͡°)ᕗ");
+                                }
+                            },
+                            error: function () {
+                                alert('Error');
+                            }
+                        });
+                    }
+                })
+            })
+</script>
+
+<div id="facesModal" class="modal hide fade" role="dialog" data-url="@Url.Action("FacesModalView", "AddPerson")"></div>
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
