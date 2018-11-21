@@ -10,10 +10,11 @@ persons and institutions are notified.
 ## Built With
 * C#
 * Face++ API
-* Entity framerwork
+* Entity framework
 * Twilio API
 * Google Static Maps API
 * Google Geocoding API
+* Quartz Enrtprise Scheduler .NET
 
 ## Authors
 * **Arnas Danaitis** [arnasDan](https://github.com/arnasDan)
@@ -21,6 +22,3 @@ persons and institutions are notified.
 * **Tomas Drąsutis** [tomas-drasutis](https://github.com/tomas-drasutis)
 * **Tomas Vilčinskas** - *Leader, sensei, etc* - [dogecade](https://github.com/dogecade)
 * See also the list of [contributors](https://github.com/dogecade/ProtingaVizija/contributors).
-
-## License
-TBD
