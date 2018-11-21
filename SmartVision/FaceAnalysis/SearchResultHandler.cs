@@ -1,161 +1,249 @@
-﻿
-using NotificationService;
+﻿using NotificationService;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Linq;
 using System.Diagnostics;
+using System.Net;
 using System.Threading.Tasks;
+using BusService;
+using Quartz;
+using Quartz.Impl;
+using LocationService;
+using Objects.CameraProperties;
 using Objects.ContactInformation;
+using Quartz.Impl.Matchers;
 
 namespace FaceAnalysis
 {
     public class SearchResultHandler
     {
-        private const string normalProbabilityEmailSubject = "Decent possibility that your missing person was detected!";
-        private const string normalProbabilitySmsBodyBeginning = "Good afternoon. There's a possibility that your missing person ";
-        private const string normalProbabilitySmsBodyEnding = " was detected. Please check you email for more detailed information.";
-        private const string normalProbabilityEmailBodyBeginning = "Good afternoon. There's a possibility that your missing person ";
-        private const string normalProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
 
-        private const string highProbabilityEmailSubject = "HIGH possibility that your missing person was detected!";
-        private const string highProbabilitySmsBodyBeginning = "Good afternoon. There's a HIGH possibility that your missing person ";
-        private const string highProbabilitySmsBodyEnding = " was detected. Please check you email for more detailed information.";
-        private const string highProbabilityEmailBodyBeginning = "Good afternoon. There's a HIGH possibility that your missing person ";
-        private const string highProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
+        private const string emailSubject = "{0} possibility that your missing person was detected!";
+        private const string smsBodyBeginning = "Good afternoon. There's a {0} possibility that your missing person ";
+        private const string smsBodyEnding = " was detected. Please check you email for more detailed information.";
+        private const string emailBodyBeginning = "Good afternoon. There's a {0} possibility that your missing person ";
+        private const string emailBodyEnding = " was detected at this location - ";
 
-        private const string veryHighProbabilityEmailSubject = "VERY HIGH possibility that your missing person was detected!";
-        private const string veryHighProbabilitySmsBodyBeginning = "Good afternoon. There's a VERY HIGH possibility that your missing person ";
-        private const string veryHighProbabilitySmsBodyEnding = " was detected. Please check you email for more detailed information.";
-        private const string veryHighProbabilityEmailBodyBeginning = "Good afternoon. There's a VERY HIGH possibility that your missing person ";
-        private const string veryHighProbabilityEmailBodyEnding = " was detected. Please find attached frame in which your person was spotted.";
+        private readonly IScheduler scheduler;
+        private static readonly ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData> likelinessLevelData =
+            new ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData>
+        (
+            new List<KeyValuePair<LikelinessConfidence, LikelinessLevelData>>
+            {
+                new KeyValuePair<LikelinessConfidence, LikelinessLevelData>
+                (
+                    LikelinessConfidence.VeryHighProbability,
+                    new LikelinessLevelData
+                    {
+                        TimeLimit = 60,
+                        EmailSubject = string.Format(emailSubject, "VERY HIGH"),
+                        SmsBodyBeginning = string.Format(smsBodyBeginning, "VERY HIGH"),
+                        SmsBodyEnding = smsBodyEnding,
+                        EmailBodyBeginning = string.Format(emailBodyBeginning, "VERY HIGH"),
+                        EmailBodyEnding = emailBodyEnding,
+                    }
+                ),
+                new KeyValuePair<LikelinessConfidence, LikelinessLevelData>
+                (
+                    LikelinessConfidence.HighProbability,
+                    new LikelinessLevelData
+                    {
+                        TimeLimit = 60,
+                        EmailSubject = string.Format(emailSubject, "HIGH"),
+                        SmsBodyBeginning = string.Format(smsBodyBeginning, "HIGH"),
+                        SmsBodyEnding = smsBodyEnding,
+                        EmailBodyBeginning = string.Format(emailBodyBeginning, "HIGH"),
+                        EmailBodyEnding = emailBodyEnding,
+                    }
+                ),
+                new KeyValuePair<LikelinessConfidence, LikelinessLevelData>
+                (
+                    LikelinessConfidence.NormalProbability,
+                    new LikelinessLevelData
+                    {
+                        TimeLimit = 120,
+                        EmailSubject = string.Format(emailSubject, "average"),
+                        SmsBodyBeginning = string.Format(smsBodyBeginning, "average"),
+                        SmsBodyEnding = smsBodyEnding,
+                        EmailBodyBeginning = string.Format(emailBodyBeginning, "average"),
+                        EmailBodyEnding = emailBodyEnding,
+                    }
+                )
+            }
+        );
 
-        private readonly Task notifactionSenderTask;
-        private readonly ConcurrentDictionary<string, Tuple<DateTime, LikelinessConfidence>> notificationsToSend = new ConcurrentDictionary<string, Tuple<DateTime, LikelinessConfidence>>();
-        private readonly ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData> likelinessLevelData = new ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData>();
-
-        public SearchResultHandler(CancellationToken token)
+        public SearchResultHandler(CameraProperties cameraProperties)
         {
-            LikelinessLevelData highLevelData = new LikelinessLevelData
-            {
-                TimeLimit = 60,
-                EmailSubject = highProbabilityEmailSubject,
-                SmsBodyBeginning = highProbabilitySmsBodyBeginning,
-                SmsBodyEnding = highProbabilitySmsBodyEnding,
-                EmailBodyBeginning = highProbabilityEmailBodyBeginning,
-                EmailBodyEnding = highProbabilityEmailBodyEnding,
-            };
-            LikelinessLevelData veryHighLevelData = new LikelinessLevelData
-            {
-                TimeLimit = 60,
-                EmailSubject = veryHighProbabilityEmailSubject,
-                SmsBodyBeginning = veryHighProbabilitySmsBodyBeginning,
-                SmsBodyEnding = veryHighProbabilitySmsBodyEnding,
-                EmailBodyBeginning = veryHighProbabilityEmailBodyBeginning,
-                EmailBodyEnding = veryHighProbabilityEmailBodyEnding,
-            };
-            LikelinessLevelData normalLevelData = new LikelinessLevelData
-            {
-                TimeLimit = 120,
-                EmailSubject = normalProbabilityEmailSubject,
-                SmsBodyBeginning = normalProbabilitySmsBodyBeginning,
-                SmsBodyEnding = normalProbabilitySmsBodyEnding,
-                EmailBodyBeginning = normalProbabilityEmailBodyBeginning,
-                EmailBodyEnding = normalProbabilityEmailBodyEnding,
-            };
-
-            likelinessLevelData.TryAdd(LikelinessConfidence.VeryHighProbability, veryHighLevelData);
-            likelinessLevelData.TryAdd(LikelinessConfidence.NormalProbability, normalLevelData);
-            likelinessLevelData.TryAdd(LikelinessConfidence.HighProbability, highLevelData);
-
-            notifactionSenderTask = Task.Run(() => SenderTask(token));
+            scheduler = new StdSchedulerFactory().GetScheduler().GetAwaiter().GetResult();
+            scheduler.Start();
+            scheduler.Context.Put("cameraProperties", cameraProperties);
         }
 
-        /// <summary>
-        /// Task to process stored notification requests.
-        /// </summary>
-        /// <param name="token">Cancellation token to stop</param>
-        public void SenderTask(CancellationToken token)
+        public void Complete()
         {
-            while (true)
-            {
-                if (token.IsCancellationRequested)
-                    break;
-                foreach (var entry in notificationsToSend)
-                {
-                    if (entry.Value.Item1 <= DateTime.Now)
-                    {
-                        if (entry.Value.Item2 < LikelinessConfidence.VeryHighProbability)
-                            SendNotifications(confidence: entry.Value.Item2, faceToken: entry.Key);
-                        notificationsToSend.TryRemove(entry.Key, out _);
-                    }
-                }
-            }
+            scheduler.Shutdown();
         }
 
         /// <summary>
         /// Handles an incoming search result.
         /// </summary>
         /// <param name="likeliness">Search result to handle</param>
-        public void HandleSearchResult(LikelinessResult likeliness)
+        public async Task HandleSearchResult(LikelinessResult likeliness)
         {
-            Debug.WriteLine(likeliness.Confidence);
+            Debug.WriteLine(string.Format("Handling search result with confidence={0}", likeliness.Confidence));
+            if (await scheduler.CheckExists(new JobKey(likeliness.FaceToken, "timeout")))
+                return;
             switch (likeliness.Confidence)
             {
                 case LikelinessConfidence.LowProbability:
-                    return;
+                    break;
+                case LikelinessConfidence.NormalProbability:
+                case LikelinessConfidence.HighProbability:
+                    await ScheduleJobByLikeliness<SendNotificationJob>(likeliness, "notificationJob");
+                    break;
                 case LikelinessConfidence.VeryHighProbability:
-                    Tuple<DateTime, LikelinessConfidence> currentValue;
-                    if (!notificationsToSend.TryGetValue(likeliness.FaceToken, out currentValue) || currentValue.Item2 < likeliness.Confidence)
-                        SendNotifications(likeliness.Confidence, likeliness.FaceToken);
+                    var key = new JobKey(likeliness.FaceToken, "notificationJob");
+                    IJobDetail instantNotificationJob = JobBuilder.Create<SendNotificationJob>()
+                        .WithIdentity(key)
+                        .UsingJobData("confidence", (int)likeliness.Confidence)
+                        .Build();
+                    await scheduler.AddJob(instantNotificationJob, true, true);
+                    await scheduler.TriggerJob(key);
+                    await ScheduleJobByLikeliness<TimeoutJob>(likeliness, "timeout");
                     break;
             }
-            DateTime sendTime = DateTime.Now.AddSeconds(likelinessLevelData[likeliness.Confidence].TimeLimit);
-            notificationsToSend.AddOrUpdate(
-                likeliness.FaceToken,
-                Tuple.Create(sendTime, likeliness.Confidence),
-                (key, oldValue) => Tuple.Create(
-                    likeliness.Confidence == LikelinessConfidence.VeryHighProbability ? sendTime : new[] { sendTime, oldValue.Item1 }.Min(),
-                    (LikelinessConfidence)Math.Max((int)oldValue.Item2, (int)likeliness.Confidence)
-                )
-            );
+        }
+
+        private async Task ScheduleJobByLikeliness<JobType>(LikelinessResult likelinessResult, string group) where JobType : IJob
+        {
+            var jobKey = new JobKey(likelinessResult.FaceToken, group);
+            IJobDetail job = JobBuilder.Create<JobType>()
+                .WithIdentity(jobKey)
+                .UsingJobData("confidence", (int)likelinessResult.Confidence)
+                .Build();
+            ITrigger triggerByConfidence = TriggerBuilder.Create()
+                .ForJob(job)
+                .StartAt(DateTime.Now.AddSeconds(likelinessLevelData[likelinessResult.Confidence].TimeLimit))
+                .Build();
+            var oldJob = await scheduler.GetJobDetail(jobKey);
+            if (oldJob != null)
+            {
+                var trigger = (await scheduler.GetTriggersOfJob(jobKey)).FirstOrDefault();
+                var triggerToUse = trigger == null || trigger.StartTimeUtc > triggerByConfidence.StartTimeUtc ?
+                    triggerByConfidence : trigger;
+                if (oldJob.JobDataMap.GetInt("confidence") < (int)likelinessResult.Confidence)
+                {
+                    await scheduler.AddJob(job, true, true);
+                    await scheduler.ScheduleJob(triggerToUse);
+                }
+                else
+                    await scheduler.RescheduleJob(trigger.Key, triggerToUse);
+                return;
+            }
+            else
+            {
+                await scheduler.AddJob(job, true, true);
+                await scheduler.ScheduleJob(triggerByConfidence);
+            }
+
+        }
+
+        /// <summary>
+        /// Dummy job to prevent "spam" of messages,
+        /// to be scheduled after sending high probability notification
+        /// </summary>
+        internal class TimeoutJob : IJob
+        {
+            public async Task Execute(IJobExecutionContext context)
+            {
+                Debug.WriteLine(string.Format("Notifications for face token {0} can be sent again.", context.JobDetail.Key.Name));
+            }
         }
 
         /// <summary>
         /// Sends Email and SMS
         /// </summary>
-        /// <param name="confidence">Likeliness that the person is identified</param>
-        /// <param name="faceToken">Face token of the missing person</param>
-        private void SendNotifications(LikelinessConfidence confidence, string faceToken)
+        [DisallowConcurrentExecution]
+        internal class SendNotificationJob : IJob
         {
-            ContactInformation information = new CallsToDb().GetMissingPersonData(faceToken);
-            if (information == null)
-                return;
-            LikelinessLevelData data = likelinessLevelData[confidence];
+            public async Task Execute(IJobExecutionContext context)
+            { 
+                var faceToken = context.JobDetail.Key.Name;
+                var confidence = (LikelinessConfidence)context.JobDetail.JobDataMap.GetInt("confidence");
+                Debug.WriteLine(string.Format("Executing notifaction job, faceToken={0}, confidence={1}", faceToken, confidence));
+                var schedulerContext = context.Scheduler.Context;
+                CameraProperties cameraProperties = (CameraProperties)schedulerContext.Get("cameraProperties");
 
-            if (Mail.SendMail(information.contactPersonEmailAddress, data.EmailSubject,
-                    data.EmailBodyBeginning + information.missingPersonFirstName + " " +
-                    information.missingPersonLastName + data.EmailBodyEnding) == null)
-            {
-                Debug.WriteLine("Mail message was not sent!");
-            }
+                ContactInformation information = await new CallsToDb().GetMissingPersonData(faceToken);
 
-            if (Sms.SendSms(information.contactPersonPhoneNumber,
-                    data.SmsBodyBeginning + information.missingPersonFirstName + " " +
-                    information.missingPersonLastName + data.SmsBodyEnding) == null)
-            {
-                Debug.WriteLine("Sms message was not sent!");
+                if (information == null)
+                    return;
+
+                LikelinessLevelData data = likelinessLevelData[confidence];
+
+                byte[] locationPicture = null;
+                string locationString = "";
+
+                if (cameraProperties != null)
+                {
+                    var bus = (cameraProperties.IsBus) ? new Bus(cameraProperties.BusId, DateTime.Now) : null;
+
+                    var location = (cameraProperties.IsBus)
+                        ? new Location(bus)
+                        : new Location(cameraProperties.StreetName, cameraProperties.HouseNumber, cameraProperties.CityName,
+                            cameraProperties.CountryName, cameraProperties.PostalCode);
+
+                    locationString = (cameraProperties.IsBus)
+                        ? BusHelpers.GetBusLocation(bus)
+                        : LocationHelpers.LocationString(location);
+
+                    string locationPicUrl = (cameraProperties.IsBus)
+                        ? LocationHelpers.CreateLocationPictureFromCoordinates(location)
+                        : LocationHelpers.CreateLocationPictureFromAddress(location);
+
+                    using (WebClient client = new WebClient())
+                    {
+                        locationPicture = await client.DownloadDataTaskAsync(locationPicUrl);
+                    }
+                }
+
+                if (Mail.SendMail(information.contactPersonEmailAddress, data.EmailSubject,
+                        data.EmailBodyBeginning + information.missingPersonFirstName + " " +
+                        information.missingPersonLastName + data.EmailBodyEnding + locationString,
+                        new List<byte[]>() { locationPicture }, new List<string>() { "Location.jpeg" }) != null)
+                {
+                    Debug.WriteLine("Mail message was sent!");
+                }
+                else
+                {
+                    Debug.WriteLine("Mail message was not sent!");
+                }
+
+                if (Sms.SendSms(information.contactPersonPhoneNumber,
+                        data.SmsBodyBeginning + information.missingPersonFirstName + " " +
+                        information.missingPersonLastName + data.SmsBodyEnding) != null)
+                {
+                    Debug.WriteLine("Sms message was sent!");
+                }
+                else
+                {
+                    Debug.WriteLine("Sms message was not sent!");
+                }
+
+                //make sure repeated requests for this face token are not sent.
+                await context.Scheduler.DeleteJob(context.JobDetail.Key);
             }
         }
-    }
-
-    public struct LikelinessLevelData
-    {
-        public int TimeLimit { get; set; }
-        public string EmailSubject { get; set; }
-        public string SmsBodyBeginning { get; set; }
-        public string SmsBodyEnding { get; set; }
-        public string EmailBodyBeginning { get; set; }
-        public string EmailBodyEnding { get; set; }
+        internal class LikelinessLevelData
+        {
+            public int TimeLimit { get; set; }
+            public string EmailSubject { get; set; }
+            public string SmsBodyBeginning { get; set; }
+            public string SmsBodyEnding { get; set; }
+            public string EmailBodyBeginning { get; set; }
+            public string EmailBodyEnding { get; set; }
+        }
     }
 }

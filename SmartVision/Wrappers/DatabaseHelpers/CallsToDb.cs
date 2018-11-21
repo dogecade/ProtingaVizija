@@ -6,6 +6,7 @@ using System.Linq;
 using Helpers;
 using Objects.ContactInformation;
 using Objects.Person;
+using System.Threading.Tasks;
 
 namespace FaceAnalysis
 {
@@ -18,10 +19,10 @@ namespace FaceAnalysis
         /// </summary>
         /// <param name="matchedFace">ID of face to grab</param>
         /// <returns>Contact information</returns>
-        public ContactInformation GetMissingPersonData(string matchedFace)
+        public async Task<ContactInformation> GetMissingPersonData(string matchedFace)
         {
             HttpClientWrapper wrapper = new HttpClientWrapper();
-            var missingPersonsJson = wrapper.Get(getMisingPersonsUrl).Result;
+            var missingPersonsJson = await wrapper.Get(getMisingPersonsUrl);
             if (missingPersonsJson == null)
             {
                 Debug.WriteLine("Cannot access DB endpoint");
@@ -54,10 +55,10 @@ namespace FaceAnalysis
         /// Grabs missing person data from DB.
         /// </summary>
         /// <returns>A list of missing people</returns>
-        public List<MissingPerson> GetPeopleData()
+        public async Task<List<MissingPerson>> GetPeopleData()
         {
             HttpClientWrapper wrapper = new HttpClientWrapper();
-            var missingPersonsJson = wrapper.Get(getMisingPersonsUrl).Result;
+            var missingPersonsJson = await wrapper.Get(getMisingPersonsUrl);
             var missingPersonsList = JsonConvert.DeserializeObject<List<MissingPerson>>(missingPersonsJson);
 
             return missingPersonsList;

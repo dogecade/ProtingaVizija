@@ -9,7 +9,7 @@ namespace FaceAnalysis
     public class ProcessableVideoSource
     {
         private ConcurrentQueue<Rectangle> faceRectangles;
-        private object latestFrameLock = new object();
+        private readonly object latestFrameLock = new object();
         public event NewFrameEventHandler NewFrame;
         public IVideoSource Stream { get; }
         public Guid Id { get; }
@@ -57,7 +57,7 @@ namespace FaceAnalysis
             NewFrame?.Invoke(this, new NewFrameEventArgs(bitmap));
             lock (latestFrameLock)
             {
-                latestFrame.Dispose();
+                latestFrame?.Dispose();
                 latestFrame = bitmap;
             }
         }
@@ -71,6 +71,11 @@ namespace FaceAnalysis
         public override bool Equals(object obj)
         {
             return obj is ProcessableVideoSource && ((ProcessableVideoSource)obj).Id == Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
 
         public static bool operator ==(ProcessableVideoSource lhs, ProcessableVideoSource rhs)

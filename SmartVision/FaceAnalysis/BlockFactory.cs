@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
 
@@ -9,29 +9,24 @@ namespace FaceAnalysis
     internal static class BlockFactory
     {
         //TODO: make generic, output dictionary.
-        public static IPropagatorBlock<SourceBitmapPair, SourceBitmapPair[]> CreateDistinctConditionalBatchBlock(Func<bool> batchCondition)
+        public static IPropagatorBlock<Tuple<KeyType, ValueType>, IDictionary<KeyType, ValueType>> CreateConditionalDictionaryBlock<KeyType, ValueType>(Func<bool> batchCondition)
         {
-            var dictLock = new object();
 
-            var dictionary = new Dictionary<ProcessableVideoSource, Bitmap>();
+            var dictionary = new ConcurrentDictionary<KeyType, ValueType>();
 
-            var source = new BufferBlock<SourceBitmapPair[]>();
+            var source = new BufferBlock<IDictionary<KeyType, ValueType>>();
 
-            var target = new ActionBlock<SourceBitmapPair>(async item =>
+            var target = new ActionBlock<Tuple<KeyType, ValueType>>(async item =>
             {
-                lock(dictLock)
-                    if (dictionary.ContainsKey(item.Source))
-                        dictionary[item.Source].Dispose();
-                dictionary[item.Source] = item.Bitmap;
+                if (dictionary.TryGetValue(item.Item1, out ValueType value) && value is IDisposable disposableValue)
+                    disposableValue.Dispose();
+                dictionary[item.Item1] = item.Item2;
+                //TODO: would probably be nice to trigger earlier than when latest item arrives.
                 if (batchCondition())
                 {
-                    SourceBitmapPair[] array;
-                    lock(dictLock)
-                    {
-                        array = dictionary.Select(pair => new SourceBitmapPair(pair.Key, HelperMethods.ProcessImage(pair.Value))).ToArray();
-                        dictionary.Clear();
-                    }    
-                    await source.SendAsync(array);
+                    var oldDictionary = dictionary;
+                    dictionary = new ConcurrentDictionary<KeyType, ValueType>();
+                    await source.SendAsync(oldDictionary);
 
                 }
             });
@@ -39,7 +34,11 @@ namespace FaceAnalysis
             target.Completion.ContinueWith(async delegate
             {
                 if (dictionary.Any())
-                    await source.SendAsync(dictionary.Select(pair => new SourceBitmapPair(pair.Key, pair.Value)).ToArray());
+                {
+                    var oldDictionary = dictionary;
+                    dictionary = new ConcurrentDictionary<KeyType, ValueType>();
+                    await source.SendAsync(oldDictionary);
+                }
                 source.Complete();
             });
 
