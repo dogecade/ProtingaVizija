@@ -1,5 +1,6 @@
 ﻿//using FaceAnalysis;
 using FaceAnalysis;
+using Objects.Person;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,6 +10,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Net.Http;
+using Helpers;
 
 namespace Api.Controllers
 {
@@ -17,11 +20,11 @@ namespace Api.Controllers
         // GET: AddPerson
         public ActionResult Index()
         {
-            return View();
+            return View("AddContactPerson");
         }
         public ActionResult MissingPersonView()
         {
-            return View();
+            return View("AddMissingPerson");
         }
         [HttpPost]
         public async Task<ActionResult> CheckImage()
@@ -50,7 +53,37 @@ namespace Api.Controllers
             }
             return null;
         }
-
+        [HttpPost]
+        public async Task<string> AddMissingPerson (MissingPerson missingPersons)
+        {
+            HttpClientWrapper httpClient = new HttpClientWrapper();
+            byte[] byteArray = Convert.FromBase64String(missingPersons.faceImg);
+            using (var ms = new MemoryStream(byteArray, 0, byteArray.Length))
+            {
+                Bitmap image = (Bitmap)Bitmap.FromStream(ms);
+                string imgLoc = await httpClient.PostImageToApiString(image);
+                missingPersons.faceImg = imgLoc;
+                HttpContent content = await httpClient.PostMissingPersonToApiAsync(missingPersons);
+                string missingParsed = await content.ReadAsStringAsync();
+                return missingParsed;
+            }
+        }
+        [HttpPost]
+        public async Task<string> AddContactPerson (ContactPerson contactPersons)
+        {
+            HttpClientWrapper httpClient = new HttpClientWrapper();
+            HttpContent content = await httpClient.PostContactPersonToApiAsync(contactPersons);
+            string contactParsed = await content.ReadAsStringAsync();
+            return contactParsed;
+        }
+        [HttpPost]
+        public async Task<string> AddRelationship(MissingContact missing)
+        {
+            HttpClientWrapper httpClient = new HttpClientWrapper();
+            HttpContent content = await httpClient.PostRelToApi(missing);
+            string contactParsed = await content.ReadAsStringAsync();
+            return contactParsed;
+        }
         public ActionResult FacesModalView()
         {
 

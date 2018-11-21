@@ -67,58 +67,5 @@
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script>
-            $(document).ready(function () {
-
-                $("#imageBrowse").change(function () {
-
-                    var File = this.files;
-                    if (File && File[0]) {
-                        var fd = new FormData;
-                        var files = $("#imageBrowse").get(0).files;
-                        var reader = new FileReader();
-                        fd.append("Image", files[0]);
-                        $.ajax({
-                            url: '@Url.Action("CheckImage", "AddPerson")',
-                            processData: false,
-                            contentType: false,
-                            type: 'POST',
-                            dataType: "json",
-                            data: fd,
-                            success: function (data) {
-                                $('#imgWrapper').empty();
-                                switch (data.result.length) {
-                                    case 0:
-                                        alert("No faces have been detected in the image!!!");
-                                        break;
-                                    case 1:
-                                        $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="data:image/jpeg;base64, ' + data.result[0].ImageBase64 + '" />');
-                                        break;
-                                    default:
-                                        var url = $("#facesModal").data('url');
-                                        $.get(url, function (content) {
-                                            $("#facesModal").html(content);
-                                            data.result.forEach(function (image) {
-                                                $("#facesModalBody").append('<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6"><img id = ' + image.FaceToken + ' class="img-thumbnail selectable-face" src="data:image/jpeg;base64, ' + image.ImageBase64 + '" /></div>')
-                                            });
-                                            $("#facesModal").modal('show');
-                                            $('.selectable-face').one('click', function () {
-                                                var imgsrc = $(this).attr('src');
-                                                $('#imgWrapper').prepend('<img id="targetImg" class="img-responsive" src="' + imgsrc + '" />');
-                                                $("#facesModal").modal('hide');
-                                                    
-                                            });
-                                        });
-                                        //alert("Too many faces!! Not yet implemented ─=≡Σᕕ( ͡° ͜ʖ ͡°)ᕗ");
-                                }       
-                            },
-                            error: function () {
-                                alert('Error');
-                            }
-                        });
-                    }
-                })
-            })
-    </script>
     <div id="facesModal" class="modal hide fade" role="dialog" data-url="@Url.Action("FacesModalView", "AddPerson")"></div>
 </body>

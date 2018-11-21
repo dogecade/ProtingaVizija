@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="CameraProperties\CameraProperties.cs" />
     <Compile Include="Person\ContactPerson.cs" />
+    <Compile Include="Person\MissingContact.cs" />
     <Compile Include="Person\MissingPerson.cs" />
     <Compile Include="ContactInformation\ContactInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
