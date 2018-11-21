@@ -18,13 +18,13 @@ namespace Api.Controllers
     public class AddPersonController : Controller
     {
         // GET: AddPerson
-        public ActionResult Index()
+        public ActionResult AddContactPerson()
         {
-            return View("AddContactPerson");
+            return View();
         }
-        public ActionResult MissingPersonView()
+        public ActionResult AddMissingPerson()
         {
-            return View("AddMissingPerson");
+            return View();
         }
         [HttpPost]
         public async Task<ActionResult> CheckImage()
@@ -54,7 +54,7 @@ namespace Api.Controllers
             return null;
         }
         [HttpPost]
-        public async Task<string> AddMissingPerson (MissingPerson missingPersons)
+        public async Task<ActionResult> AddMissingPerson (MissingPerson missingPersons)
         {
             HttpClientWrapper httpClient = new HttpClientWrapper();
             byte[] byteArray = Convert.FromBase64String(missingPersons.faceImg);
@@ -65,16 +65,16 @@ namespace Api.Controllers
                 missingPersons.faceImg = imgLoc;
                 HttpContent content = await httpClient.PostMissingPersonToApiAsync(missingPersons);
                 string missingParsed = await content.ReadAsStringAsync();
-                return missingParsed;
+                return View("View");
             }
         }
         [HttpPost]
-        public async Task<string> AddContactPerson (ContactPerson contactPersons)
+        public async Task<ActionResult> AddContactPerson (ContactPerson contactPersons)
         {
             HttpClientWrapper httpClient = new HttpClientWrapper();
             HttpContent content = await httpClient.PostContactPersonToApiAsync(contactPersons);
             string contactParsed = await content.ReadAsStringAsync();
-            return contactParsed;
+            return View("View");
         }
         [HttpPost]
         public async Task<string> AddRelationship(MissingContact missing)

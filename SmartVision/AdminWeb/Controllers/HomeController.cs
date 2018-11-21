@@ -29,15 +29,15 @@ namespace AdminWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddCamera(String streamUrl)
+        public ActionResult AddCamera(string streamUrl)
         {
             Debug.WriteLine(streamUrl);
-            if (!streamUrl.Equals(""))
+            if (streamUrl != null)
             {
                 streamUrl = streamUrl.Replace(@"""", string.Empty);
                 URLlist.Add(streamUrl);
             }
-            return Json(new { result = "succ" }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
         public ActionResult GetStreamList()
@@ -45,7 +45,7 @@ namespace AdminWeb.Controllers
             return Json(new { result = URLlist }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public ActionResult RemoveStream(String streamUrl)
+        public ActionResult RemoveStream(string streamUrl)
         {
             Debug.WriteLine(streamUrl);
             if (!streamUrl.Equals(""))
@@ -53,7 +53,7 @@ namespace AdminWeb.Controllers
                 streamUrl = streamUrl.Replace(@"""", string.Empty);
                 URLlist.Remove(streamUrl);
             }
-            return Json(new { result = "succ" }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
         }
 
     }
