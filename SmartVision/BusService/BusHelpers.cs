@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using Objects.Buses;
 
 namespace BusService
 {
@@ -132,7 +134,6 @@ namespace BusService
             return string.Format(previousStop.Split(',')[2] + " - " + nextStop.Split(',')[2]);
         }
 
-
         private static int Min(List<double> list)
         {
             int minIndex = 0;
@@ -144,6 +145,29 @@ namespace BusService
             }
 
             return minIndex;
+        }
+
+        public static List<AvailableBus> GetAllAvailableBusses()
+        {
+            // Get data of all buses
+            var allBuses = new List<string>();
+            using (var client = new WebClient())
+            {
+                string result = client.DownloadString("https://www.stops.lt/vilnius/gps_full.txt");
+                allBuses = result.Split('\n').ToList();
+            }
+
+            allBuses.RemoveAt(0);
+            var busList = new List<AvailableBus>();
+
+            foreach (var bus in allBuses)
+                if (!bus.Equals(""))
+                {
+                    var busProperties = bus.Split(',');
+                    busList.Add(new AvailableBus(busProperties[0], busProperties[1], busProperties[3]));
+                }
+
+            return busList;
         }
     }
 }
