@@ -1,3 +1,5 @@
 language: csharp
 solution: ./SmartVision/SmartVision.sln
+script: 
+  - xbuild /p:Configuration=Release {./SmartVision/SmartVision.sln}
 install: nuget restore ./SmartVision/SmartVision.sln
