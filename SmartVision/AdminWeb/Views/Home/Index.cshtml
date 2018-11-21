@@ -1,0 +1,162 @@
+﻿@using System.Collections
+@using System.Security.Policy
+
+@{
+    ViewBag.Title = "Smart Vision Admin";
+}
+
+@model AdminWeb.Models.BusModel
+@{
+    ViewBag.Title = "Index";
+}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="row">
+        <div class="col-sm-8" id="streamWrapper">
+        </div>
+        <div class="col-sm-4">
+            <div class="contact-clean">
+                <h3 class="text-center">Add A New Camera Feed</h3>
+                <div class="form-group center">
+                    @Html.Label("Video camera stream URL: ")
+                    @Html.TextBox("streamURL", null, new { @class = "form-control", @type = "text", @id = "streamURL" })
+                    @Html.Label("The camera is located in a bus: ")
+                    @Html.CheckBox("isBus", false, new { @id = "isBus" })
+                </div>
+                <div id="cameraForm" class="form-group center">
+                    @Html.Label("Street name:")
+                    @Html.TextBox("streetName", null, new { @class = "form-control", @type = "text", @id = "streetName" })
+                    @Html.Label("House number:")
+                    @Html.TextBox("houseNumber", null, new { @class = "form-control", @type = "text", @id = "houseNumber" })
+                    @Html.Label("City:")
+                    @Html.TextBox("city", null, new { @class = "form-control", @type = "text", @id = "city" })
+                    @Html.Label("Country:")
+                    @Html.TextBox("country", null, new { @class = "form-control", @type = "text", @id = "country" })
+                    @Html.Label("Post code:")
+                    @Html.TextBox("postCode", null, new { @class = "form-control", @type = "text", @id = "postCode" })
+                </div>
+                <div id="bussForm" style="display: none;" class="form-group center">
+                    @Html.Label("Bus number:")
+                    @Html.DropDownListFor(m => m.SelectedBusId, Model.Buses)
+                </div>
+                <div class="form-group center">
+                    <input class="btn btn-primary d-flex m-auto" type="submit" id="submit" value="Submit">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+    .hoverContainer {
+        position: relative;
+        margin-top: 50px;
+        width: 300px;
+        height: 200px;
+    }
+
+    .overlayHover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0);
+        transition: background 0.5s ease;
+    }
+
+    .hoverContainer:hover #overlay {
+        display: block;
+        background: rgba(0, 0, 0, .3);
+    }
+
+    .hoverableButton {
+        position: absolute;
+        width: 15%;
+        left: 85%;
+        top: 0%;
+        opacity: 0;
+        transition: opacity .35s ease;
+        border-radius: 0;
+    }
+
+        .hoverableButton a {
+            width: 10%;
+            text-align: center;
+            color: white;
+            border: solid 2px white;
+            z-index: 1;
+        }
+
+    .hoverContainer:hover .hoverableButton {
+        opacity: 1;
+    }
+
+    .drop-down {
+        top: 100%;
+    }
+</style>
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script>
+    $('#isBus').change(function () {
+        $('#cameraForm').toggle();
+        $('#bussForm').toggle();
+    });
+
+    $(document).ready(function() {
+        $.ajax({
+            url: '@Url.Action("GetStreamList", "Home")',
+            type: 'GET',
+            dataType: "json",
+            success: function (data) {
+                data.result.forEach(function (image) {
+                    $("#streamWrapper").append('<div class="hoverContainer">' +
+                                                    '<img src="' + image + '" height="200" width="300" /> ' +
+                                                    '<div class="overlay"></div>  ' +
+                                                    '<button id="' + image + '"class="btn btn-square btn-danger hoverableButton" onclick="removeStream(this.id)">' +
+                                                    'X' +
+                                                    '</button>' +
+                                                '</div>');
+                });
+            },
+            error: function () {
+                alert('Error POST');
+            }
+        });
+    });
+
+     function removeStream (element) {
+        $.ajax({
+            url: '@Url.Action("RemoveStream", "Home")',
+            type: 'POST',
+            dataType: "json",
+            data: { streamUrl: JSON.stringify(element) },
+            success: function (data) {
+                location.reload();
+            },
+            error: function () {
+                alert('Error remove POST');
+            }
+        });
+     };
+
+    $("#submit").click(function () {
+        var streamUrl = document.getElementById('streamURL').value;;
+        $.ajax({
+            url: '@Url.Action("AddCamera", "Home")',
+            type: 'POST',
+            dataType: "json",
+            data: {streamUrl : JSON.stringify(streamUrl)},
+            success: function (data) {
+                location.reload(); // location.reload(forceGet) - By default, the reload() method reloads the page from the cache, but you can force it to reload the page from the server by setting the forceGet parameter to true: location.reload(true).
+            },
+            error: function () {
+                alert('Error add POST');
+            }
+        });
+    });
+</script>

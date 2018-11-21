@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Buses\AvailableBus.cs" />
     <Compile Include="CameraProperties\CameraProperties.cs" />
     <Compile Include="Person\ContactPerson.cs" />
     <Compile Include="Person\MissingContact.cs" />
