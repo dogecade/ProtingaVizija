@@ -64,8 +64,8 @@ namespace Api.Controllers
                 string imgLoc = await httpClient.PostImageToApiString(image);
                 missingPersons.faceImg = imgLoc;
                 HttpContent content = await httpClient.PostMissingPersonToApiAsync(missingPersons);
-                string missing1 = await content.ReadAsStringAsync();
-                return missing1;
+                string missingParsed = await content.ReadAsStringAsync();
+                return missingParsed;
             }
         }
         [HttpPost]
@@ -73,16 +73,16 @@ namespace Api.Controllers
         {
             HttpClientWrapper httpClient = new HttpClientWrapper();
             HttpContent content = await httpClient.PostContactPersonToApiAsync(contactPersons);
-            string contact1 = await content.ReadAsStringAsync();
-            return contact1;
+            string contactParsed = await content.ReadAsStringAsync();
+            return contactParsed;
         }
         [HttpPost]
         public async Task<string> AddRelationship(MissingContact missing)
         {
             HttpClientWrapper httpClient = new HttpClientWrapper();
             HttpContent content = await httpClient.PostRelToApi(missing);
-            string contact1 = await content.ReadAsStringAsync();
-            return contact1;
+            string contactParsed = await content.ReadAsStringAsync();
+            return contactParsed;
         }
         public ActionResult FacesModalView()
         {
