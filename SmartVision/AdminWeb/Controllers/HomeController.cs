@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using AdminWeb.Models;
 using BusService;
+using StreamingBackend;
 
 namespace AdminWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private static List<string> URLlist = new List<string> { "https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", "http://quadcam.unrfound.unr.edu/axis-cgi/mjpg/video.cgi" };
         public ActionResult Index()
         {
             var model = new BusModel();
@@ -35,23 +32,23 @@ namespace AdminWeb.Controllers
             if (streamUrl != null)
             {
                 streamUrl = streamUrl.Replace(@"""", string.Empty);
-                URLlist.Add(streamUrl);
+                MJPEGStreamManager.AddStream(streamUrl);
             }
             return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
         public ActionResult GetStreamList()
         {
-            return Json(new { result = URLlist }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = MJPEGStreamManager.GetStreamUrls() }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public ActionResult RemoveStream(string streamUrl)
         {
             Debug.WriteLine(streamUrl);
-            if (!streamUrl.Equals(""))
+            if (streamUrl != "")
             {
                 streamUrl = streamUrl.Replace(@"""", string.Empty);
-                URLlist.Remove(streamUrl);
+                MJPEGStreamManager.RemoveStream(streamUrl);
             }
             return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
         }

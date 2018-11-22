@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AForge.Video;
 using FaceAnalysis;
 
 namespace StreamingBackend
@@ -15,18 +16,35 @@ namespace StreamingBackend
             new System.Threading.AutoResetEvent(false).WaitOne();
         }
 
+        //TODO: this assumes that it's an MJPEG stream, it could be a JPEG stream as well
+        public static string AddStream(string sourceUrl)
+        {
+            return AddStream(new ProcessableVideoSource(new MJPEGStream(sourceUrl)));
+        }
+
         public static string AddStream(ProcessableVideoSource source)
         {
-            var server = new MJPEGServer(source);
+            var server = new MJPEGServer(source, start: true);
             streamServers[source] = server;
             processor.AddSource(source);
             return "http://localhost:" + server.Port.ToString();
         }
+        
+        public static void RemoveStream(string sourceUrl)
+        {
+            foreach(var source in streamServers.Keys)
+                if (streamServers[source].Url.Split('/')[2] == sourceUrl.Split('/')[2])
+                {
+                    RemoveStream(source);
+                    return;
+                }
 
-        public static async Task RemoveStream(ProcessableVideoSource source)
+        }
+
+        public static void RemoveStream(ProcessableVideoSource source)
         {
             streamServers.TryRemove(source, out var server);
-            await server.Stop();
+            server.Stop();
             processor.RemoveSource(source);
         }
 

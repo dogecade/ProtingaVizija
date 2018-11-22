@@ -13,6 +13,8 @@ namespace StreamingBackend
     public class MJPEGServer
     {
         public int Port { get; private set; }
+
+        public string Url { get { return "http://localhost:" + Port.ToString();  } }
         private const string boundary = "--boundary";
         private const string header = "HTTP/1.1 200 OK\r\n" +
                                         "Content-Type: multipart/x-mixed-replace; boundary=" +
@@ -20,15 +22,14 @@ namespace StreamingBackend
                                         "\r\n";
         private bool listen;
         private Task listeningTask;
-        private ConcurrentDictionary<TcpClient, NetworkStream> clients = new ConcurrentDictionary<TcpClient, NetworkStream>();
+        private ConcurrentDictionary<TcpClient, bool> clients = new ConcurrentDictionary<TcpClient, bool>();
         private readonly TcpListener listener;
         private readonly ProcessableVideoSource source;
         public MJPEGServer(ProcessableVideoSource source, int port = 0, bool start = false)
         {
-            Port = port >= 0 ? port : 0;
             this.source = source;
 
-            listener = new TcpListener(IPAddress.Any, Port);
+            listener = new TcpListener(IPAddress.Any, port >= 0 ? port : 0);
 
             if (start)
                 Start();
@@ -49,42 +50,50 @@ namespace StreamingBackend
             listeningTask = Task.Run(() => Listen());
         }
 
-        public async Task Stop()
+        public void Stop()
         {
             foreach (var client in clients.Keys)
                 client.Dispose();
-            clients = new ConcurrentDictionary<TcpClient, NetworkStream>();
+            clients = new ConcurrentDictionary<TcpClient, bool>();
 
             source.Stop();
 
             listener.Stop();
             listen = false;
-            await listeningTask;
         }
 
         private async Task Listen()
         {
             while (listen)
             {
-                var client = await listener.AcceptTcpClientAsync();
+                TcpClient client;
+                try
+                {
+                    client = await listener.AcceptTcpClientAsync();
+                }
+                catch (System.ObjectDisposedException)
+                {
+                    Debug.WriteLine("Stopping listening");
+                    return;
+                }
+
                 Debug.WriteLine("A client connected.");
-                clients[client] = client.GetStream();
+                clients[client] = true;
                 await SendStringToClientAsync(client, header);
                 client.GetStream().Flush();
             }
         }
 
-        private bool CheckClientStatus(TcpClient client)
+        private void CheckClientStatus(TcpClient client)
         {
             if (!client.Connected)
             {
                 Debug.WriteLine("Client has disconnected");
-                clients.TryRemove(client, out _);
-                client.Dispose();
-                return false;
+                if (clients.TryRemove(client, out _))
+                {
+                    client.Dispose();
+                }
             }
-            else
-                return true;
         }
 
         private async Task SendStringToClientAsync(TcpClient client, string text)
@@ -132,7 +141,15 @@ namespace StreamingBackend
         {
             var bitmap = new Bitmap(e.Frame);
             foreach (var client in clients.Keys)
-                await SendImageToClientAsync(client, new Bitmap(bitmap));
+                try
+                {
+                    await SendImageToClientAsync(client, new Bitmap(bitmap));
+                }
+                catch (System.ObjectDisposedException)
+                {
+                    Debug.WriteLine("Client has already disconnected");
+                }
+                
             bitmap.Dispose();
         }
     }
