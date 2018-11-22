@@ -26,13 +26,13 @@ namespace AdminWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddCamera(string streamUrl)
+        public ActionResult AddCamera(CameraPropertiesModel properties)
         {
-            Debug.WriteLine(streamUrl);
-            if (streamUrl != null)
+            Debug.WriteLine(properties.StreamUrl);
+            if (properties.StreamUrl != null)
             {
-                streamUrl = streamUrl.Replace(@"""", string.Empty);
-                MJPEGStreamManager.AddStream(streamUrl);
+                properties.StreamUrl = properties.StreamUrl.Replace(@"""", string.Empty);
+                MJPEGStreamManager.AddStream(properties.StreamUrl, properties);
             }
             return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
         }

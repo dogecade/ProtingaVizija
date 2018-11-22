@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Drawing;
 using System.Net;
@@ -129,7 +130,7 @@ namespace StreamingBackend
                 await SendStringToClientAsync(client, "\r\n");
                 client.GetStream().Flush();
             }
-            catch (System.IO.IOException e)
+            catch (Exception e ) when (e is System.IO.IOException || e is InvalidOperationException)
             {
                 Debug.WriteLine("An error occured when sending image to client stream: ");
                 Debug.WriteLine(e);
