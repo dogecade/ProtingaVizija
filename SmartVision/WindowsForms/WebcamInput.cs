@@ -14,7 +14,7 @@ namespace WindowsForms
         private static Bitmap lastImage;
         private static ProcessableVideoSource source;
         private static FaceProcessor processor;
-        private static int BusId = 744;
+
         /// <summary>
         /// Enables the input of the webcam
         /// </summary>
@@ -36,7 +36,7 @@ namespace WindowsForms
                 MessageBox.Show(Messages.cameraNotFound);
                 return false;
             }
-            processor = new FaceProcessor(source, new CameraProperties(cameraUrl, BusId));
+            processor = new FaceProcessor(source);
             source.NewFrame += GetFrame;
             source.Start();
             return true;

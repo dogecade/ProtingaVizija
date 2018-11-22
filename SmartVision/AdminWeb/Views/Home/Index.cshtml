@@ -145,12 +145,20 @@
      };
 
     $("#submit").click(function () {
-        var streamUrl = document.getElementById('streamURL').value;;
+        var properties = {
+            StreamUrl: document.getElementById('streamURL').value,
+            StreetName: document.getElementById('streetName').value,
+            CityName: document.getElementById('city').value,
+            PostalCode: document.getElementById('postCode').value,
+            IsBus: document.getElementById('isBus').value,
+            BusId: '0'
+    }
         $.ajax({
             url: '@Url.Action("AddCamera", "Home")',
             type: 'POST',
+            contentType: "application/json; charset=utf-8",
             dataType: "json",
-            data: {streamUrl : JSON.stringify(streamUrl)},
+            data: JSON.stringify(properties),
             success: function (data) {
                 location.reload(); // location.reload(forceGet) - By default, the reload() method reloads the page from the cache, but you can force it to reload the page from the server by setting the forceGet parameter to true: location.reload(true).
             },
