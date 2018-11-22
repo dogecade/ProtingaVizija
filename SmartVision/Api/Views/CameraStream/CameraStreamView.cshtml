@@ -1,18 +1,39 @@
-﻿@using Api.Models
-@{
-    ViewBag.Title = "Smart Vision";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<style>
-    .parent {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+﻿<style>
+    .myVideo {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100% !important;
+        min-height: 100% !important;
     }
 
     .child {
-        display: inline-block;
+        position: absolute;
+        top: 90%; /* position the top  edge of the element at the middle of the parent */
+        left: 50%; /* position the left edge of the element at the middle of the parent */
+        transform: translate(-50%, -50%);
+    }
+
+    .myButton {
+        background: url(../../img/camera.png) no-repeat;
+        cursor: pointer;
+        border: none;
+        width: 100px;
+        height: 100px;
+    }
+
+        .myButton:active /* use Dot here */ {
+            background: url(../../img/camera.png) no-repeat;
+        }
+
+    .canvas {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        background-color: black;
+        top: 0;
+        left: 0;
+        z-index: 10;
     }
 </style>
 
@@ -20,19 +41,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="~/Content/Contact-Form-Clean.css">
+    <title>Film a person</title>
 </head>
 
-<body>
-<div>
-    <video id="video" style="visibility: hidden; display: block; margin: 0 auto; margin-top: 30px;" width="300" height="400" autoplay></video>
-    <select id="videoSource" onchange="start()" style="visibility: hidden; display: block; margin: 0 auto; margin-top: 20px"></select>
-    <div id="container" class="parent">
-        <button id="enableStream" class="child" style="margin-top: 20px; height: 70px; width: 200px" onclick="start()">Enable camera</button>
-        <button id="disableStream" class="child" style="margin-top: 20px; height: 70px; width: 200px" onclick="stop()">Disable camera</button>
+<body onload="start()" onunload="stop()">
+    <div class="container">
+        <video id="video" class="myVideo" style="display: block; margin: 0 auto; margin-top: 30px;" autoplay></video>
+        <input id="button " type="submit" class="child myButton" value="" onclick="snapshot();">
+        <canvas id="canvas" class="canvas" style="visibility:hidden"></canvas>
     </div>
-</div>
-
     <script src="~/Scripts/GetCameraFeed.js"></script>
 </body>
 </html>
