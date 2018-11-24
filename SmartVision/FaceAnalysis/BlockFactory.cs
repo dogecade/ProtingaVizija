@@ -9,14 +9,14 @@ namespace FaceAnalysis
     internal static class BlockFactory
     {
         //TODO: make generic, output dictionary.
-        public static IPropagatorBlock<Tuple<KeyType, ValueType>, IDictionary<KeyType, ValueType>> CreateConditionalDictionaryBlock<KeyType, ValueType>(Func<bool> batchCondition)
+        public static IPropagatorBlock<(KeyType, ValueType), IDictionary<KeyType, ValueType>> CreateConditionalDictionaryBlock<KeyType, ValueType>(Func<bool> batchCondition)
         {
 
             var dictionary = new ConcurrentDictionary<KeyType, ValueType>();
 
             var source = new BufferBlock<IDictionary<KeyType, ValueType>>();
 
-            var target = new ActionBlock<Tuple<KeyType, ValueType>>(async item =>
+            var target = new ActionBlock<(KeyType, ValueType)>(async item =>
             {
                 if (dictionary.TryGetValue(item.Item1, out ValueType value) && value is IDisposable disposableValue)
                     disposableValue.Dispose();

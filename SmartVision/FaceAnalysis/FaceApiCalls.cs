@@ -25,7 +25,7 @@ namespace FaceAnalysis
         {
             this.httpClientWrapper = httpClientWrapper;
         }
-
+        
         /// <summary>
         /// Calls frame analyze API
         /// </summary>
@@ -57,7 +57,6 @@ namespace FaceAnalysis
             HttpContent keyContent = new StringContent(Keys.faceApiKey);
             HttpContent secretContent = new StringContent(Keys.faceApiSecret);
             HttpContent facesetNameContent = new StringContent(facesetName);
-
             using (var formData = new MultipartFormDataContent())
             {
                 formData.Add(keyContent, "api_key");

@@ -78,7 +78,7 @@ namespace FaceAnalysis
         }
 
         //TODO: should probably attempt to add padding to help prevent "phantom" face rectangles.
-        public static Tuple<IDictionary<IdentifierType, Rectangle>, Bitmap>  ProcessImages<IdentifierType>(IDictionary<IdentifierType, Bitmap> dictionary)
+        public static (IDictionary<IdentifierType, Rectangle> rectangles, Bitmap image) ProcessImages<IdentifierType>(IDictionary<IdentifierType, Bitmap> dictionary)
         {
             const int MAX_EDGE_IMAGES = 3;
             if (dictionary?.Any() != true)
@@ -111,8 +111,8 @@ namespace FaceAnalysis
                     currentPosition.X = 0;
                     currentPosition.Y += maxHeight;
                 }      
-            return new Tuple<IDictionary<IdentifierType, Rectangle>, Bitmap>(idsRectangles, conjoinedBitmap);
-            
+
+            return (idsRectangles, conjoinedBitmap);          
         }
     }
 }
