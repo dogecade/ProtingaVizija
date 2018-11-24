@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using AForge.Video;
@@ -17,7 +17,7 @@ namespace FaceAnalysis
     {
         private const int MAX_SOURCES = 9;
         private const int BUFFER_LIMIT = 10000;
-        private SynchronizedCollection<ProcessableVideoSource> sources = new SynchronizedCollection<ProcessableVideoSource>();
+        private ConcurrentDictionary<IVideoSource, ProcessableVideoSource> sources = new ConcurrentDictionary<IVideoSource, ProcessableVideoSource>();
         private bool processingRunning = false;
         private readonly BroadcastBlock<(IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON)> broadcastBlock;
         private readonly ActionBlock<string> searchActionBlock;
@@ -100,25 +100,23 @@ namespace FaceAnalysis
                 throw new ArgumentException("Source and its stream cannot be null");
             if (sources.Count + 1 > MAX_SOURCES * MAX_SOURCES)
                 throw new ArgumentException(string.Format("Number of sources exceeds limit ({0})", MAX_SOURCES));
-            sources.Add(source);
+            sources[source.Stream] = source;
             source.Stream.NewFrame += QueueFrame;
             FrameProcessed += source.UpdateRectangles;
         }
 
         public void RemoveSource(ProcessableVideoSource source)
         {
-            if (sources.Contains(source))
+            if (sources.TryRemove(source.Stream, out _))
             {
                 source.Stream.NewFrame -= QueueFrame;
                 FrameProcessed -= source.UpdateRectangles;
-                sources.Remove(source);
             }
         }
 
         public async void Complete()
         {
-            var sourcesCopy = sources.ToArray();
-            foreach (var source in sourcesCopy)
+            foreach (var source in sources.Values)
                 RemoveSource(source);
             batchBlock.Complete();
             searchBufferBlock.Complete();
@@ -172,8 +170,8 @@ namespace FaceAnalysis
             Bitmap bitmap;
             lock (sender)
                 bitmap = new Bitmap(e.Frame);
-            var source = sources.Where(src => src.Stream == sender).FirstOrDefault();
-            await batchBlock.SendAsync((source, bitmap));
+            var source = (IVideoSource)sender;
+            await batchBlock.SendAsync((sources[source], bitmap));
         }
 
         /// <summary>
