@@ -105,7 +105,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlockFactory.cs" />
+    <Compile Include="BatchDictionaryBlock.cs" />
     <Compile Include="FaceProcessor.cs" />
     <Compile Include="FaceApiCalls.cs" />
     <Compile Include="HelperMethods.cs" />

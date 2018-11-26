@@ -36,8 +36,13 @@ namespace WindowsForms
                 MessageBox.Show(Messages.cameraNotFound);
                 return false;
             }
-            processor = new FaceProcessor(source);
+            var fakeSource = new ProcessableVideoSource(new MJPEGStream("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi"));
+            processor = new FaceProcessor(fakeSource);
+            processor.AddSource(source);
+            processor.Start();
+
             source.NewFrame += GetFrame;
+            fakeSource.Start();
             source.Start();
             return true;
         }
