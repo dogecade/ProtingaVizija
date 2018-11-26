@@ -29,8 +29,8 @@ function stop() {
 
 function snapshot() {
     canvas.style.visibility = "visible";
-    canvas.width = 500;
-    canvas.height = 500;
+    canvas.width = 200;
+    canvas.height = 200;
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
     var img = canvas.toDataURL();
     $.ajax({
