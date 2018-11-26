@@ -142,7 +142,7 @@ namespace FaceAnalysis
                     .Select(face =>
                     {
                         var rectangle = (Rectangle)face.Face_rectangle;
-                        rectangle.Location = Point.Subtract(pair.Value.Location, (Size) rectangle.Location);
+                        rectangle.Location = Point.Subtract(rectangle.Location, (Size)pair.Value.Location);
                         return (Rectangle)face.Face_rectangle;
                     })
                     .ToList();
