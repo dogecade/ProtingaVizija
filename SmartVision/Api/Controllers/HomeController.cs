@@ -14,5 +14,17 @@ namespace Api.Controllers
 
             return View();
         }
+        public ActionResult RegisterView()
+        {
+            ViewBag.Title = "Smart Vision";
+
+            return View();
+        }
+        public ActionResult LoginView()
+        {
+            ViewBag.Title = "Smart Vision";
+
+            return View();
+        }
     }
 }
