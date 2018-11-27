@@ -8,6 +8,7 @@ namespace AdminWeb.Models
 {
     public class CameraPropertiesModel
     {
+        public string StreamUrl { get; set; }
         public string StreetName { get; set; }
         public string HouseNumber { get; set; }
         public string CityName { get; set; }

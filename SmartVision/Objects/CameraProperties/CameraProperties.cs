@@ -10,7 +10,7 @@
         public bool IsBus { get; }
         public int BusId { get; }
 
-        public CameraProperties(string streamUrl, int busId)
+        public CameraProperties(int busId)
         {
             BusId = busId;
             IsBus = true;
