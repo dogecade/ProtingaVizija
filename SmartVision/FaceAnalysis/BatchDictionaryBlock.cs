@@ -12,8 +12,8 @@ namespace FaceAnalysis
     /// <summary>
     /// Block that stores key/value pairs in a dictionary until batch is triggered.
     /// </summary>
-    /// <typeparam name="KeyType"></typeparam>
-    /// <typeparam name="ValueType"></typeparam>
+    /// <typeparam name="KeyType">Type of the keys</typeparam>
+    /// <typeparam name="ValueType">Type of the values</typeparam>
     public class BatchDictionaryBlock<KeyType, ValueType> : IPropagatorBlock<(KeyType, ValueType), IDictionary<KeyType, ValueType>>,
                                                             IReceivableSourceBlock<IDictionary<KeyType, ValueType>>
     {

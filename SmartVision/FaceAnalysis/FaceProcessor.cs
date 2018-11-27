@@ -13,6 +13,10 @@ using Objects.CameraProperties;
 
 namespace FaceAnalysis
 {
+    /// <summary>
+    /// Face processor that holds ProcessableVideoSources and collects their frames,
+    /// Then sends them to the API as a batch. Also handles searching.
+    /// </summary>
     public class FaceProcessor
     {
         private const int MAX_SOURCES = 9;
@@ -90,6 +94,10 @@ namespace FaceAnalysis
             AddSource(source);
         }
 
+        /// <summary>
+        /// Adds video source to processor
+        /// </summary>
+        /// <param name="source">Video source to add</param>
         public void AddSource(ProcessableVideoSource source)
         {
             if (source?.Stream == null)
@@ -101,6 +109,10 @@ namespace FaceAnalysis
             FrameProcessed += source.UpdateRectangles;
         }
 
+        /// <summary>
+        /// Removes source from processor (if present)
+        /// </summary>
+        /// <param name="source">Source to remove</param>
         public void RemoveSource(ProcessableVideoSource source)
         {
             if (sources.TryRemove(source.Stream, out _))
@@ -110,12 +122,19 @@ namespace FaceAnalysis
             }
         }
 
+        /// <summary>
+        /// Starts processing - waits until a frame arrives, then triggers the batch.
+        /// </summary>
+        /// <returns></returns>
         public async Task Start()
         {
             await batchBlock.HasValueAsync();
             batchBlock.TriggerBatch();
         }
 
+        /// <summary>
+        /// Completes the processor - completes its blocks, removes all its sources, etc.
+        /// </summary>
         public async void Complete()
         {
             foreach (var source in sources.Values)
@@ -208,6 +227,10 @@ namespace FaceAnalysis
         }
     }
 
+    /// <summary>
+    /// Event args for event that processor is done processing.
+    /// Holds source / rectangle list pairs in the form of a dictionary.
+    /// </summary>
     public class FrameProcessedEventArgs : EventArgs
     {
         public FrameProcessedEventArgs(IDictionary<ProcessableVideoSource, List<Rectangle>> rectangleDictionary)

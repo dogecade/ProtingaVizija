@@ -77,6 +77,13 @@ namespace FaceAnalysis
             return imgClone;
         }
 
+        /// <summary>
+        /// Combines multiple frames into a single one,
+        /// preserving identifying information
+        /// </summary>
+        /// <typeparam name="IdentifierType">Type that identifies each bitmap / rectangle</typeparam>
+        /// <param name="dictionary">Dictionary of identifier / bitmap pairs</param>
+        /// <returns></returns>
         //TODO: should probably attempt to add padding to help prevent "phantom" face rectangles.
         public static (IDictionary<IdentifierType, Rectangle> rectangles, Bitmap image) ProcessImages<IdentifierType>(IDictionary<IdentifierType, Bitmap> dictionary)
         { 

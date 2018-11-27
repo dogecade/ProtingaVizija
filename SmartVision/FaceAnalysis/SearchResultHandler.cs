@@ -116,6 +116,14 @@ namespace FaceAnalysis
             }
         }
 
+        /// <summary>
+        /// Schedules a notification job.
+        /// Detail depend on the likeliness level
+        /// </summary>
+        /// <typeparam name="JobType">Type of job to create</typeparam>
+        /// <param name="likelinessResult">Likeliness result</param>
+        /// <param name="group">Group of the job to create</param>
+        /// <returns></returns>
         private async Task ScheduleJobByLikeliness<JobType>(LikelinessResult likelinessResult, string group) where JobType : IJob
         {
             var jobKey = new JobKey(likelinessResult.FaceToken, group);
