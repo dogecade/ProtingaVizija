@@ -8,7 +8,6 @@ namespace AdminWeb.Models
 {
     public class CameraPropertiesModel
     {
-        public string StreamUrl { get; set; }
         public string StreetName { get; set; }
         public string HouseNumber { get; set; }
         public string CityName { get; set; }
@@ -21,7 +20,6 @@ namespace AdminWeb.Models
         {
             return new CameraProperties
             (
-                streamUrl: model.StreamUrl,
                 busId: model.BusId,
                 cityName: model.CityName,
                 countryName: model.CountryName,

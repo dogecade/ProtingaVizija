@@ -16,7 +16,7 @@
             IsBus = true;
         }
 
-        public CameraProperties(string streamUrl, string streetName, string houseNumber, string cityName, string countryName, string postalCode, bool isBus, int busId = 0)
+        public CameraProperties(string streetName, string houseNumber, string cityName, string countryName, string postalCode, bool isBus, int busId = 0)
         {
             StreetName = streetName;
             HouseNumber = houseNumber;
