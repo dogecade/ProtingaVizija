@@ -16,14 +16,15 @@
             IsBus = true;
         }
 
-        public CameraProperties(string streetName, string houseNumber, string cityName, string countryName, string postalCode)
+        public CameraProperties(string streamUrl, string streetName, string houseNumber, string cityName, string countryName, string postalCode, bool isBus, int busId = 0)
         {
             StreetName = streetName;
             HouseNumber = houseNumber;
             CityName = cityName;
             CountryName = countryName;
             PostalCode = postalCode;
-            IsBus = false;
+            IsBus = isBus;
+            BusId = busId;
         }
     }
 }

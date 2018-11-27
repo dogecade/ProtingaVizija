@@ -235,9 +235,11 @@ namespace FaceAnalysis
         /// </summary>
         internal class TimeoutJob : IJob
         {
-            public async Task Execute(IJobExecutionContext context)
+            public Task Execute(IJobExecutionContext context)
             {
                 Debug.WriteLine(string.Format("Notifications for face token {0} can be sent again.", context.JobDetail.Key.Name));
+
+                return Task.CompletedTask;
             }
         }
 
