@@ -151,6 +151,85 @@ namespace FaceAnalysis
         }
 
         /// <summary>
+        /// Handles a single searchResult with no scheduling - sends it out if it meets the minimum confidence requirement.
+        /// </summary>
+        /// <param name="minimumConfidence">Minimum confidence to send the notification</param>
+        /// <returns></returns>
+        public static async Task HandleOneResult(LikelinessResult result, LikelinessConfidence minimumConfidence, CameraProperties cameraProperties = null)
+        {
+            if (result.Confidence >= minimumConfidence)
+            {
+                Debug.WriteLine(string.Format("Probability {0} meets minimum confidence requirement, notification will be sent.", result.Confidence));
+            }
+                await SendNotification(result.FaceToken, result.Confidence, cameraProperties);
+        }
+
+        /// <summary>
+        /// Sends email and SMS
+        /// </summary>
+        /// <param name="faceToken"></param>
+        /// <param name="confidence"></param>
+        /// <param name="cameraProperties"></param>
+        private static async Task SendNotification(string faceToken, LikelinessConfidence confidence, CameraProperties cameraProperties)
+        {
+            ContactInformation information = await new CallsToDb().GetMissingPersonData(faceToken);
+
+            if (information == null)
+                return;
+
+            LikelinessLevelData data = likelinessLevelData[confidence];
+
+            byte[] locationPicture = null;
+            string locationString = "";
+
+            if (cameraProperties != null)
+            {
+                var bus = (cameraProperties.IsBus) ? new Bus(cameraProperties.BusId, DateTime.Now) : null;
+
+                var location = (cameraProperties.IsBus)
+                    ? new Location(bus)
+                    : new Location(cameraProperties.StreetName, cameraProperties.HouseNumber, cameraProperties.CityName,
+                        cameraProperties.CountryName, cameraProperties.PostalCode);
+
+                locationString = (cameraProperties.IsBus)
+                    ? BusHelpers.GetBusLocation(bus)
+                    : LocationHelpers.LocationString(location);
+
+                string locationPicUrl = (cameraProperties.IsBus)
+                    ? LocationHelpers.CreateLocationPictureFromCoordinates(location)
+                    : LocationHelpers.CreateLocationPictureFromAddress(location);
+
+                using (WebClient client = new WebClient())
+                {
+                    locationPicture = await client.DownloadDataTaskAsync(locationPicUrl);
+                }
+            }
+
+            if (Mail.SendMail(information.contactPersonEmailAddress, data.EmailSubject,
+                    data.EmailBodyBeginning + information.missingPersonFirstName + " " +
+                    information.missingPersonLastName + data.EmailBodyEnding + locationString,
+                    new List<byte[]>() { locationPicture }, new List<string>() { "Location.jpeg" }) != null)
+            {
+                Debug.WriteLine("Mail message was sent!");
+            }
+            else
+            {
+                Debug.WriteLine("Mail message was not sent!");
+            }
+
+            if (Sms.SendSms(information.contactPersonPhoneNumber,
+                    data.SmsBodyBeginning + information.missingPersonFirstName + " " +
+                    information.missingPersonLastName + data.SmsBodyEnding) != null)
+            {
+                Debug.WriteLine("Sms message was sent!");
+            }
+            else
+            {
+                Debug.WriteLine("Sms message was not sent!");
+            }
+        }
+
+        /// <summary>
         /// Dummy job to prevent "spam" of messages,
         /// to be scheduled after sending high probability notification
         /// </summary>
@@ -163,7 +242,7 @@ namespace FaceAnalysis
         }
 
         /// <summary>
-        /// Sends Email and SMS
+        /// Job to send email and SMS.
         /// </summary>
         [DisallowConcurrentExecution]
         internal class SendNotificationJob : IJob
@@ -176,61 +255,7 @@ namespace FaceAnalysis
                 var schedulerContext = context.Scheduler.Context;
                 CameraProperties cameraProperties = (CameraProperties)schedulerContext.Get("cameraProperties");
 
-                ContactInformation information = await new CallsToDb().GetMissingPersonData(faceToken);
-
-                if (information == null)
-                    return;
-
-                LikelinessLevelData data = likelinessLevelData[confidence];
-
-                byte[] locationPicture = null;
-                string locationString = "";
-
-                if (cameraProperties != null)
-                {
-                    var bus = (cameraProperties.IsBus) ? new Bus(cameraProperties.BusId, DateTime.Now) : null;
-
-                    var location = (cameraProperties.IsBus)
-                        ? new Location(bus)
-                        : new Location(cameraProperties.StreetName, cameraProperties.HouseNumber, cameraProperties.CityName,
-                            cameraProperties.CountryName, cameraProperties.PostalCode);
-
-                    locationString = (cameraProperties.IsBus)
-                        ? BusHelpers.GetBusLocation(bus)
-                        : LocationHelpers.LocationString(location);
-
-                    string locationPicUrl = (cameraProperties.IsBus)
-                        ? LocationHelpers.CreateLocationPictureFromCoordinates(location)
-                        : LocationHelpers.CreateLocationPictureFromAddress(location);
-
-                    using (WebClient client = new WebClient())
-                    {
-                        locationPicture = await client.DownloadDataTaskAsync(locationPicUrl);
-                    }
-                }
-
-                if (Mail.SendMail(information.contactPersonEmailAddress, data.EmailSubject,
-                        data.EmailBodyBeginning + information.missingPersonFirstName + " " +
-                        information.missingPersonLastName + data.EmailBodyEnding + locationString,
-                        new List<byte[]>() { locationPicture }, new List<string>() { "Location.jpeg" }) != null)
-                {
-                    Debug.WriteLine("Mail message was sent!");
-                }
-                else
-                {
-                    Debug.WriteLine("Mail message was not sent!");
-                }
-
-                if (Sms.SendSms(information.contactPersonPhoneNumber,
-                        data.SmsBodyBeginning + information.missingPersonFirstName + " " +
-                        information.missingPersonLastName + data.SmsBodyEnding) != null)
-                {
-                    Debug.WriteLine("Sms message was sent!");
-                }
-                else
-                {
-                    Debug.WriteLine("Sms message was not sent!");
-                }
+                await SendNotification(faceToken, confidence, cameraProperties);
 
                 //make sure repeated requests for this face token are not sent.
                 await context.Scheduler.DeleteJob(context.JobDetail.Key);

@@ -21,8 +21,11 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        //this should probably return action result, otherwise nothing will happen in the frontend IIRC
         public async Task CaptureSnapshot(string imgBase64)
         {
+            FaceApiCalls apiCalls = new FaceApiCalls(new HttpClientWrapper());
+
             // Prepare base64 string
             imgBase64 = imgBase64.Substring(imgBase64.IndexOf("base64,", StringComparison.Ordinal) + 7);
             imgBase64 = imgBase64.Substring(0, imgBase64.LastIndexOf("\"", StringComparison.Ordinal));
@@ -31,35 +34,29 @@ namespace Api.Controllers
             // Create a bitmap
             byte[] bitmapData = Convert.FromBase64String(FixBase64ForImage(imgBase64));
             System.IO.MemoryStream streamBitmap = new System.IO.MemoryStream(bitmapData);
-            Bitmap bitImage = new Bitmap((Bitmap)Image.FromStream(streamBitmap));
+            Bitmap bitmap = new Bitmap((Bitmap)Image.FromStream(streamBitmap));
 
-            bitImage = HelperMethods.ProcessImage(bitImage);
+            bitmap = HelperMethods.ProcessImage(bitmap);
             // Analyze bitmap
-            var processedFrame = await FaceProcessor.ProcessFrame(bitImage);
-
-            foreach (var face in processedFrame.Faces)
+            FrameAnalysisJSON analysisResult = await FaceProcessor.ProcessFrame(bitmap);
+            if (analysisResult == null)
             {
-                await FaceSearch(face.Face_token);
+                //error must've occured, should alert user.
+                return;
+            }
+            foreach (var face in analysisResult.Faces)
+            {
+                var searchResult = await apiCalls.SearchFaceInFaceset(Keys.facesetToken, face.Face_token);
+                if (searchResult != null)
+                    foreach (var likelinessResult in searchResult.LikelinessConfidences()) //might want to set the camera properties to some value.
+                        await SearchResultHandler.HandleOneResult(likelinessResult, LikelinessConfidence.HighProbability, cameraProperties: null);
             }
         }
         public string FixBase64ForImage(string Image)
         {
             System.Text.StringBuilder sbText = new System.Text.StringBuilder(Image, Image.Length);
-            sbText.Replace("\r\n", String.Empty); sbText.Replace(" ", String.Empty);
+            sbText.Replace("\r\n", string.Empty); sbText.Replace(" ", string.Empty);
             return sbText.ToString();
-        }
-
-        /// <summary>
-        /// Task for face search - executes API call, etc.
-        /// </summary>
-        private async Task FaceSearch(string faceToken)
-        {
-            FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
-            SearchResultHandler searchResultHandler = new SearchResultHandler(new CameraProperties("http://quadcam.unrfound.unr.edu/axis-cgi/mjpg/video.cgi", 8023));
-            FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, faceToken);
-            if (response != null)
-                foreach (LikelinessResult result in response.LikelinessConfidences())
-                    await searchResultHandler.HandleSearchResult(result);
         }
     }
 }
