@@ -48,47 +48,49 @@
         <video id="video" class="myVideo" style="display: block; margin: 0 auto; margin-top: 30px;" autoplay></video>
         <input id="button" class="child myButton" value="">
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/GetCameraFeed.js"></script>
+    <script>
+        var img;
+
+        $('#button').on('click', function () {
+            $('#snapshotModal').appendTo("body").modal('show');
+            var canvas = document.getElementById('canvas');
+            canvas.width = 200;
+            canvas.height = 200;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            img = canvas.toDataURL();
+            $('#modalContent').append('<input id="analyzePictureButton" style="display: block;" type="submit" value="Analyze picture"/>');
+            $('#modalFooter').append('<button class="btn btn-primary" data-dismiss="modal" id="closeButton">Cancel</button>');
+
+            $('#analyzePictureButton').on('click', function () {
+                $.ajax({
+                    url: '/CameraStream/CaptureSnapshot',
+                    type: 'POST',
+                    dataType: "json",
+                    data: { 'imgBase64': JSON.stringify(img) },
+                    success: function (data) {
+                        alert(data.result);
+                    },
+                    error: function () {
+                        alert("An error occured while analyzing picture");
+                    }
+                });
+
+            });
+            $('#closeButton').on('click', function () {
+                $('#snapshotModal').modal().remove();
+                $('.modal-backdrop').remove();
+            });
+
+
+        });
+
+    </script>
+
+    <div id="snapshotModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" data-url="@Html.Action("SnapshotModalView", "CameraStream")"></div>
+
 </body>
 </html>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-<script src="~/Scripts/GetCameraFeed.js"></script>
-<script>
-    var img;
-
-    $('#button').on('click', function () {
-        $('#snapshotModal').modal('show');
-        var canvas = document.getElementById('canvas');
-        canvas.width = 200;
-        canvas.height = 200;
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-        img = canvas.toDataURL();
-        $('#modalContent').append('<input id="analyzePictureButton" style="display: block;" type="submit" value="Analyze picture"/>');
-        $('#modalFooter').append('<button class="btn btn-primary" data-dismiss="modal" id="closeButton">Cancel</button>');
-
-        $('#analyzePictureButton').on('click', function () {
-            $.ajax({
-                url: '/CameraStream/CaptureSnapshot',
-                type: 'POST',
-                dataType: "json",
-                data: { 'imgBase64': JSON.stringify(img) },
-                success: function (data) {
-                    alert(data.result);
-                },
-                error: function () {
-                    alert("An error occured while analyzing picture");
-                }
-            });
-
-        });
-        $('#closeButton').on('click', function () {
-            $('#snapshotModal').modal().remove();
-        });
-
-
-    });
-
-</script>
-
-<div id="snapshotModal" class="modal hide fade" role="dialog" data-url="@Html.Action("SnapshotModalView", "CameraStream")"></div>

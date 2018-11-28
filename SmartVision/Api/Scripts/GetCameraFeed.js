@@ -1,5 +1,4 @@
 ﻿const videoSelect = document.querySelector("select#videoSource");
-const canvas = document.querySelector("select#canvas");
 const constraints = {
     video: {
         facingMode: "environment"
@@ -24,24 +23,4 @@ function stop() {
     video.src = "";
     stream.getTracks().forEach(track => track.stop());
     console.log("Stopping stream");
-}
-
-function snapshot() {
-    console.log(canvas);
-    canvas.width = 200;
-    canvas.height = 200;
-    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-    var img = canvas.toDataURL();
-    $.ajax({
-        url: '/CameraStream/CaptureSnapshot',
-        type: 'POST',
-        dataType: "json",
-        data: { 'imgBase64': JSON.stringify(img) },
-        success: function (data) {
-            alert(data.result);
-        },
-        error: function () {
-            alert("nixuj");
-        }
-    });
 }
