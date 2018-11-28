@@ -1,5 +1,5 @@
 ﻿const videoSelect = document.querySelector("select#videoSource");
-const canvas = document.getElementById("canvas");
+const canvas = document.querySelector("select#canvas");
 const constraints = {
     video: {
         facingMode: "environment"
@@ -16,7 +16,6 @@ function handleError(error) {
 }
 
 function start() {
-    canvas.fillStyle = 'white';
     navigator.mediaDevices.getUserMedia(constraints).then(gotStream).catch(handleError);
 }
 
@@ -28,21 +27,21 @@ function stop() {
 }
 
 function snapshot() {
-    canvas.style.visibility = "visible";
-    canvas.width = 200;
-    canvas.height = 200;
-    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-    var img = canvas.toDataURL();
-    $.ajax({
-        url: '/CameraStream/CaptureSnapshot',
-        type: 'POST',
-        dataType: "json",
-        data: { 'imgBase64': JSON.stringify(img) },
-        success: function () {
-            alert("zjbs success");
-        },
-        error: function () {
-            alert("nixuj");
-        }
-    });
+    console.log(canvas);
+    //canvas.width = 200;
+    //canvas.height = 200;
+    //canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    //var img = canvas.toDataURL();
+    //$.ajax({
+    //    url: '/CameraStream/CaptureSnapshot',
+    //    type: 'POST',
+    //    dataType: "json",
+    //    data: { 'imgBase64': JSON.stringify(img) },
+    //    success: function () {
+    //        alert("zjbs success");
+    //    },
+    //    error: function () {
+    //        alert("nixuj");
+    //    }
+    //});
 }

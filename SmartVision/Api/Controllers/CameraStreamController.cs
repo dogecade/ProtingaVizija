@@ -20,6 +20,12 @@ namespace Api.Controllers
             return View();
         }
 
+        public ActionResult SnapshotModalView()
+        {
+
+            return PartialView();
+        }
+
         [HttpPost]
         //this should probably return action result, otherwise nothing will happen in the frontend IIRC
         public async Task CaptureSnapshot(string imgBase64)
