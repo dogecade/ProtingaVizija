@@ -1,6 +1,4 @@
-﻿
-
-<style>
+﻿<style>
     .modalCenter {
         top: 50% !important;
         transform: translateY(-50%) !important;
@@ -13,9 +11,15 @@
 
 
 <div class="modal-dialog modalCenter">
-    <div class="modal-content">
-        <canvas id="canvas" class="canvas" style="visibility:hidden"></canvas>
-        <input id="button1" type="submit" value="Take new picture">
-        <input id="button2" type="submit" value="Analyze picture">
+    <div id="modalContent" class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title justify-content-center">Choose a face:</h4>
+        </div>
+        <canvas id="canvas" class="canvas"></canvas>
+        @*<input id="newPictureButton" style="display: block;" type="submit" value="Take new picture">
+        <input id="analyzePictureButton" style="display: block;" type="submit" value="Analyze picture">*@
+        <div id="modalFooter" class="modal-footer">
+            
+        </div>
     </div>
 </div>

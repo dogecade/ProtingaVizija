@@ -22,13 +22,12 @@ namespace Api.Controllers
 
         public ActionResult SnapshotModalView()
         {
-
             return PartialView();
         }
 
         [HttpPost]
         //this should probably return action result, otherwise nothing will happen in the frontend IIRC
-        public async Task CaptureSnapshot(string imgBase64)
+        public async Task<ActionResult> CaptureSnapshot(string imgBase64)
         {
             FaceApiCalls apiCalls = new FaceApiCalls(new HttpClientWrapper());
 
@@ -48,7 +47,7 @@ namespace Api.Controllers
             if (analysisResult == null)
             {
                 //error must've occured, should alert user.
-                return;
+                return null;
             }
             foreach (var face in analysisResult.Faces)
             {
@@ -57,6 +56,8 @@ namespace Api.Controllers
                     foreach (var likelinessResult in searchResult.LikelinessConfidences()) //might want to set the camera properties to some value.
                         await SearchResultHandler.HandleOneResult(likelinessResult, LikelinessConfidence.HighProbability, cameraProperties: null);
             }
+
+            return Json(new { result = LikelinessConfidence.HighProbability.ToString() }, JsonRequestBehavior.AllowGet);
         }
         public string FixBase64ForImage(string Image)
         {
