@@ -105,10 +105,10 @@
 
 <script>
     $('#password, #confirm_password').on('keyup', function () {
-        if ($('#password').val() == $('#confirm_password').val() && $('#password').val() != "" && $('#confirm_password').val() != "") {
+        if ($('#password').val() === $('#confirm_password').val() && $('#password').val() !== "" && $('#confirm_password').val() !== "") {
             $('#password').css('border-color', 'green');
             $('#confirm_password').css('border-color', 'green');
-        } else if($('#password').val() == "" || $('#confirm_password').val() == "") {
+        } else if($('#password').val() === "" || $('#confirm_password').val() === "") {
             $('#password').css('border-color', '');
             $('#confirm_password').css('border-color', '');
         } else

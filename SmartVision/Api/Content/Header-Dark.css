@@ -2,6 +2,7 @@
   background:transparent;
   background-size:cover;
   padding-bottom:80px;
+  border: 1px black solid;
 }
 
 @media (min-width:768px) {
