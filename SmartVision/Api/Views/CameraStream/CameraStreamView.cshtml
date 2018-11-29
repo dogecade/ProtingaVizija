@@ -57,9 +57,12 @@
         $('#button').on('click', function () {
             $('#snapshotModal').appendTo("body").modal('show');
             var canvas = document.getElementById('canvas');
-            canvas.width = 200;
-            canvas.height = 200;
+            canvas.width = 1000;
+            canvas.height = 1000;
+            //canvas.style.width = "500px";
+            //canvas.style.height = "500px";
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
             img = canvas.toDataURL();
             $('#modalContent').append('<input id="analyzePictureButton" style="display: block;" type="submit" value="Analyze picture"/>');
             $('#modalFooter').append('<button class="btn btn-primary" data-dismiss="modal" id="closeButton">Cancel</button>');
@@ -73,15 +76,14 @@
                     success: function (data) {
                         alert(data.result);
                     },
-                    error: function () {
-                        alert("An error occured while analyzing picture");
+                    error: function (xhr) {
+                        alert("An error have occured while analyzing provided picture");
                     }
                 });
 
             });
             $('#closeButton').on('click', function () {
-                $('#snapshotModal').modal().remove();
-                $('.modal-backdrop').remove();
+                $('#snapshotModal').modal('hide');
             });
 
 
@@ -89,7 +91,10 @@
 
     </script>
 
-    <div id="snapshotModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" data-url="@Html.Action("SnapshotModalView", "CameraStream")"></div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <div id="snapshotModal" class="modal fade" role="dialog" data-url="@Html.Action("SnapshotModalView", "CameraStream")"></div>
 
 </body>
 </html>
