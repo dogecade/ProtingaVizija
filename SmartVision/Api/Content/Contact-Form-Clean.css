@@ -99,6 +99,8 @@
 	height:120px;
 	width:100px;
 	border: gray 1px solid;
+	padding-left: 0;
+	padding-right: 0;
 }
 #targetImg {
 	width: 100%;
