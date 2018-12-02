@@ -102,6 +102,32 @@
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
 <script>
+
+    $(function () {
+
+        var alerter = $.connection.faceDetectedAlert;
+
+        /*
+        function init() {
+            ticker.server.getAllStocks().done(function (stocks) {
+                $stockTableBody.empty();
+                $.each(stocks, function () {
+                    var stock = formatStock(this);
+                    $stockTableBody.append(rowTemplate.supplant(stock));
+                });
+            });
+        }
+        */
+
+        // Add a client-side hub method that the server will call
+        alerter.client.alertFaceDetected = function (id) {
+            /* handle the fact that face detected in camera with id */
+        }
+
+        $.connection.hub.start().done(init);
+
+    });
+
     $('#isBus').change(function () {
         $('#cameraForm').toggle();
         $('#bussForm').toggle();
@@ -113,14 +139,12 @@
             type: 'GET',
             dataType: "json",
             success: function (data) {
-                data.result.forEach(function (image) {
-                    $("#streamWrapper").append('<div class="hoverContainer">' +
-                                                    '<img src="' + image + '" height="200" width="300" /> ' +
-                                                    '<div class="overlay"></div>  ' +
-                                                    '<button id="' + image + '"class="btn btn-square btn-danger hoverableButton" onclick="removeStream(this.id)">' +
-                                                    'X' +
-                                                    '</button>' +
-                                                '</div>');
+                data.result.forEach(function (streamTuple) {
+                    var stream = {
+                        url: streamTuple.Item1,
+                        id: streamTuple.Item2
+                    };
+                    addStream(stream);
                 });
             },
             error: function () {
@@ -129,20 +153,30 @@
         });
     });
 
-     function removeStream (element) {
+    function removeStream(element) {
         $.ajax({
             url: '@Url.Action("RemoveStream", "Home")',
             type: 'POST',
             dataType: "json",
-            data: { streamUrl: JSON.stringify(element) },
+            data: { streamId: JSON.stringify($(element).data('id')) },
             success: function (data) {
-                location.reload();
+                $(element).parent().remove();
             },
             error: function () {
                 alert('Error remove POST');
             }
         });
-     };
+    };
+
+    function addStream(stream) {
+        $("#streamWrapper").append('<div class="hoverContainer" data-id="' + stream.id + '">' +
+            '<img src="' + stream.url + '" height="200" width="300" /> ' +
+            '<div class="overlay"></div>  ' +
+            '<button data-id="' + stream.id + '"class="btn btn-square btn-danger hoverableButton" onclick="removeStream(this)">' +
+            'X' +
+            '</button>' +
+            '</div>');
+    }
 
     $("#submit").click(function () {
         var properties = {
@@ -159,8 +193,9 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(properties),
-            success: function (data) {
-                location.reload(); // location.reload(forceGet) - By default, the reload() method reloads the page from the cache, but you can force it to reload the page from the server by setting the forceGet parameter to true: location.reload(true).
+            success: function (streamData) {
+                $(':input').not('#submit').val('');
+                addStream(streamData);
             },
             error: function () {
                 alert('Error add POST');

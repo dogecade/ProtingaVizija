@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using AForge.Video;
@@ -60,7 +61,16 @@ namespace FaceAnalysis
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
+            var hashCode = -1743501413;
+            hashCode = hashCode * -1521134295 + EqualityComparer<ConcurrentQueue<Rectangle>>.Default.GetHashCode(faceRectangles);
+            hashCode = hashCode * -1521134295 + EqualityComparer<IVideoSource>.Default.GetHashCode(Stream);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(Id);
+            return hashCode;
+        }
+
+        public override string ToString()
+        {
+            return Id.ToString();
         }
 
         public static bool operator ==(ProcessableVideoSource lhs, ProcessableVideoSource rhs)

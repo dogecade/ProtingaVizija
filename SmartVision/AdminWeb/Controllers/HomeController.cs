@@ -26,31 +26,37 @@ namespace AdminWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddCamera(CameraPropertiesModel properties)
+        public async Task<ActionResult> AddCamera(CameraPropertiesModel properties)
         {
             Debug.WriteLine(properties.StreamUrl);
             if (properties.StreamUrl != null)
             {
                 properties.StreamUrl = properties.StreamUrl.Replace(@"""", string.Empty);
-                MJPEGStreamManager.AddStream(properties.StreamUrl, properties);
+                var (url, id) = await MJPEGStreamManager.AddStream(properties.StreamUrl, properties);
+                return Json(new { url, id }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
+            else
+                return null;
         }
+
         [HttpGet]
         public ActionResult GetStreamList()
         {
-            return Json(new { result = MJPEGStreamManager.GetStreamUrls() }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = MJPEGStreamManager.GetStreams() }, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
-        public ActionResult RemoveStream(string streamUrl)
+        public ActionResult RemoveStream(string streamId)
         {
-            Debug.WriteLine(streamUrl);
-            if (streamUrl != "")
+            Debug.WriteLine(streamId);
+            if (streamId != "")
             {
-                streamUrl = streamUrl.Replace(@"""", string.Empty);
-                MJPEGStreamManager.RemoveStream(streamUrl);
+                streamId = streamId.Replace(@"""", string.Empty);
+                MJPEGStreamManager.RemoveStream(streamId);
+                return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
+            else
+                return null;
         }
 
     }

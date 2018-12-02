@@ -36,7 +36,6 @@ namespace FaceAnalysis
 
         public FaceProcessor(CameraProperties cameraProperties = null)
         {
-
             var linkOptions = new DataflowLinkOptions { PropagateCompletion = true };
             var blockOptions = new ExecutionDataflowBlockOptions { BoundedCapacity = 1 };
 
