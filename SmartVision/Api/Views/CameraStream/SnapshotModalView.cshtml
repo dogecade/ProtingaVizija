@@ -1,0 +1,23 @@
+﻿<style>
+    .modalCenter {
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+    }
+
+    .modal-dialog {
+        text-align: center;
+    }
+
+    .modal-content {
+        display: inline-block;
+    }
+</style>
+
+<div class="modal-dialog modalCenter">
+    <div id="modalContent" class="modal-content">
+        <canvas id="snapshotCanvas" class="canvas"></canvas>
+        <div class="modal-footer">
+            <button class="btn btn-primary" data-dismiss="modal" id="closeButton">Cancel</button>
+        </div>
+    </div>
+</div>

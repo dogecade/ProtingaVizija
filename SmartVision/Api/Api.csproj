@@ -361,6 +361,7 @@
     <Content Include="Views\CameraStream\CameraStreamView.cshtml" />
     <Content Include="Views\Home\RegisterView.cshtml" />
     <Content Include="Views\Home\LoginView.cshtml" />
+    <Content Include="Views\CameraStream\SnapshotModalView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

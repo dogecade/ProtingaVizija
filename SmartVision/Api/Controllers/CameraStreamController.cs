@@ -16,6 +16,11 @@ namespace Api.Controllers
             return View();
         }
 
+        public ActionResult SnapshotModalView()
+        {
+            return PartialView();
+        }
+
         [HttpPost]
         public void CaptureSnapshot(string imgBase64)
         {
