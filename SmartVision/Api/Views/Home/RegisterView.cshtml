@@ -1,0 +1,120 @@
+﻿@model Objects.Person.MissingPerson
+@{
+    Layout = "";
+    ViewBag.Title = "Smart Vision";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="~/Content/Contact-Form-Clean.css">
+</head>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+
+<body>
+    <div class="contact-clean">
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+        {
+            <div class="container align-content-center">
+                <div class="row d-flex justify-content-center">
+                    <div class="col d-flex justify-content-center">
+                        <h2>Registration Form</h2>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div id="register-form">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group center">
+                    @Html.LabelFor(model => model.firstName, "Full Name:", htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                        </div>
+                        @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control", @type = "text", @name = "full_name", @required = "" } })
+                        @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group center">
+                    @Html.LabelFor(model => model.firstName, "Username:", htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                        </div>
+                        @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control", @type = "text", @name = "username", @required = "" } })
+                        @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group center">
+                    @Html.LabelFor(model => model.firstName, "Phone Number:", htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+                        </div>
+                        @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control", @type = "tel", @required = "", @pattern = "^[+][0-9]+$" } })
+                        @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group center">
+                    @Html.LabelFor(model => model.firstName, "Email:", htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                        </div>
+                        @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control", @type = "email", @required = "", pattern = "[^@\\s]+@[^@\\s]+\\.[^@\\s]+" } })
+                        @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group center">
+                    @Html.LabelFor(model => model.firstName, "Password:", htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                        </div>
+                        @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control", @name = "password", @id = "password", @required = "", @type = "password" } })
+                        @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group center">
+                    @Html.LabelFor(model => model.firstName, "Confirm Password:", htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                        </div>
+                        @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control", @name = "confirm_password", @id = "confirm_password", @required = "", @type = "password" } })
+                        @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group center">
+                        <input id="submitButton" type="submit" value="Register" class="btn btn-primary d-flex m-auto" href="../Home/Index" />
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</body>
+
+<script>
+    $('#password, #confirm_password').on('keyup', function () {
+        if ($('#password').val() === $('#confirm_password').val() && $('#password').val() !== "" && $('#confirm_password').val() !== "") {
+            $('#password').css('border-color', 'green');
+            $('#confirm_password').css('border-color', 'green');
+        } else if($('#password').val() === "" || $('#confirm_password').val() === "") {
+            $('#password').css('border-color', '');
+            $('#confirm_password').css('border-color', '');
+        } else
+        {
+        $('#password').css('border-color', 'red');
+        $('#confirm_password').css('border-color', 'red');
+        }
+    });
+</script>

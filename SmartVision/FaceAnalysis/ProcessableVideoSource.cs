@@ -9,20 +9,9 @@ namespace FaceAnalysis
     public class ProcessableVideoSource
     {
         private ConcurrentQueue<Rectangle> faceRectangles;
-        private readonly object latestFrameLock = new object();
         public event NewFrameEventHandler NewFrame;
         public IVideoSource Stream { get; }
         public Guid Id { get; }
-        public Bitmap LatestFrameCopy
-        {
-            get
-            {
-                lock(latestFrameLock)
-                    return new Bitmap(latestFrame);
-            }
-        }
-
-        private Bitmap latestFrame;
 
         public ProcessableVideoSource(IVideoSource videoStream)
         {
@@ -55,11 +44,7 @@ namespace FaceAnalysis
                         g.DrawRectangle(pen, face);
 
             NewFrame?.Invoke(this, new NewFrameEventArgs(bitmap));
-            lock (latestFrameLock)
-            {
-                latestFrame?.Dispose();
-                latestFrame = bitmap;
-            }
+            bitmap.Dispose();
         }
 
         public void UpdateRectangles(object sender, FrameProcessedEventArgs e)
