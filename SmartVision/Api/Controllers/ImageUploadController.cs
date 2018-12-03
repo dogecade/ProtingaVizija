@@ -1,4 +1,5 @@
 ﻿using Api.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
@@ -51,7 +52,9 @@ namespace Api.Controllers
         public override string GetLocalFileName(System.Net.Http.Headers.HttpContentHeaders headers)
         {
             // override the filename which is stored by the provider (by default is bodypart_x)
-            string originalFileName = headers.ContentDisposition.FileName.Trim('\"');
+            Guid g;
+            g = Guid.NewGuid();
+            string originalFileName = g.ToString() + ".jpg" ;
 
             return originalFileName;
         }
