@@ -24,7 +24,7 @@ namespace Api.Controllers
                 throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.UnsupportedMediaType);
             }
             string root = System.Web.HttpContext.Current.Server.MapPath("~/img");
-            var provider = new MultipartFormDataStreamProvider(root);
+            var provider = new MyMultipartFormDataStreamProvider(root);
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             List<string> strings = new List<string>();
             try
@@ -32,7 +32,7 @@ namespace Api.Controllers
                 await request.Content.ReadAsMultipartAsync(provider);
                 foreach (MultipartFileData file in provider.FileData)
                 {
-                    strings.Add(file.LocalFileName);
+                    strings.Add(file.LocalFileName.Substring(file.LocalFileName.LastIndexOf('\\')));
                 }
 
                 return Ok(serializer.Serialize(strings));
@@ -43,4 +43,18 @@ namespace Api.Controllers
             }
         }
     }
+    public class MyMultipartFormDataStreamProvider : MultipartFormDataStreamProvider
+    {
+        public MyMultipartFormDataStreamProvider(string path) : base(path)
+        { }
+
+        public override string GetLocalFileName(System.Net.Http.Headers.HttpContentHeaders headers)
+        {
+            // override the filename which is stored by the provider (by default is bodypart_x)
+            string originalFileName = headers.ContentDisposition.FileName.Trim('\"');
+
+            return originalFileName;
+        }
+    }
+
 }
