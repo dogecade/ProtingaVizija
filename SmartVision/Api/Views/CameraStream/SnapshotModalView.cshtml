@@ -1,21 +1,27 @@
 ﻿<style>
-    .modalCenter {
-        top: 50% !important;
-        transform: translateY(-50%) !important;
+    .canvas {
+        width: 30%;
+        height: 30%;
+        display: block;
+        margin: 0 auto;
+        position: absolute;
     }
 
-    .modal-dialog {
+    .analyzeButton {
+        display: block;
+        margin: 0 auto;
+        position: relative;
         text-align: center;
     }
 
-    .modal-content {
-        display: inline-block;
-    }
 </style>
 
-<div class="modal-dialog modalCenter">
+<div class="modal-dialog">
     <div id="modalContent" class="modal-content">
-        <canvas id="snapshotCanvas" class="canvas"></canvas>
+        <div class="modal-body" id="modalBody">
+            <canvas id="canvas" class="canvas"></canvas>
+            <input id="analyzePictureButton" class="analyzeButton" type="submit" value="Analyze picture" />
+        </div>
         <div class="modal-footer">
             <button class="btn btn-primary" data-dismiss="modal" id="closeButton">Cancel</button>
         </div>

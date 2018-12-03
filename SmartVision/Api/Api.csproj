@@ -381,6 +381,10 @@
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Constants\Constants.csproj">
+      <Project>{265fbc83-ec69-4a84-be40-3856b6056f64}</Project>
+      <Name>Constants</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FaceAnalysis\FaceAnalysis.csproj">
       <Project>{c9dd5eb7-25cd-4f3a-901a-0f20a7f8479d}</Project>
       <Name>FaceAnalysis</Name>

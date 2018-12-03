@@ -19,7 +19,7 @@
         transform: translate(-50%, -50%);
     }
 
-    .video-container{
+    .video-container {
         position: relative;
         width: 500px;
         height: 500px;
@@ -41,6 +41,18 @@
         resize: both;
         overflow: auto;
     }
+
+    .modalSize {
+        width: 90%;
+        height: 90%;
+        overflow-y: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        padding-top: 10%;
+    }
 </style>
 
 <html>
@@ -51,20 +63,44 @@
 </head>
 
 <body onload="start()" onunload="stop()">
-    <div class="container video">
+    <div class="container">
         <video id="video" class="myVideo center" autoplay></video>
         <input id="button" type="submit" class="child myButton" value="">
     </div>
-    <script src="~/Scripts/GetCameraFeed.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/GetCameraFeed.js"></script>
     <script>
+        var img;
         $('#button').on('click', function () {
-            $('#snapshotModal').modal('show');
+            $('#snapshotModal').appendTo("body").modal('show');
+            var canvas = document.getElementById('canvas');
+            canvas.width = 250;
+            canvas.height = 250;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            img = canvas.toDataURL();
+            $('#analyzePictureButton').on('click', function () {
+                $.ajax({
+                    url: '/CameraStream/CaptureSnapshot',
+                    type: 'POST',
+                    dataType: "json",
+                    data: { 'imgBase64': JSON.stringify(img) },
+                    success: function (data) {
+                        alert(data.result);
+                    },
+                    error: function () {
+                        alert("An error have occured while analyzing provided picture");
+                    }
+                });
+            });
+            $('#closeButton').on('click', function () {
+                alert('darau');
+                $('#snapshotModal').modal('hide');
+            });
         });
     </script>
-    <div id="snapshotModal" class="modal hide fade" role="dialog" data-url="@Url.Action("SnapshotModalView", "CameraStream")"></div>
 
+    <div id="snapshotModal" class="modal fade modalSize" role="dialog" data-url="@Html.Action("SnapshotModalView", "CameraStream")"></div>
 
 </body>
 </html>
