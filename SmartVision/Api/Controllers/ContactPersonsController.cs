@@ -20,8 +20,6 @@ namespace Api.Controllers
         // GET: api/ContactPersons
         public IQueryable<ContactPerson> GetContactPersons()
         {
-            db.Configuration.ProxyCreationEnabled = false;
-
             return db.ContactPersons;
         }
 

@@ -57,11 +57,6 @@ namespace Api.Controllers
         public async Task<ActionResult> AddMissingPerson (MissingPerson missingPersons)
         {
             HttpClientWrapper httpClient = new HttpClientWrapper();
-            if (await new FaceApiCalls(httpClient).AddFaceToFaceset(Constants.Keys.facesetToken, missingPersons.faceToken) == null)
-            {
-                //TODO: have some proper things to do here.
-                throw new SystemException("ding dong");
-            }
             byte[] byteArray = Convert.FromBase64String(missingPersons.faceImg);
             using (var ms = new MemoryStream(byteArray, 0, byteArray.Length))
             {

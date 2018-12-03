@@ -102,8 +102,7 @@ namespace Helpers
             byte[] imgArray = (byte[])converter.ConvertTo(img, typeof(byte[]));
             form.Add(new ByteArrayContent(imgArray, 0, imgArray.Length), "user_picture", "user_picture.jpg");
             HttpResponseMessage response = await httpClient.PostAsync(new Uri(API + "/ImageUpload"), form);
-            string temp = await response.Content.ReadAsStringAsync();
-            return temp.Replace(@"""", string.Empty).Replace("/", string.Empty).Replace("[", string.Empty).Replace("]", string.Empty);
+            return await response.Content.ReadAsStringAsync();
         }
 
         public async Task<HttpContent> PostRelToApi(Object missingContact)
