@@ -18,7 +18,16 @@
             </div>
             @foreach (var item in Model)
             {
+                if (item.faceImg.Length != 0)
+                {
+                    string x = "/img/" + item.faceImg.Remove(item.faceImg.Length - 1);
+                    <img  height ="100px" width ="100px" src="@x" />
+                }
                 //Displaying images of missing people
+
+                @item.firstName
+                @item.lastName
+                <br />
             }
         </div>
     </div>
