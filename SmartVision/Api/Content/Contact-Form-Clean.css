@@ -1,5 +1,5 @@
 .contact-clean {
-  background-color: #0C0404;
+  background-color: #fff;
   padding:80px 0;
 }
 
@@ -59,7 +59,7 @@
   resize:vertical;
 }
 
-.contact-clean form .btn {
+/*.contact-clean form .btn {
   padding:16px 32px;
   border:none;
   background:none;
@@ -86,7 +86,7 @@
   background-color:#055ada !important;
   margin-top:15px;
   color:#fff;
-}
+}*/
 
 
 .center {
