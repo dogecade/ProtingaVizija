@@ -16,10 +16,11 @@ namespace Api.Controllers
     public class MissingPersonsController : ApiController
     {
         private pstop2018Entities1 db = new pstop2018Entities1();
-
+       
         // GET: api/MissingPersons
         public IQueryable<MissingPerson> GetMissingPersons()
         {
+            db.Configuration.ProxyCreationEnabled = false;
             return db.MissingPersons;
         }
 
