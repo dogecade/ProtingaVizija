@@ -16,10 +16,11 @@ namespace AdminWeb.Controllers
             var allBuses = BusHelpers.GetAllAvailableBusses();
             var items = new List<SelectListItem>();
 
-            foreach (var bus in allBuses)
-            {
-                items.Add(new SelectListItem() { Text = bus.Name, Value = bus.Id });
-            }
+            if (allBuses != null)
+                foreach (var bus in allBuses)
+                {
+                    items.Add(new SelectListItem() { Text = bus.Name, Value = bus.Id });
+                }
 
             model.Buses = items;
             return View(model);
