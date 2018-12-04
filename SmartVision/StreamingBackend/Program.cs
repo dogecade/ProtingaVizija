@@ -12,13 +12,13 @@ namespace StreamingBackend
     public static class MJPEGStreamManager
     {
         private static readonly ConcurrentDictionary<ProcessableVideoSource, MJPEGServer> streamServers = new ConcurrentDictionary<ProcessableVideoSource, MJPEGServer>();
-        private static FaceProcessor processor;
+        public static FaceProcessor Processor { get; } = new FaceProcessor();
+        //TODO: REPLACE THIS PLS
+        private static volatile bool isStarted = false;
         static void Main(string[] args)
         {
             new System.Threading.AutoResetEvent(false).WaitOne();
         }
-
-        public static void Test() => Debug.WriteLine("opapapa");
 
         //TODO: this assumes that it's an MJPEG stream, it could be a JPEG stream as well
         public static async Task<(string url, string id)> AddStream(string sourceUrl, CameraProperties properties = null)
@@ -26,21 +26,21 @@ namespace StreamingBackend
             return await AddStream(new ProcessableVideoSource(new MJPEGStream(sourceUrl)), properties);
         }
 
-        //TODO: this is hacky as hell, should be fixed with proper CameraProperties things
         public static async Task<(string url, string id)> AddStream(ProcessableVideoSource source, CameraProperties properties = null)
         {
-            bool processorNull = processor == null;
-            processor = processor == null ? new FaceProcessor(properties) : processor;
             var server = new MJPEGServer(source, start: true);
             streamServers[source] = server;
-            processor.AddSource(source);
-            if (processorNull)
-                await processor.Start();
+            Processor.AddSource(source);
+            if (!isStarted)
+            {
+                isStarted = true;
+                await Processor.Start();
+            }
             return (server.Url, source.Id.ToString());
             
         }
         
-        public static void RemoveStream(string sourceId)
+        public static void RemoveStream(string sourceId)    
         {
             foreach(var source in streamServers.Keys)
                 if (source.Id.ToString() == sourceId)
@@ -55,7 +55,7 @@ namespace StreamingBackend
         {
             streamServers.TryRemove(source, out var server);
             server.Stop();
-            processor.RemoveSource(source);
+            Processor.RemoveSource(source);
         }
 
         public static IEnumerable<(string url, string id)> GetStreams()
