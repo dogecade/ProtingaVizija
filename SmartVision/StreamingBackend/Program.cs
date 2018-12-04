@@ -13,29 +13,22 @@ namespace StreamingBackend
     {
         private static readonly ConcurrentDictionary<ProcessableVideoSource, MJPEGServer> streamServers = new ConcurrentDictionary<ProcessableVideoSource, MJPEGServer>();
         public static FaceProcessor Processor { get; } = new FaceProcessor();
-        //TODO: REPLACE THIS PLS
-        private static volatile bool isStarted = false;
         static void Main(string[] args)
         {
             new System.Threading.AutoResetEvent(false).WaitOne();
         }
 
         //TODO: this assumes that it's an MJPEG stream, it could be a JPEG stream as well
-        public static async Task<(string url, string id)> AddStream(string sourceUrl, CameraProperties properties = null)
+        public static (string url, string id) AddStream(string sourceUrl)
         {
-            return await AddStream(new ProcessableVideoSource(new MJPEGStream(sourceUrl)), properties);
+            return AddStream(new ProcessableVideoSource(new MJPEGStream(sourceUrl)));
         }
 
-        public static async Task<(string url, string id)> AddStream(ProcessableVideoSource source, CameraProperties properties = null)
+        public static (string url, string id) AddStream(ProcessableVideoSource source)
         {
             var server = new MJPEGServer(source, start: true);
             streamServers[source] = server;
             Processor.AddSource(source);
-            if (!isStarted)
-            {
-                isStarted = true;
-                await Processor.Start();
-            }
             return (server.Url, source.Id.ToString());
             
         }

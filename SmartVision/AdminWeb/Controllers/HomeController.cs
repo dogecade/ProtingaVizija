@@ -12,6 +12,11 @@ namespace AdminWeb.Controllers
     {
         public ActionResult Index()
         {
+            return View();
+        }
+
+        public ActionResult Configuration()
+        {
             var model = new BusModel();
             var allBuses = BusHelpers.GetAllAvailableBusses();
             var items = new List<SelectListItem>();
@@ -27,17 +32,24 @@ namespace AdminWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddCamera(CameraPropertiesModel properties)
+        public ActionResult AddCamera(string streamUrl)
         {
-            Debug.WriteLine(properties.StreamUrl);
-            if (properties.StreamUrl != null)
+            Debug.WriteLine(streamUrl);
+            if (streamUrl != null)
             {
-                properties.StreamUrl = properties.StreamUrl.Replace(@"""", string.Empty);
-                var (url, id) = await MJPEGStreamManager.AddStream(properties.StreamUrl, properties);
+                streamUrl = streamUrl.Replace(@"""", string.Empty);
+                var (url, id) = MJPEGStreamManager.AddStream(streamUrl);
                 return Json(new { url, id }, JsonRequestBehavior.AllowGet);
             }
             else
                 return null;
+        }
+
+        [HttpPost]
+        public ActionResult ChangeProperties(CameraPropertiesModel properties)
+        {
+            MJPEGStreamManager.Processor.UpdateProperties(properties);
+            return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

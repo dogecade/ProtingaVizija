@@ -1,0 +1,78 @@
+﻿@using System.Collections
+@using System.Security.Policy
+
+@{
+    ViewBag.Title = "Configuration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model AdminWeb.Models.BusModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Configuration</h2>
+
+<div class="contact-clean">
+    <div class="form-group center">
+        @Html.Label("The camera is located in a bus: ")
+        @Html.CheckBox("isBus", false, new { @id = "isBus" })
+    </div>
+    <div id="cameraForm" class="form-group center">
+        @Html.Label("Street name:")
+        @Html.TextBox("streetName", null, new { @class = "form-control", @type = "text", @id = "streetName" })
+        @Html.Label("House number:")
+        @Html.TextBox("houseNumber", null, new { @class = "form-control", @type = "text", @id = "houseNumber" })
+        @Html.Label("City:")
+        @Html.TextBox("city", null, new { @class = "form-control", @type = "text", @id = "city" })
+        @Html.Label("Country:")
+        @Html.TextBox("country", null, new { @class = "form-control", @type = "text", @id = "country" })
+        @Html.Label("Post code:")
+        @Html.TextBox("postCode", null, new { @class = "form-control", @type = "text", @id = "postCode" })
+    </div>
+    <div id="busForm" style="display: none;" class="form-group center">
+        @Html.Label("Bus number:")
+        @Html.DropDownListFor(m => m.SelectedBusId, Model.Buses)
+    </div>
+    <div class="form-group center">
+        <input class="btn btn-primary d-flex m-auto" type="submit" id="submit" value="Submit">
+    </div>
+</div>
+<style>
+    .drop-down {
+        top: 100%;
+    }
+</style>
+
+@section scripts
+{
+    <script>
+        $('#isBus').change(function () {
+            $('#cameraForm').toggle();
+            $('#busForm').toggle();
+        });
+
+        $("#submit").click(function () {
+            var properties = {
+                StreetName: document.getElementById('streetName').value,
+                CityName: document.getElementById('city').value,
+                PostalCode: document.getElementById('postCode').value,
+                IsBus: document.getElementById('isBus').value,
+                BusId: '0'
+        }
+            $.ajax({
+                url: '@Url.Action("ChangeProperties", "Home")',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(properties),
+                success: function (result) {
+                    $(':input').not('#submit').val('');
+                },
+                error: function () {
+                    alert('Error add POST');
+                }
+            });
+        });
+    </script>
+}

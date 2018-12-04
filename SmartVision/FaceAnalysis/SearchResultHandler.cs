@@ -27,6 +27,7 @@ namespace FaceAnalysis
         private const string emailBodyEnding = " was detected at this location - ";
 
         private readonly IScheduler scheduler;
+
         private static readonly ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData> likelinessLevelData =
             new ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData>
         (
@@ -78,12 +79,17 @@ namespace FaceAnalysis
         {
             scheduler = new StdSchedulerFactory().GetScheduler().GetAwaiter().GetResult();
             scheduler.Start();
-            scheduler.Context.Put("cameraProperties", cameraProperties);
+            UpdateProperties(cameraProperties);
         }
 
         public void Complete()
         {
             scheduler.Shutdown();
+        }
+
+        public void UpdateProperties(CameraProperties cameraProperties)
+        {
+            scheduler.Context.Put("cameraProperties", cameraProperties);
         }
 
         /// <summary>

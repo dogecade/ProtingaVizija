@@ -32,6 +32,7 @@ namespace FaceAnalysis
         private readonly BatchDictionaryBlock<ProcessableVideoSource, Bitmap> batchBlock;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
         private readonly SearchResultHandler resultHandler;
+        
 
         /// <summary>
         /// Event that processing is completed.
@@ -137,6 +138,14 @@ namespace FaceAnalysis
         public async Task Start()
         {
             await batchBlock.TriggerBatch();
+        }
+
+        /// <summary>
+        /// Updates properties of the underlying search result handler
+        /// </summary>
+        public void UpdateProperties(CameraProperties cameraProperties)
+        {
+            resultHandler.UpdateProperties(cameraProperties);
         }
 
         /// <summary>
