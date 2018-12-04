@@ -265,6 +265,7 @@
     <Content Include="Content\assets\images\ab-f-img9.jpg" />
     <Content Include="Content\assets\images\angela-img.jpg" />
     <Content Include="Content\assets\images\background\about-bg.jpg" />
+    <Content Include="Content\assets\images\background\addmissing-bg.jpg" />
     <Content Include="Content\assets\images\background\blog-bg.jpg" />
     <Content Include="Content\assets\images\background\contact-bg.jpg" />
     <Content Include="Content\assets\images\background\homepage-bg.jpg" />

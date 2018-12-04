@@ -7,35 +7,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @*<link rel="stylesheet" href="~/Content/Lightbox-Gallery.css">*@
+    <link rel="stylesheet" href="~/Content/Lightbox-Gallery.css">
 </head>
 <body>
-    @*<div class="photo-gallery">
-        <div class="container">
-            <div class="intro">
-                <h2 class="text-center">Have you seen these people?</h2>
-                <p class="text-center">You can find additional information by hovering over pictures. If you have seen these people please contact the authorities or the contact people of the missing person.</p>
-            </div>
-            @foreach (var item in Model)
-            {
-                if (item.faceImg.Length != 0)
-                {
-                    string x = "/img/" + item.faceImg.Remove(item.faceImg.Length - 1);
-                    <img  height ="100px" width ="100px" src="@x" />
-                }
-                //Displaying images of missing people
-
-                @item.firstName
-                @item.lastName
-                <br />
-            }
-        </div>
-    </div>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>*@
-
-
     <!--Home Sections-->
     <section id="hello" class="model-banner bg-mega">
         <div class="overlay"></div>
@@ -50,12 +24,7 @@
             </div><!--End off row-->
         </div><!--End off container -->
 </section> <!--End off Home Sections-->
-    <div class="head_title container" style="text-align: center;">
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+    <div class="head_title container currently-header p-top-100" >
         <h2>Have you seen these people?</h2>
         <h5>You can find additional information by hovering over pictures. If you have seen these people please contact the authorities or the contact people of the missing person.</h5>
         <div class="separator_left" style="width:100%"></div>
