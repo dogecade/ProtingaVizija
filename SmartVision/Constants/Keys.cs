@@ -10,5 +10,7 @@
         public const string twilioAuthToken = "";
 
         public const string googleApiKey = "";
+        public const string recaptchaSecretKey = "";
+
     }
 }

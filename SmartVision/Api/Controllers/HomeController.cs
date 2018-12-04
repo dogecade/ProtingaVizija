@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Constants;
+using Newtonsoft.Json.Linq;
 
 namespace Api.Controllers
 {
@@ -25,6 +28,43 @@ namespace Api.Controllers
             ViewBag.Title = "Smart Vision";
 
             return View();
+        }
+        public ActionResult CaptchaVerificationRegister()
+        {
+            var response = Request["g-recaptcha-response"];
+            string secretKey = Keys.recaptchaSecretKey;
+            var client = new WebClient();
+            var result = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, response));
+            var obj = JObject.Parse(result);
+            var status = (bool)obj.SelectToken("success");
+
+            if (status)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewBag.Message = "ReCaptcha validation failed";
+
+            return View("RegisterView");
+        }
+
+        public ActionResult CaptchaVerificationLogin()
+        {
+            var response = Request["g-recaptcha-response"];
+            string secretKey = Keys.recaptchaSecretKey;
+            var client = new WebClient();
+            var result = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, response));
+            var obj = JObject.Parse(result);
+            var status = (bool)obj.SelectToken("success");
+
+            if (status)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewBag.Message = "ReCaptcha validation failed";
+
+            return View("LoginView");
         }
     }
 }
