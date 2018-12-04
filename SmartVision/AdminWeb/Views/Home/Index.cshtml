@@ -9,6 +9,7 @@
 @{
     ViewBag.Title = "Index";
 }
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -99,107 +100,107 @@
     }
 </style>
 
-<script src="~/Scripts/jquery-3.3.1.min.js"></script>
-<script src="~/Scripts/bootstrap.min.js"></script>
-<script>
+@section scripts
+{
+    @Scripts.Render("~/Scripts/jquery.signalR-2.2.2.js")
+    <script src="~/signalr/hubs"></script>
+    <script>
+        $(function () {
 
-    $(function () {
+            var alerter = $.connection.faceDetectedAlert;
 
-        var alerter = $.connection.faceDetectedAlert;
+            console.log(alerter);
+            console.log($.connection);           
 
-        /*
-        function init() {
-            ticker.server.getAllStocks().done(function (stocks) {
-                $stockTableBody.empty();
-                $.each(stocks, function () {
-                    var stock = formatStock(this);
-                    $stockTableBody.append(rowTemplate.supplant(stock));
+            alerter.client.alertFaceDetected = function (ids) {
+                /* handle the fact that face detected in camera with id */
+                ids.forEach(function (id) {
+                    console.log(id);
                 });
+            }
+
+            $.connection.hub.start({ transport: 'longPolling' }, function () {
+                console.log('connection started!');
             });
+
+            //$.connection.hub.start().done(init);
+
+        });
+
+        $('#isBus').change(function () {
+            $('#cameraForm').toggle();
+            $('#bussForm').toggle();
+        });
+
+        $(document).ready(function() {
+            $.ajax({
+                url: '@Url.Action("GetStreamList", "Home")',
+                type: 'GET',
+                dataType: "json",
+                success: function (data) {
+                    data.result.forEach(function (streamTuple) {
+                        var stream = {
+                            url: streamTuple.Item1,
+                            id: streamTuple.Item2
+                        };
+                        addStream(stream);
+                    });
+                },
+                error: function () {
+                    alert('Error POST');
+                }
+            });
+        });
+
+        function removeStream(element) {
+            $.ajax({
+                url: '@Url.Action("RemoveStream", "Home")',
+                type: 'POST',
+                dataType: "json",
+                data: { streamId: JSON.stringify($(element).data('id')) },
+                success: function (data) {
+                    $(element).parent().remove();
+                },
+                error: function () {
+                    alert('Error remove POST');
+                }
+            });
+        };
+
+        function addStream(stream) {
+            $("#streamWrapper").append('<div class="hoverContainer" data-id="' + stream.id + '">' +
+                '<img src="' + stream.url + '" height="200" width="300" /> ' +
+                '<div class="overlay"></div>  ' +
+                '<button data-id="' + stream.id + '"class="btn btn-square btn-danger hoverableButton" onclick="removeStream(this)">' +
+                'X' +
+                '</button>' +
+                '</div>');
         }
-        */
 
-        // Add a client-side hub method that the server will call
-        alerter.client.alertFaceDetected = function (id) {
-            /* handle the fact that face detected in camera with id */
+        $("#submit").click(function () {
+            var properties = {
+                StreamUrl: document.getElementById('streamURL').value,
+                StreetName: document.getElementById('streetName').value,
+                CityName: document.getElementById('city').value,
+                PostalCode: document.getElementById('postCode').value,
+                IsBus: document.getElementById('isBus').value,
+                BusId: '0'
         }
-
-        $.connection.hub.start().done(init);
-
-    });
-
-    $('#isBus').change(function () {
-        $('#cameraForm').toggle();
-        $('#bussForm').toggle();
-    });
-
-    $(document).ready(function() {
-        $.ajax({
-            url: '@Url.Action("GetStreamList", "Home")',
-            type: 'GET',
-            dataType: "json",
-            success: function (data) {
-                data.result.forEach(function (streamTuple) {
-                    var stream = {
-                        url: streamTuple.Item1,
-                        id: streamTuple.Item2
-                    };
-                    addStream(stream);
-                });
-            },
-            error: function () {
-                alert('Error POST');
-            }
+            $.ajax({
+                url: '@Url.Action("AddCamera", "Home")',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(properties),
+                success: function (streamData) {
+                    $(':input').not('#submit').val('');
+                    addStream(streamData);
+                },
+                error: function () {
+                    alert('Error add POST');
+                }
+            });
         });
-    });
+    </script>
 
-    function removeStream(element) {
-        $.ajax({
-            url: '@Url.Action("RemoveStream", "Home")',
-            type: 'POST',
-            dataType: "json",
-            data: { streamId: JSON.stringify($(element).data('id')) },
-            success: function (data) {
-                $(element).parent().remove();
-            },
-            error: function () {
-                alert('Error remove POST');
-            }
-        });
-    };
-
-    function addStream(stream) {
-        $("#streamWrapper").append('<div class="hoverContainer" data-id="' + stream.id + '">' +
-            '<img src="' + stream.url + '" height="200" width="300" /> ' +
-            '<div class="overlay"></div>  ' +
-            '<button data-id="' + stream.id + '"class="btn btn-square btn-danger hoverableButton" onclick="removeStream(this)">' +
-            'X' +
-            '</button>' +
-            '</div>');
-    }
-
-    $("#submit").click(function () {
-        var properties = {
-            StreamUrl: document.getElementById('streamURL').value,
-            StreetName: document.getElementById('streetName').value,
-            CityName: document.getElementById('city').value,
-            PostalCode: document.getElementById('postCode').value,
-            IsBus: document.getElementById('isBus').value,
-            BusId: '0'
-    }
-        $.ajax({
-            url: '@Url.Action("AddCamera", "Home")',
-            type: 'POST',
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(properties),
-            success: function (streamData) {
-                $(':input').not('#submit').val('');
-                addStream(streamData);
-            },
-            error: function () {
-                alert('Error add POST');
-            }
-        });
-    });
-</script>
+}

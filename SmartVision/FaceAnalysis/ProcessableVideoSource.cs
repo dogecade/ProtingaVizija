@@ -62,7 +62,6 @@ namespace FaceAnalysis
         public override int GetHashCode()
         {
             var hashCode = -1743501413;
-            hashCode = hashCode * -1521134295 + EqualityComparer<ConcurrentQueue<Rectangle>>.Default.GetHashCode(faceRectangles);
             hashCode = hashCode * -1521134295 + EqualityComparer<IVideoSource>.Default.GetHashCode(Stream);
             hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(Id);
             return hashCode;

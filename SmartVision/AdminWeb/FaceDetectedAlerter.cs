@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using FaceAnalysis;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using StreamingBackend;
 
 namespace AdminWeb
 {
@@ -13,16 +15,20 @@ namespace AdminWeb
 
         private IHubConnectionContext<dynamic> Clients { get; set; }
 
-        //something to hold here?
-
         private FaceDetectedAlerter(IHubConnectionContext<dynamic> clients)
         {
             Clients = clients;
+            MJPEGStreamManager.Processor.FacesDetected += HandleFacesDetectedEvent;
         }
 
-        private void AlertDetectedFace(string guid)
+        private void AlertDetectedFaces(IEnumerable<string> guids)
         {
-            Clients.All.alertFaceDetected(guid);
+            Clients.All.alertFaceDetected(guids);
+        }
+
+        private void HandleFacesDetectedEvent(object sender, FacesDetectedEventArgs e)
+        {
+            AlertDetectedFaces(e.Sources.Select(source => source.Id.ToString()));
         }
 
         public static FaceDetectedAlerter Instance { get { return instance.Value; } } 

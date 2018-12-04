@@ -32,7 +32,16 @@ namespace FaceAnalysis
         private readonly BatchDictionaryBlock<ProcessableVideoSource, Bitmap> batchBlock;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
         private readonly SearchResultHandler resultHandler;
+
+        /// <summary>
+        /// Event that processing is completed.
+        /// </summary>
         public event EventHandler<FrameProcessedEventArgs> FrameProcessed;
+
+        /// <summary>
+        /// Event that face(s) were detected.
+        /// </summary>
+        public event EventHandler<FacesDetectedEventArgs> FacesDetected;
 
         public FaceProcessor(CameraProperties cameraProperties = null)
         {
@@ -167,6 +176,9 @@ namespace FaceAnalysis
             }
 
             OnProcessingCompletion(new FrameProcessedEventArgs(results));
+
+            if (results.Count > 0)
+                OnFacesDetected(new FacesDetectedEventArgs(results.Keys));
         }
 
         /// <summary>
@@ -200,7 +212,12 @@ namespace FaceAnalysis
         /// <param name="e">Event arguments</param>
         protected virtual void OnProcessingCompletion(FrameProcessedEventArgs e)
         {
-            FrameProcessed?.Invoke(this, e);
+            FrameProcessed?.Invoke(this, e);           
+        }
+
+        protected virtual void OnFacesDetected(FacesDetectedEventArgs e)
+        {
+            FacesDetected?.Invoke(this, e);
         }
 
         /// <summary>
@@ -228,7 +245,7 @@ namespace FaceAnalysis
 
     /// <summary>
     /// Event args for event that processor is done processing.
-    /// Holds source / rectangle list pairs in the form of a dictionary.
+    /// Holds source / rectangle list pairzs in the form of a dictionary.
     /// </summary>
     public class FrameProcessedEventArgs : EventArgs
     {
@@ -238,6 +255,19 @@ namespace FaceAnalysis
         }
 
         public IDictionary<ProcessableVideoSource, List<Rectangle>> RectangleDictionary { get; }
+    }
+
+    /// <summary>
+    /// Event args for detected faces event,
+    /// Holds sources where face was detected.
+    /// </summary>
+    public class FacesDetectedEventArgs : EventArgs
+    {
+        public IEnumerable<ProcessableVideoSource> Sources { get; }
+        public FacesDetectedEventArgs(IEnumerable<ProcessableVideoSource> sources)
+        {
+            Sources = sources;
+        }
     }
 }
 
