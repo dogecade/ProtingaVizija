@@ -69,7 +69,7 @@ namespace FaceAnalysis
             (async dict => {
                 var (rectangles, image) = HelperMethods.ProcessImages(dict);
                 var processedFrame = await ProcessFrame(image);
-                batchBlock.TriggerBatch();
+                await batchBlock.TriggerBatch();
                 return (rectangles, processedFrame);
             });
             broadcastBlock = new BroadcastBlock<(IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON)>(item => item);
@@ -136,8 +136,7 @@ namespace FaceAnalysis
         /// <returns></returns>
         public async Task Start()
         {
-            await batchBlock.HasValueAsync();
-            batchBlock.TriggerBatch();
+            await batchBlock.TriggerBatch();
         }
 
         /// <summary>
@@ -177,8 +176,11 @@ namespace FaceAnalysis
 
             OnProcessingCompletion(new FrameProcessedEventArgs(results));
 
-            if (results.Count > 0)
-                OnFacesDetected(new FacesDetectedEventArgs(results.Keys));
+            var sourcesWithFaces = results
+                .Where(pair => pair.Value.Count > 0)
+                .Select(pair => pair.Key);
+
+            OnFacesDetected(new FacesDetectedEventArgs(sourcesWithFaces));
         }
 
         /// <summary>

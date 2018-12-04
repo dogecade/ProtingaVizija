@@ -40,21 +40,22 @@ namespace FaceAnalysis
                     if (signal != null && !signal.Task.IsCompleted)
                         signal?.SetResult(true);
             });
-            target.Completion.ContinueWith(delegate
+            target.Completion.ContinueWith(async delegate
             {
                 if (dictionary.Any())
                 {
-                    TriggerBatch();
+                    await TriggerBatch();
                 }
                 source.Complete();
             });
         }
 
         /// <summary>
-        /// Triggers batch, pushes dictionary
+        /// Awaits until block has value, then triggers batch, pushes dictionary
         /// </summary>
-        public void TriggerBatch()
+        public async Task TriggerBatch()
         {
+            await HasValueAsync();
             var oldDictionary = dictionary;
             dictionary = new ConcurrentDictionary<KeyType, ValueType>();
             if (source is BufferBlock<IDictionary<KeyType, ValueType>>)
@@ -67,6 +68,8 @@ namespace FaceAnalysis
         /// <returns></returns>
         public async Task HasValueAsync()
         {
+            if (dictionary.Count > 0)
+                return;
             lock(signalLock)
                 signal = new TaskCompletionSource<bool>();
             await signal.Task;
