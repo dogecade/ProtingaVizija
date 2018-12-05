@@ -907,6 +907,7 @@ Nav Menu style
 .blog-banner,
 .addmissing-banner,
 .currentlymissing-banner,
+.vilnius-banner,
 .home{
     background-size: cover;
     position: relative;
@@ -935,6 +936,10 @@ Nav Menu style
 .currentlymissing-banner{
     background: url(../images/background/currentlymissing-bg.jpg) no-repeat bottom center;
 }
+.vilnius-banner{
+    background: url(../images/background/contactVilnius.jpg) no-repeat bottom center;
+}
+
 
 /*
 Home Section style
