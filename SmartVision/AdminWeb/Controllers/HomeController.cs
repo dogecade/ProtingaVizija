@@ -83,6 +83,8 @@ namespace AdminWeb.Controllers
         [HttpGet]
         public async Task<ActionResult> StartProcessor()
         {
+            //TODO: fetch latest properties from config and set that before starting.
+            //TODO: stopping
             await MJPEGStreamManager.Processor.Start();
             return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
         }

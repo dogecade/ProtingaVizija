@@ -19,7 +19,6 @@ namespace FaceAnalysis
 {
     public class SearchResultHandler
     {
-
         private const string emailSubject = "{0} possibility that your missing person was detected!";
         private const string smsBodyBeginning = "Good afternoon. There's a {0} possibility that your missing person ";
         private const string smsBodyEnding = " was detected. Please check you email for more detailed information.";
