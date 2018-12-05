@@ -1,18 +1,17 @@
-﻿namespace Objects.ContactInformation
+﻿using System.Collections.Generic;
+
+namespace Objects.ContactInformation
 {
     public class ContactInformation
     {
-        public string missingPersonFirstName { get; set; }
-        public string missingPersonLastName { get; set; }
-        public string contactPersonPhoneNumber { get; set; }
-        public string contactPersonEmailAddress { get; set; }
-
-        public ContactInformation(string missingPersonFirstName, string missingPersonLastName, string contactPersonPhoneNumber, string contactPersonEmailAddress)
+        public string MissingPersonFirstName { get; set; }
+        public string MissingPersonLastName { get; set; }
+        public List<ContactData> ContactsData { get; set; }
+        public ContactInformation(string missingPersonFirstName, string missingPersonLastName, List<ContactData> contactsData)
         {
-            this.missingPersonFirstName = missingPersonFirstName;
-            this.missingPersonLastName = missingPersonLastName;
-            this.contactPersonPhoneNumber = contactPersonPhoneNumber;
-            this.contactPersonEmailAddress = contactPersonEmailAddress;
+            MissingPersonFirstName = missingPersonFirstName;
+            MissingPersonLastName = missingPersonLastName;
+            ContactsData = contactsData;
         }
     }
 }

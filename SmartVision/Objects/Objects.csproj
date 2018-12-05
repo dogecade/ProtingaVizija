@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Buses\AvailableBus.cs" />
     <Compile Include="CameraProperties\CameraProperties.cs" />
+    <Compile Include="ContactInformation\ContactData.cs" />
     <Compile Include="Person\ContactPerson.cs" />
     <Compile Include="Person\MissingContact.cs" />
     <Compile Include="Person\MissingPerson.cs" />

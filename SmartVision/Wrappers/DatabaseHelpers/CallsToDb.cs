@@ -19,7 +19,7 @@ namespace FaceAnalysis
         /// </summary>
         /// <param name="matchedFace">ID of face to grab</param>
         /// <returns>Contact information</returns>
-        public async Task<ContactInformation> GetMissingPersonData(string matchedFace)
+        public async Task<ContactInformation> GetContactsInformation(string matchedFace)
         {
             HttpClientWrapper wrapper = new HttpClientWrapper();
             var missingPersonsJson = await wrapper.Get(getMisingPersonsUrl);
@@ -43,12 +43,14 @@ namespace FaceAnalysis
             string missingPersonFirstName = foundMissingPerson.firstName;
             string missingPersonLastName = foundMissingPerson.lastName;
 
-            var contactPerson = foundMissingPerson.ContactPersons.FirstOrDefault();
-            string contactPersonPhoneNumber = contactPerson.phoneNumber;
-            string contactPersonEmailAddress = contactPerson.emailAddress;
+            var contactsData = new List<ContactData>();
 
-            return new ContactInformation(missingPersonFirstName, missingPersonLastName,
-                contactPersonPhoneNumber, contactPersonEmailAddress);
+            foreach (var contact in foundMissingPerson.ContactPersons)
+            {
+                contactsData.Add(new ContactData(contact.phoneNumber,contact.emailAddress));
+            }
+
+            return new ContactInformation(missingPersonFirstName, missingPersonLastName, contactsData);
         }
 
         /// <summary>

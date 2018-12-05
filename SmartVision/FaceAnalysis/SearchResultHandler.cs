@@ -1,4 +1,4 @@
-﻿﻿using NotificationService;
+﻿using NotificationService;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -161,7 +161,7 @@ namespace FaceAnalysis
             {
                 Debug.WriteLine(string.Format("Probability {0} meets minimum confidence requirement, notification will be sent.", result.Confidence));
             }
-                await SendNotification(result.FaceToken, result.Confidence, cameraProperties);
+            await SendNotification(result.FaceToken, result.Confidence, cameraProperties);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace FaceAnalysis
         /// <param name="cameraProperties"></param>
         private static async Task SendNotification(string faceToken, LikelinessConfidence confidence, CameraProperties cameraProperties)
         {
-            ContactInformation information = await new CallsToDb().GetMissingPersonData(faceToken);
+            ContactInformation information = await new CallsToDb().GetContactsInformation(faceToken);
 
             if (information == null)
                 return;
@@ -205,27 +205,30 @@ namespace FaceAnalysis
                 }
             }
 
-            if (Mail.SendMail(information.contactPersonEmailAddress, data.EmailSubject,
-                    data.EmailBodyBeginning + information.missingPersonFirstName + " " +
-                    information.missingPersonLastName + data.EmailBodyEnding + locationString,
-                    new List<byte[]>() { locationPicture }, new List<string>() { "Location.jpeg" }) != null)
+            foreach (var contactData in information.ContactsData)
             {
-                Debug.WriteLine("Mail message was sent!");
-            }
-            else
-            {
-                Debug.WriteLine("Mail message was not sent!");
-            }
+                if (Mail.SendMail(contactData.EmailAddress, data.EmailSubject,
+                        data.EmailBodyBeginning + information.MissingPersonFirstName + " " +
+                        information.MissingPersonLastName + data.EmailBodyEnding + locationString,
+                        new List<byte[]>() { locationPicture }, new List<string>() { "Location.jpeg" }) != null)
+                {
+                    Debug.WriteLine("Mail message was sent!");
+                }
+                else
+                {
+                    Debug.WriteLine("Mail message was not sent!");
+                }
 
-            if (Sms.SendSms(information.contactPersonPhoneNumber,
-                    data.SmsBodyBeginning + information.missingPersonFirstName + " " +
-                    information.missingPersonLastName + data.SmsBodyEnding) != null)
-            {
-                Debug.WriteLine("Sms message was sent!");
-            }
-            else
-            {
-                Debug.WriteLine("Sms message was not sent!");
+                if (Sms.SendSms(contactData.PhoneNumber,
+                        data.SmsBodyBeginning + information.MissingPersonFirstName + " " +
+                        information.MissingPersonLastName + data.SmsBodyEnding) != null)
+                {
+                    Debug.WriteLine("Sms message was sent!");
+                }
+                else
+                {
+                    Debug.WriteLine("Sms message was not sent!");
+                }
             }
         }
 
@@ -250,7 +253,7 @@ namespace FaceAnalysis
         internal class SendNotificationJob : IJob
         {
             public async Task Execute(IJobExecutionContext context)
-            { 
+            {
                 var faceToken = context.JobDetail.Key.Name;
                 var confidence = (LikelinessConfidence)context.JobDetail.JobDataMap.GetInt("confidence");
                 Debug.WriteLine(string.Format("Executing notifaction job, faceToken={0}, confidence={1}", faceToken, confidence));
