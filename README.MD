@@ -15,6 +15,7 @@ persons and institutions are notified.
 * Google Static Maps API
 * Google Geocoding API
 * Quartz Enterprise Scheduler .NET
+* Google reCaptcha
 
 ## Authors
 * **Arnas Danaitis** [arnasDan](https://github.com/arnasDan)
