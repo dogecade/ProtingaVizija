@@ -33,8 +33,11 @@ namespace Api.Controllers
         {
             var response = Request["g-recaptcha-response"];
             string secretKey = Keys.recaptchaSecretKey;
-            var client = new WebClient();
-            var result = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, response));
+            string result;
+            using (var client = new WebClient())
+            {
+                result = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, response));
+            }
             var obj = JObject.Parse(result);
             var status = (bool)obj.SelectToken("success");
 
@@ -52,8 +55,11 @@ namespace Api.Controllers
         {
             var response = Request["g-recaptcha-response"];
             string secretKey = Keys.recaptchaSecretKey;
-            var client = new WebClient();
-            var result = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, response));
+            string result;
+            using (var client = new WebClient())
+            {
+                result = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, response));
+            }
             var obj = JObject.Parse(result);
             var status = (bool)obj.SelectToken("success");
 
