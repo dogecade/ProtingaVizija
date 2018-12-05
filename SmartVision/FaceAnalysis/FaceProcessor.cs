@@ -149,6 +149,15 @@ namespace FaceAnalysis
         }
 
         /// <summary>
+        /// Updates the keys of the underlying API caller
+        /// </summary>
+        /// <param name="apiKeySet"></param>
+        public void UpdateKeys(ApiKeySet apiKeySet)
+        {
+            faceApiCalls.ApiKeys = apiKeySet;
+        }
+
+        /// <summary>
         /// Completes the processor - completes its blocks, removes all its sources, etc.
         /// </summary>
         public async void Complete()
@@ -197,7 +206,7 @@ namespace FaceAnalysis
         /// </summary>
         private async Task FaceSearch(string faceToken)
         {
-            FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(Keys.facesetToken, faceToken);
+            FoundFacesJSON response = await faceApiCalls.SearchFaceInFaceset(faceToken);
             if (response != null)
                 foreach (LikelinessResult result in response.LikelinessConfidences())
                     await resultHandler.HandleSearchResult(result);

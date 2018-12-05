@@ -86,11 +86,6 @@
 
         });
 
-        $('#isBus').change(function () {
-            $('#cameraForm').toggle();
-            $('#bussForm').toggle();
-        });
-
         $(document).ready(function() {
             $.ajax({
                 url: '@Url.Action("GetStreamList", "Home")',

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using AdminWeb.Models;
 using BusService;
@@ -17,18 +19,17 @@ namespace AdminWeb.Controllers
 
         public ActionResult Configuration()
         {
-            var model = new BusModel();
+            //TODO: fetch camera properties.
+            CameraPropertiesModel propertiesModel = new CameraPropertiesModel();
+            propertiesModel.BusModel = new BusModel();
             var allBuses = BusHelpers.GetAllAvailableBusses();
-            var items = new List<SelectListItem>();
-
             if (allBuses != null)
-                foreach (var bus in allBuses)
-                {
-                    items.Add(new SelectListItem() { Text = bus.Name, Value = bus.Id });
-                }
-
-            model.Buses = items;
-            return View(model);
+                propertiesModel.BusModel.Buses = allBuses
+                    .Select(bus => new SelectListItem { Text = bus.Name, Value = bus.Id });
+            propertiesModel.ApiKey = ConfigurationManager.AppSettings["ApiKey"];
+            propertiesModel.ApiSecret = ConfigurationManager.AppSettings["ApiSecret"];
+            propertiesModel.FacesetToken = ConfigurationManager.AppSettings["FacesetToken"];
+            return View(propertiesModel);   
         }
 
         [HttpPost]
@@ -48,8 +49,15 @@ namespace AdminWeb.Controllers
         [HttpPost]
         public ActionResult ChangeProperties(CameraPropertiesModel properties)
         {
+            //TODO: save camera properties to config as well.
             MJPEGStreamManager.Processor.UpdateProperties(properties);
-            return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
+            Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
+            config.AppSettings.Settings["ApiKey"].Value = properties.ApiKey;
+            config.AppSettings.Settings["ApiSecret"].Value = properties.ApiSecret;
+            config.AppSettings.Settings["FacesetToken"].Value = properties.FacesetToken;
+            config.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");
+            return RedirectToAction("Configuration");
         }
 
         [HttpGet]
@@ -70,6 +78,13 @@ namespace AdminWeb.Controllers
             }
             else
                 return null;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> StartProcessor()
+        {
+            await MJPEGStreamManager.Processor.Start();
+            return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
         }
 
     }
