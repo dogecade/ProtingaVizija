@@ -906,6 +906,7 @@ Nav Menu style
 .about-banner,
 .blog-banner,
 .addmissing-banner,
+.currentlymissing-banner,
 .home{
     background-size: cover;
     position: relative;
@@ -931,7 +932,9 @@ Nav Menu style
 .addmissing-banner{
     background: url(../images/background/addmissing-bg.jpg) no-repeat bottom center;
 }
-
+.currentlymissing-banner{
+    background: url(../images/background/currentlymissing-bg.jpg) no-repeat bottom center;
+}
 
 /*
 Home Section style

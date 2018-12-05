@@ -26,5 +26,11 @@ namespace Api.Controllers
 
             return View();
         }
+        public ActionResult Contact()
+        {
+            ViewBag.Title = "Smart Vision";
+
+            return View();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Api.Models;
+﻿using System.Diagnostics;
+using Api.Models;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -17,8 +18,16 @@ namespace Api.Controllers
         {
             var missingPeople = new MissingPersonsController().GetMissingPersons().ToList();
 
+            foreach (var dx in missingPeople)
+            {
+                dx.faceImg = dx.faceImg.Replace("\\", "");
+                Debug.WriteLine(dx.firstName);
+            }
             return View(missingPeople);
         }
-
+        public ActionResult MoreInformationModal()
+        {
+            return PartialView();
+        }
     }
 }
