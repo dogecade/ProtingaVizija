@@ -58,6 +58,7 @@ namespace StreamingBackend
             clients = new ConcurrentDictionary<TcpClient, bool>();
 
             source.Stop();
+            source.NewFrame -= SendNewFrameToClients;
 
             listener.Stop();
             listen = false;
@@ -72,7 +73,7 @@ namespace StreamingBackend
                 {
                     client = await listener.AcceptTcpClientAsync();
                 }
-                catch (System.ObjectDisposedException)
+                catch (ObjectDisposedException)
                 {
                     Debug.WriteLine("Stopping listening");
                     return;
@@ -146,7 +147,7 @@ namespace StreamingBackend
                 {
                     await SendImageToClientAsync(client, new Bitmap(bitmap));
                 }
-                catch (System.ObjectDisposedException)
+                catch (ObjectDisposedException)
                 {
                     Debug.WriteLine("Client has already disconnected");
                 }

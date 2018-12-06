@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using AdminWeb.Models;
 using BusService;
@@ -12,44 +14,78 @@ namespace AdminWeb.Controllers
     {
         public ActionResult Index()
         {
-            var model = new BusModel();
+            return View();
+        }
+
+        public ActionResult Configuration()
+        {
+            //TODO: fetch camera properties.
+            CameraPropertiesModel propertiesModel = new CameraPropertiesModel();
+            propertiesModel.BusModel = new BusModel();
             var allBuses = BusHelpers.GetAllAvailableBusses();
-            var items = new List<SelectListItem>();
-
-            foreach (var bus in allBuses)
-            {
-                items.Add(new SelectListItem() { Text = bus.Name, Value = bus.Id });
-            }
-
-            model.Buses = items;
-            return View(model);
+            if (allBuses != null)
+                propertiesModel.BusModel.Buses = allBuses
+                    .Select(bus => new SelectListItem { Text = bus.Name, Value = bus.Id });
+            propertiesModel.ApiKey = ConfigurationManager.AppSettings["ApiKey"];
+            propertiesModel.ApiSecret = ConfigurationManager.AppSettings["ApiSecret"];
+            propertiesModel.FacesetToken = ConfigurationManager.AppSettings["FacesetToken"];
+            return View(propertiesModel);   
         }
 
         [HttpPost]
-        public ActionResult AddCamera(CameraPropertiesModel properties)
+        public ActionResult AddCamera(string streamUrl)
         {
-            Debug.WriteLine(properties.StreamUrl);
-            if (properties.StreamUrl != null)
+            Debug.WriteLine(streamUrl);
+            if (streamUrl != null)
             {
-                properties.StreamUrl = properties.StreamUrl.Replace(@"""", string.Empty);
-                MJPEGStreamManager.AddStream(properties.StreamUrl, properties);
+                streamUrl = streamUrl.Replace(@"""", string.Empty);
+                var (url, id) = MJPEGStreamManager.AddStream(streamUrl);
+                return Json(new { url, id }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
+            else
+                return null;
         }
+
+        [HttpPost]
+        public ActionResult ChangeProperties(CameraPropertiesModel properties)
+        {
+            //TODO: save camera properties to config as well.
+            MJPEGStreamManager.Processor.UpdateProperties(properties);
+            Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
+            config.AppSettings.Settings["ApiKey"].Value = properties.ApiKey;
+            config.AppSettings.Settings["ApiSecret"].Value = properties.ApiSecret;
+            config.AppSettings.Settings["FacesetToken"].Value = properties.FacesetToken;
+            config.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");
+            return RedirectToAction("Configuration");
+        }
+
         [HttpGet]
         public ActionResult GetStreamList()
         {
-            return Json(new { result = MJPEGStreamManager.GetStreamUrls() }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = MJPEGStreamManager.GetStreams() }, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
-        public ActionResult RemoveStream(string streamUrl)
+        public ActionResult RemoveStream(string streamId)
         {
-            Debug.WriteLine(streamUrl);
-            if (streamUrl != "")
+            Debug.WriteLine(streamId);
+            if (streamId != "")
             {
-                streamUrl = streamUrl.Replace(@"""", string.Empty);
-                MJPEGStreamManager.RemoveStream(streamUrl);
+                streamId = streamId.Replace(@"""", string.Empty);
+                MJPEGStreamManager.RemoveStream(streamId);
+                return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
             }
+            else
+                return null;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> StartProcessor()
+        {
+            //TODO: fetch latest properties from config and set that before starting.
+            //TODO: stopping
+            await MJPEGStreamManager.Processor.Start();
             return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
         }
 

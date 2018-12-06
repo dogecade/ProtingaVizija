@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AForge.Video;
@@ -11,32 +12,31 @@ namespace StreamingBackend
     public static class MJPEGStreamManager
     {
         private static readonly ConcurrentDictionary<ProcessableVideoSource, MJPEGServer> streamServers = new ConcurrentDictionary<ProcessableVideoSource, MJPEGServer>();
-        private static FaceProcessor processor;
+        public static FaceProcessor Processor { get; } = new FaceProcessor();
         static void Main(string[] args)
         {
             new System.Threading.AutoResetEvent(false).WaitOne();
         }
 
         //TODO: this assumes that it's an MJPEG stream, it could be a JPEG stream as well
-        public static string AddStream(string sourceUrl, CameraProperties properties = null)
+        public static (string url, string id) AddStream(string sourceUrl)
         {
-            return AddStream(new ProcessableVideoSource(new MJPEGStream(sourceUrl)), properties);
+            return AddStream(new ProcessableVideoSource(new MJPEGStream(sourceUrl)));
         }
 
-        public static string AddStream(ProcessableVideoSource source, CameraProperties properties = null)
+        public static (string url, string id) AddStream(ProcessableVideoSource source)
         {
-            processor = processor == null ? new FaceProcessor(properties) : processor;
             var server = new MJPEGServer(source, start: true);
             streamServers[source] = server;
-            processor.AddSource(source);
-            return server.Url;
+            Processor.AddSource(source);
+            return (server.Url, source.Id.ToString());
             
         }
         
-        public static void RemoveStream(string sourceUrl)
+        public static void RemoveStream(string sourceId)    
         {
             foreach(var source in streamServers.Keys)
-                if (streamServers[source].Url.Split('/')[2] == sourceUrl.Split('/')[2])
+                if (source.Id.ToString() == sourceId)
                 {
                     RemoveStream(source);
                     return;
@@ -48,12 +48,12 @@ namespace StreamingBackend
         {
             streamServers.TryRemove(source, out var server);
             server.Stop();
-            processor.RemoveSource(source);
+            Processor.RemoveSource(source);
         }
 
-        public static IEnumerable<string> GetStreamUrls()
+        public static IEnumerable<(string url, string id)> GetStreams()
         {
-            return streamServers.Values.Select(server => "http://localhost:" + server.Port.ToString());
+            return streamServers.Select(pair => (pair.Value.Url, pair.Key.Id.ToString()));
         }
     }
 }

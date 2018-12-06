@@ -11,6 +11,7 @@ namespace UnitTests
     [TestClass]
     public class FaceSetTests
     {
+        /*
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
 
 
@@ -227,5 +228,6 @@ namespace UnitTests
 
             return result;
         }
+        */
     }
 }
