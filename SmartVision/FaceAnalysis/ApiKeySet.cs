@@ -9,11 +9,11 @@ namespace FaceAnalysis
 {
     public class ApiKeySet
     {
-        public ApiKeySet(string key, string secret, string facesetTaken)
+        public ApiKeySet(string key, string secret, string facesetToken)
         {
             Key = key;
             Secret = secret;
-            FacesetTaken = facesetTaken;
+            FacesetToken = facesetToken;
         }
 
         public string Key { get; }
