@@ -58,7 +58,7 @@ namespace Api.Controllers
 
             foreach (var face in analysisResult.Faces)
             {
-                var searchResult = await apiCalls.SearchFaceInFaceset(Keys.facesetToken, face.Face_token);
+                var searchResult = await apiCalls.SearchFaceInFaceset(face.Face_token);
                 if (searchResult != null)
                 {
                     foreach (var likelinessResult in searchResult.LikelinessConfidences()) //might want to set the camera properties to some value.
