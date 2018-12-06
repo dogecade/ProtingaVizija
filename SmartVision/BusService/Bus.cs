@@ -44,7 +44,7 @@ namespace BusService
                 RouteName = BusHelpers.GetRouteName(BusNumber);
                 if (!busDataColumns[9].Equals(""))
                 {
-                    BusTime = date.AddSeconds(Convert.ToDouble(busDataColumns[9])).TimeOfDay;
+                    BusTime = date.AddSeconds(-Convert.ToInt32(busDataColumns[9])).TimeOfDay;
                 }
             }
             catch (Exception)
