@@ -181,7 +181,6 @@ namespace FaceAnalysis
         /// <summary>
         /// Deletes the faceset
         /// </summary>
-        /// <param name="facesetToken">Faceset token</param>
         /// <returns>DeleteFacesetJSON</returns>
         public async Task<DeleteFacesetJSON> DeleteFaceset()
         {

@@ -57,7 +57,7 @@ namespace Api.Controllers
         public async Task<ActionResult> AddMissingPerson (MissingPerson missingPersons)
         {
             HttpClientWrapper httpClient = new HttpClientWrapper();
-            if (await new FaceApiCalls(httpClient).AddFaceToFaceset(Constants.Keys.facesetToken, missingPersons.faceToken) == null)
+            if (await new FaceApiCalls(httpClient).AddFaceToFaceset(missingPersons.faceToken) == null)
             {
                 //TODO: have some proper things to do here.
                 throw new SystemException("ding dong");
