@@ -15,8 +15,6 @@ namespace WindowsForms
         [STAThread]
         static void Main()
         {
-            var fs = new FaceApiCalls(new HttpClientWrapper());
-            var x = fs.CreateNewFaceset("feisetas").Result.Faceset_token;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormFaceDetection());

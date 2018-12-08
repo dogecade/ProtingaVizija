@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,7 +49,7 @@ namespace Api.Controllers
                 //error must've occured, should alert user.
                 return null;
             }
-
+            
             if (analysisResult.Faces.Count == 0)
             {
                 return Json(new { result = "No faces have been found in the provided picture" }, JsonRequestBehavior.AllowGet);
@@ -59,6 +60,7 @@ namespace Api.Controllers
             foreach (var face in analysisResult.Faces)
             {
                 var searchResult = await apiCalls.SearchFaceInFaceset(Keys.facesetToken, face.Face_token);
+
                 if (searchResult != null)
                 {
                     foreach (var likelinessResult in searchResult.LikelinessConfidences()) //might want to set the camera properties to some value.

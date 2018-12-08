@@ -872,7 +872,7 @@ Nav Menu style
 
 .navbar-brand {
     height: 80px;
-    padding: 30px 15px;
+	/*padding: 30px 15px;*/
 }
 
 .navbar-nav > li > a {

@@ -110,3 +110,10 @@
 	max-height: 100%;
 	border-style: none !important;
 }
+.center-content-border{
+	border: 1px #ccc solid; 
+	display: flex; 
+	align-items:center;
+	justify-content:center;
+	float:right;
+}

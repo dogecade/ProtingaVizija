@@ -1,0 +1,64 @@
+ nav.navbar.bootsnav.no-background.white .attr-nav > ul > li > a, nav.navbar.bootsnav.navbar-transparent.white .attr-nav > ul > li > a, nav.navbar.bootsnav.navbar-transparent.white ul.nav > li > a, nav.navbar.bootsnav.no-background.white ul.nav > li > a {
+        color: #6f6f6f;
+    }
+
+    .side .widget ul.link li a:hover {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    nav.navbar.bootsnav.no-background {
+        background-color: white;
+        border-bottom: solid 1px #eee;
+    }
+
+    nav.navbar.bootsnav.navbar-fixed.no-background .logo-scrolled {
+        display: block;
+    }
+
+    nav.navbar.bootsnav.navbar-fixed.no-background .logo-display {
+        display: none;
+    }
+
+    .myVideo {
+        min-width: 50% !important;
+        min-height: 50% !important;
+        display: block;
+        margin: 0 auto;
+        object-fit: fill;
+        padding-top: 30%;
+        left: 50%;
+        position: absolute;
+        top: 45%;
+        transform: translate(-50%, -50%);
+    }
+
+    .child {
+        position: absolute;
+        top: 85%; /* position the top  edge of the element at the middle of the parent */
+        left: 50%; /* position the left edge of the element at the middle of the parent */
+        transform: translate(-50%, -50%);
+    }
+
+    .video-container {
+        position: relative;
+        width: 500px;
+        height: 600px;
+    }
+
+    .myButton {
+        background: url(../../img/camera.png) no-repeat;
+        cursor: pointer;
+        border: none;
+        width: 100px;
+        height: 100px;
+    }
+
+        .myButton:active /* use Dot here */ {
+            background: url(../../img/camera.png) no-repeat;
+        }
+
+    /* .div {
+        resize: both;
+        overflow: auto;
+    }*/

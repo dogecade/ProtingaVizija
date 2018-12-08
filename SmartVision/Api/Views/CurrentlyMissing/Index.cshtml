@@ -1,13 +1,14 @@
-﻿@model IEnumerable<Api.Models.MissingPerson>
+﻿@model IEnumerable<Objects.Person.MissingPerson>
 
-@{
-    ViewBag.Title = "Smart Vision";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/Content/Lightbox-Gallery.css">
+    <link rel="stylesheet" href="~/Content/modal-spin.css">
+    @{
+        ViewBag.Title = "Smart Vision";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 </head>
 <body>
 <!--Home Sections-->

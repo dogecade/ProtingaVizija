@@ -28,7 +28,7 @@ Author URI: http://www.xpeedstudio.com
 /* Portrait tablets and small desktops */
 @media (max-width: 991px) {
     nav.navbar.bootsnav .navbar-brand{
-        padding-top:30px;
+        padding-top:20px;
     }
     nav.navbar.bootsnav .navbar-toggle{
         margin-top: 25px;
