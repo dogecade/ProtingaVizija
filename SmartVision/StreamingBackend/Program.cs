@@ -18,10 +18,9 @@ namespace StreamingBackend
             new System.Threading.AutoResetEvent(false).WaitOne();
         }
 
-        //TODO: this assumes that it's an MJPEG stream, it could be a JPEG stream as well
-        public static (string url, string id) AddStream(string sourceUrl)
+        public static (string url, string id) AddStream(IVideoSource source)
         {
-            return AddStream(new ProcessableVideoSource(new MJPEGStream(sourceUrl)));
+            return AddStream(new ProcessableVideoSource(source));
         }
 
         public static (string url, string id) AddStream(ProcessableVideoSource source)

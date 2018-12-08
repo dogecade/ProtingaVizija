@@ -9,7 +9,9 @@
         <h3>Add another camera</h3>
         @Html.Label("URL: ")
         @Html.TextBox("streamURL", null, new { @class = "form-control", @type = "text", @id = "streamURL" })
-        <input class="btn btn-primary" type="submit" id="submit" value="Add">
+        <label>@Html.RadioButton("streamType", "mjpeg", true) MJPEG stream</label>
+        <label>@Html.RadioButton("streamType", "jpeg", true) JPEG stream</label>
+        <input class="btn btn-primary form-control" type="submit" id="submit" value="Add">
     </div>
 
 </div>
@@ -57,6 +59,10 @@
     .hoverContainer:hover .hoverableButton {
         opacity: 1;
     }
+
+    #submit {
+        margin-top: 3%;
+    }
 </style>
 
 @section scripts
@@ -81,8 +87,6 @@
             $.connection.hub.start({ transport: 'longPolling' }, function () {
                 console.log('connection started!');
             });
-
-            //$.connection.hub.start().done(init);
 
         });
 
@@ -111,7 +115,7 @@
                 url: '@Url.Action("RemoveStream", "Home")',
                 type: 'POST',
                 dataType: "json",
-                data: { streamId: JSON.stringify($(element).data('id')) },
+                data: { streamId: $(element).data('id') },
                 success: function (data) {
                     $(element).parent().remove();
                 },
@@ -122,7 +126,7 @@
         };
 
         function addStream(stream) {
-            $("#streamWrapper").append('<div class="hoverContainer" data-id="' + stream.id + '">' +
+            $("#streamWrapper").append('<div class="hoverContainer" id="' + stream.id + '">' +
                 '<img src="' + stream.url + '" height="200" width="300" /> ' +
                 '<div class="overlay"></div>  ' +
                 '<button data-id="' + stream.id + '"class="btn btn-square btn-danger hoverableButton" onclick="removeStream(this)">' +
@@ -132,13 +136,16 @@
         }
 
         $("#submit").click(function () {
-            var streamUrl = document.getElementById('streamURL').value;
-            console.log(streamUrl);
+            var streamUrl = $('#streamURL').val();
+            var streamType = $('input[name=streamType]:checked').val();
+            console.log(streamType);
+            if (streamUrl === "")
+                return;
             $.ajax({
                 url: '@Url.Action("AddCamera", "Home")',
                 type: 'POST',
                 dataType: "json",
-                data: { streamUrl: JSON.stringify(streamUrl) },
+                data: { streamUrl: streamUrl, streamType: streamType },
                 success: function (streamData) {
                     $(':input').not('#submit').val('');
                     addStream(streamData);

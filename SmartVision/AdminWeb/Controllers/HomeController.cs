@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using AdminWeb.Models;
+using AForge.Video;
 using BusService;
 using StreamingBackend;
 
@@ -20,8 +21,10 @@ namespace AdminWeb.Controllers
         public ActionResult Configuration()
         {
             //TODO: fetch camera properties.
-            CameraPropertiesModel propertiesModel = new CameraPropertiesModel();
-            propertiesModel.BusModel = new BusModel();
+            CameraPropertiesModel propertiesModel = new CameraPropertiesModel
+            {
+                BusModel = new BusModel()
+            };
             var allBuses = BusHelpers.GetAllAvailableBusses();
             if (allBuses != null)
                 propertiesModel.BusModel.Buses = allBuses
@@ -33,17 +36,26 @@ namespace AdminWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddCamera(string streamUrl)
+        public ActionResult AddCamera(string streamUrl, string streamType)
         {
-            Debug.WriteLine(streamUrl);
-            if (streamUrl != null)
-            {
-                streamUrl = streamUrl.Replace(@"""", string.Empty);
-                var (url, id) = MJPEGStreamManager.AddStream(streamUrl);
-                return Json(new { url, id }, JsonRequestBehavior.AllowGet);
-            }
-            else
+
+            if (string.IsNullOrWhiteSpace(streamUrl))
                 return null;
+            Debug.WriteLine($"Adding stream {streamUrl}");
+            IVideoSource stream;
+            switch (streamType)
+            {
+                case "jpeg":
+                    stream = new JPEGStream(streamUrl);
+                    break;
+                case "mjpeg":
+                    stream = new MJPEGStream(streamUrl);
+                    break;
+                default:
+                    return null;
+            }
+            var (url, id) = MJPEGStreamManager.AddStream(stream);
+            return Json(new { url, id }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -69,10 +81,9 @@ namespace AdminWeb.Controllers
         [HttpPost]
         public ActionResult RemoveStream(string streamId)
         {
-            Debug.WriteLine(streamId);
+            Debug.WriteLine($"Removing stream {streamId}");
             if (streamId != "")
             {
-                streamId = streamId.Replace(@"""", string.Empty);
                 MJPEGStreamManager.RemoveStream(streamId);
                 return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
             }
