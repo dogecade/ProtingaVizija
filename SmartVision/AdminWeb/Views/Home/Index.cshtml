@@ -3,60 +3,64 @@
 }
 
 <div class="row">
-    <div class="col-sm-8" id="streamWrapper">
+    <div class="col-sm-8" id="streams">
+        <div id="streamWrapper" class="row no-gutters"></div>
     </div>
     <div class="col-sm-4">
         <h3>Add another camera</h3>
         @Html.Label("URL: ")
         @Html.TextBox("streamURL", null, new { @class = "form-control", @type = "text", @id = "streamURL" })
         <label>@Html.RadioButton("streamType", "mjpeg", true) MJPEG stream</label>
-        <label>@Html.RadioButton("streamType", "jpeg", true) JPEG stream</label>
+        <label>@Html.RadioButton("streamType", "jpeg", false) JPEG stream</label>
         <input class="btn btn-primary form-control" type="submit" id="submit" value="Add">
     </div>
 
 </div>
 <style>
-    .hoverContainer {
-        position: relative;
-        margin-top: 50px;
-        width: 300px;
-        height: 200px;
-    }
-
-    .overlayHover {
+    .faceDetected {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0);
-        transition: background 0.5s ease;
     }
 
-    .hoverContainer:hover #overlay {
-        display: block;
-        background: rgba(0, 0, 0, .3);
+    .imgThumbnail > img {
+        cursor: pointer;
+        border: 1px solid black;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    #imgSelected > img {
+        border: 1px solid black;
+    }
+
+    #imgSelected {
+        position: relative;
+    }
+
+    img {
+        width: 100%;
     }
 
     .hoverableButton {
+        overflow: hidden;
         position: absolute;
-        width: 15%;
-        left: 85%;
         top: 0%;
         opacity: 0;
         transition: opacity .35s ease;
         border-radius: 0;
-    }
-
-    .hoverableButton a {
-        width: 10%;
+        color: white !important;
         text-align: center;
-        color: white;
-        border: solid 2px white;
-        z-index: 1;
+        width: 10%;
     }
 
-    .hoverContainer:hover .hoverableButton {
+    .removeButton {
+        left: 80%;
+    }
+
+    .closeButton {
+        left: 90%;
+    }
+
+    #imgSelected:hover > .hoverableButton {
         opacity: 1;
     }
 
@@ -68,6 +72,7 @@
 @section scripts
 {
     @Scripts.Render("~/Scripts/jquery.signalR-2.2.2.js")
+    <script src="~/Scripts/slick/slick.min.js"></script>
     <script src="~/signalr/hubs"></script>
     <script>
         $(function () {
@@ -75,7 +80,7 @@
             var alerter = $.connection.faceDetectedAlert;
 
             console.log(alerter);
-            console.log($.connection);           
+            console.log($.connection);
 
             alerter.client.alertFaceDetected = function (ids) {
                 /* handle the fact that face detected in camera with id */
@@ -111,12 +116,16 @@
         });
 
         function removeStream(element) {
+            if (!confirm("Are you sure yout want to remove this stream & stop processing its camera feed?"))
+                return;
+            id = $(element).data('id')
             $.ajax({
                 url: '@Url.Action("RemoveStream", "Home")',
                 type: 'POST',
                 dataType: "json",
-                data: { streamId: $(element).data('id') },
+                data: { streamId: id },
                 success: function (data) {
+                    $('#' + id).remove();
                     $(element).parent().remove();
                 },
                 error: function () {
@@ -125,14 +134,29 @@
             });
         };
 
-        function addStream(stream) {
-            $("#streamWrapper").append('<div class="hoverContainer" id="' + stream.id + '">' +
-                '<img src="' + stream.url + '" height="200" width="300" /> ' +
-                '<div class="overlay"></div>  ' +
-                '<button data-id="' + stream.id + '"class="btn btn-square btn-danger hoverableButton" onclick="removeStream(this)">' +
-                'X' +
+        function selectStream(streamElement) {
+            streamElement.w
+            $('#imgSelected').remove();
+            $('#streams').append(
+                '<div id="imgSelected">' +
+                '<img src="' + $(streamElement).children('img').attr('src') + '" /> ' +
+                '<button data-id="' + streamElement.id + '"class="btn btn-square btn-danger hoverableButton removeButton" onclick="removeStream(this)">' +
+                '<span class="fa fa-ban"></span>' +
                 '</button>' +
-                '</div>');
+                '<button data-id="' + streamElement.id + '"class="btn btn-square btn-warning hoverableButton closeButton" onclick="$(this).parent().remove()">' +
+                '<span class="fa fa-times"></span>' +
+                '</button>' +
+                '</div>'
+            );
+        }
+
+        function addStream(stream) {
+            $("#streamWrapper").append(
+                '<div class="imgThumbnail col-sm-4" onclick=selectStream(this) id="' + stream.id + '">' +
+                '<span class="fa fa-user fa-10x faceDetected"></span>' +
+                '<img src="' + stream.url + '"/> ' +
+                '</div>'
+            );
         }
 
         $("#submit").click(function () {
@@ -147,7 +171,7 @@
                 dataType: "json",
                 data: { streamUrl: streamUrl, streamType: streamType },
                 success: function (streamData) {
-                    $(':input').not('#submit').val('');
+                    $('#streamUrl').val('');
                     addStream(streamData);
                 },
                 error: function () {

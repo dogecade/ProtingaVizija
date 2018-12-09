@@ -131,7 +131,7 @@ namespace StreamingBackend
                 await SendStringToClientAsync(client, "\r\n");
                 client.GetStream().Flush();
             }
-            catch (Exception e ) when (e is System.IO.IOException || e is InvalidOperationException)
+            catch (Exception e ) when (e is System.IO.IOException || e is InvalidOperationException || e is ArgumentException)
             {
                 Debug.WriteLine("An error occured when sending image to client stream: ");
                 Debug.WriteLine(e);

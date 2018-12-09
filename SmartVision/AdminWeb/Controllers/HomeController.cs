@@ -29,6 +29,8 @@ namespace AdminWeb.Controllers
             if (allBuses != null)
                 propertiesModel.BusModel.Buses = allBuses
                     .Select(bus => new SelectListItem { Text = bus.Name, Value = bus.Id });
+            else
+                propertiesModel.BusModel.Buses = Enumerable.Empty<SelectListItem>();
             propertiesModel.ApiKey = ConfigurationManager.AppSettings["ApiKey"];
             propertiesModel.ApiSecret = ConfigurationManager.AppSettings["ApiSecret"];
             propertiesModel.FacesetToken = ConfigurationManager.AppSettings["FacesetToken"];
@@ -38,7 +40,6 @@ namespace AdminWeb.Controllers
         [HttpPost]
         public ActionResult AddCamera(string streamUrl, string streamType)
         {
-
             if (string.IsNullOrWhiteSpace(streamUrl))
                 return null;
             Debug.WriteLine($"Adding stream {streamUrl}");
