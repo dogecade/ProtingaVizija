@@ -19,7 +19,7 @@ namespace FaceAnalysis
     /// </summary>
     public class FaceProcessor
     {
-        private const int MAX_SOURCES = 9;
+        private const int MAX_SOURCES = 16;
         private const int BUFFER_LIMIT = 10000;
         private ConcurrentDictionary<IVideoSource, ProcessableVideoSource> sources = new ConcurrentDictionary<IVideoSource, ProcessableVideoSource>();
         private readonly BroadcastBlock<(IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON)> broadcastBlock;

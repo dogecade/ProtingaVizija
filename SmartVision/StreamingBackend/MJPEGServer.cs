@@ -113,10 +113,8 @@ namespace StreamingBackend
             }
         }
 
-        private async Task SendImageToClientAsync(TcpClient client, Bitmap img)
+        private async Task SendByteImageToClientAsync(TcpClient client, byte[] image)
         {
-            var image = HelperMethods.ImageToByte(img);
-
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(boundary);
@@ -141,18 +139,16 @@ namespace StreamingBackend
 
         private async void SendNewFrameToClients(object sender, NewFrameEventArgs e)
         {
-            var bitmap = new Bitmap(e.Frame);
+            var byteImage = HelperMethods.ImageToByte(new Bitmap(e.Frame));
             foreach (var client in clients.Keys)
                 try
                 {
-                    await SendImageToClientAsync(client, new Bitmap(bitmap));
+                    await SendByteImageToClientAsync(client, byteImage);
                 }
                 catch (ObjectDisposedException)
                 {
                     Debug.WriteLine("Client has already disconnected");
                 }
-                
-            bitmap.Dispose();
         }
     }
 }

@@ -87,7 +87,7 @@ namespace FaceAnalysis
         //TODO: should probably attempt to add padding to help prevent "phantom" face rectangles.
         public static (IDictionary<IdentifierType, Rectangle> rectangles, Bitmap image) ProcessImages<IdentifierType>(IDictionary<IdentifierType, Bitmap> dictionary)
         { 
-            const int MAX_EDGE_IMAGES = 3;
+            const int MAX_EDGE_IMAGES = 4;
             foreach (var key in dictionary.Keys)
                 dictionary[key] = ProcessImage(dictionary[key]);
             Point currentPosition = new Point(0, 0);
