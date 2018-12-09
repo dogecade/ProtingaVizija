@@ -1,6 +1,9 @@
     .modalCenter {
-        top: 50% !important;
-        transform: translateY(-50%) !important;
+
+		display: flex;
+		/*vertical-align: middle;
+		text-align:left;
+		position:absolute;*/
     }
 
     .imagetiles {

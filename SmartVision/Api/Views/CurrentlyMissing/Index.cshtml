@@ -1,16 +1,14 @@
 ﻿@model IEnumerable<Objects.Person.MissingPerson>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="~/Content/Lightbox-Gallery.css">
-    <link rel="stylesheet" href="~/Content/modal-spin.css">
-    @{
-        ViewBag.Title = "Smart Vision";
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
-</head>
-<body>
+
+<link rel="stylesheet" href="~/Content/Lightbox-Gallery.css">
+<link rel="stylesheet" href="~/Content/modal-spin.css">
+@{
+    ViewBag.Title = "Smart Vision";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
 <!--Home Sections-->
 <section id="hello" class="currentlymissing-banner bg-mega">
     <div class="overlay"></div>
@@ -53,7 +51,6 @@
     </div><!-- Portfolio container end -->
 </section><!-- End off portfolio section -->
 
-</body>
 <div id="moreInformationModal" class="modal fadeModal in" role="dialog" data-url="@Url.Action("MoreInformationModal", "CurrentlyMissing")"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -62,17 +59,17 @@
     function callModal(firstName, lastName, dateOfBirth, lastSeenDate, lastSeenLocation, Additional_Information, faceImg) {
         var url = $("#moreInformationModal").data('url');
         $.get(url,
-            function(content) {
+            function (content) {
                 $("#moreInformationModal").html(content);
                 $("#imageWrap").append(
                     '<div class=""><img id = ' +
-                    faceImg+
-                    ' class="img-thumbnail selectable-face imgsize" src="http://viltomas.eu/img/'+ faceImg +'" /></div>');
-                $("#name").append('<div>'+ firstName +'</div>');
-                $("#surname").append('<div>'+ lastName +'</div>');
-                $("#dob").append('<div>'+ dateOfBirth +'</div>');
-                $("#lso").append('<div>'+ lastSeenDate +'</div>');
-                $("#lsl").append('<div>'+ lastSeenLocation +'</div>');
+                    faceImg +
+                    ' class="img-thumbnail selectable-face imgsize" src="http://viltomas.eu/img/' + faceImg + '" /></div>');
+                $("#name").append('<div>' + firstName + '</div>');
+                $("#surname").append('<div>' + lastName + '</div>');
+                $("#dob").append('<div>' + dateOfBirth + '</div>');
+                $("#lso").append('<div>' + lastSeenDate + '</div>');
+                $("#lsl").append('<div>' + lastSeenLocation + '</div>');
                 $("#adinfo").append('<div class="" style="width:200%; word-wrap:break-word;">' + Additional_Information + '</div>');
 
                 $("#moreInformationModal").modal('show');

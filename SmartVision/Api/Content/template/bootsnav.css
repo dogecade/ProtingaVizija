@@ -502,7 +502,7 @@ body.on-side .wrap-sticky nav.navbar.bootsnav.sticked{
 
 /* Navbar Responsive
 =================================*/
-@media (min-width: 993px) and (max-width:1400px) {
+@media (min-width: 992px) and (max-width:1400px) {
     body.wrap-nav-sidebar .wrapper .container{
         width: 100%;
         padding-left: 30px;
@@ -510,7 +510,7 @@ body.on-side .wrap-sticky nav.navbar.bootsnav.sticked{
     }
 }
 
-@media (min-width: 993px) {
+@media (min-width: 992px) {
     /* General Navbar
     =================================*/
     nav.navbar.bootsnav ul.nav .dropdown-menu .dropdown-menu{
@@ -1281,7 +1281,7 @@ body.on-side .wrap-sticky nav.navbar.bootsnav.sticked{
     /* Tabs
     =================================*/ 
     nav.navbar.bootsnav .megamenu-content.tabbed{
-        padding-left: 0 !mportant;
+        padding-left: 0 !important;
     }
     
     nav.navbar.bootsnav .tabbed > li{
@@ -1468,7 +1468,7 @@ body.on-side .wrap-sticky nav.navbar.bootsnav.sticked{
 
 @media (min-width: 480px) and (max-width: 640px) {
     nav.bootsnav.navbar-full ul.nav{
-        padding-top: 20px;
+        padding-top: 30px;
         padding-bottom: 30px;
     }
 }

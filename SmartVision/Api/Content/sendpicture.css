@@ -28,23 +28,26 @@
         object-fit: fill;
         padding-top: 30%;
         left: 50%;
-        position: absolute;
+        position: relative;
         top: 45%;
         transform: translate(-50%, -50%);
     }
-
-    .child {
-        position: absolute;
-        top: 85%; /* position the top  edge of the element at the middle of the parent */
-        left: 50%; /* position the left edge of the element at the middle of the parent */
-        transform: translate(-50%, -50%);
+	
+	 .flexbox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-flow: column;
+		position:relative;
     }
 
-    .video-container {
-        position: relative;
-        width: 500px;
-        height: 600px;
+    .flexbox>.child {
+        vertical-align: bottom;
+		position: absolute;
+		bottom:5%;
     }
+
+ 
 
     .myButton {
         background: url(../../img/camera.png) no-repeat;
@@ -58,7 +61,7 @@
             background: url(../../img/camera.png) no-repeat;
         }
 
-    /* .div {
+     /*.div {
         resize: both;
         overflow: auto;
     }*/

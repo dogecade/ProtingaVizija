@@ -6,9 +6,9 @@
 <link rel="stylesheet" href="~/Content/sendpicture.css">
 
 <body onload="start()" onunload="stop()">
-    <div class="container video-container">
-        <video id="video" class="myVideo center" autoplay></video>
-        <input id="captureButton" type="submit" class="child myButton" value="">
+    <div class="container flexbox p-top-100">
+        <video id="video" style="width: 100%;" autoplay></video>
+        <button id="captureButton" type="submit" class="child myButton" value=""></button>
     </div>
 
 <div id="snapshotModal" class="modal fadeModal in " role="dialog" data-url="@Url.Action("SnapshotModalView", "CameraStream")">
@@ -45,9 +45,9 @@
                     canvas.height = 250;
                     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
                     img = canvas.toDataURL();
-                    console.log(img);
                     $('#snapshotModal').modal('show');
                     $('#analyzeButton').on('click', function () {
+                        $("#personInformation").empty();
                         $("#personInformation").append('<div class="loader"></div>');
                         $.ajax({
                             url: '/CameraStream/CaptureSnapshot',
@@ -65,7 +65,7 @@
                         });
                     });
                 });
-           
+
             $('#closeModal').on('click', function () {
                 $("#snapshotModal").modal('hide');
             });
