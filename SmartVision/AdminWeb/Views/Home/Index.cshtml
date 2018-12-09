@@ -18,7 +18,14 @@
 </div>
 <style>
     .faceDetected {
+        display: none;
         position: absolute;
+        left: 1%;
+        bottom: 0;
+        font-size: 3em;
+        -webkit-text-fill-color: white;
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: black;
     }
 
     .imgThumbnail > img {
@@ -72,7 +79,6 @@
 @section scripts
 {
     @Scripts.Render("~/Scripts/jquery.signalR-2.2.2.js")
-    <script src="~/Scripts/slick/slick.min.js"></script>
     <script src="~/signalr/hubs"></script>
     <script>
         $(function () {
@@ -83,9 +89,9 @@
             console.log($.connection);
 
             alerter.client.alertFaceDetected = function (ids) {
-                /* handle the fact that face detected in camera with id */
                 ids.forEach(function (id) {
-                    console.log(id);
+                    $('#' + id + '> span').stop();
+                    $('#' + id + '> span').show(0).delay(3000).hide(0); //show for x ms then hide
                 });
             }
 
@@ -153,7 +159,7 @@
         function addStream(stream) {
             $("#streamWrapper").append(
                 '<div class="imgThumbnail col-sm-4" onclick=selectStream(this) id="' + stream.id + '">' +
-                '<span class="fa fa-user fa-10x faceDetected"></span>' +
+                '<span class="fa fa-user faceDetected"></span>' +
                 '<img src="' + stream.url + '"/> ' +
                 '</div>'
             );
