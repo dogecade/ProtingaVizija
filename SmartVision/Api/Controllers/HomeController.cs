@@ -29,6 +29,12 @@ namespace Api.Controllers
 
             return View();
         }
+        public ActionResult Contact()
+        {
+            ViewBag.Title = "Smart Vision";
+
+            return View();
+        }
         public ActionResult CaptchaVerificationRegister()
         {
             var response = Request["g-recaptcha-response"];

@@ -318,7 +318,7 @@ ul{
 
 /*all overlay*/
 .overlay{
-    background-color: rgba(51,51,51,0.50);
+    background-color: rgba(30,63,90,0.7);
     position: absolute;
     left:0;
     top:0;
@@ -769,7 +769,7 @@ textarea::-ms-input-placeholder{
 
 /*Preloader css*/
 #loading{
-    background-color: #ee997b;
+    background-color: #1e3f5a;
     height: 100%;
     width: 100%;
     position: fixed;
@@ -790,7 +790,7 @@ textarea::-ms-input-placeholder{
     height: 50px;
     width: 150px;
     margin-top: -25px;
-    margin-left: -75px;
+    /*margin-left: -75px;*/
 }
 .object{
     width: 8px;
@@ -872,7 +872,7 @@ Nav Menu style
 
 .navbar-brand {
     height: 80px;
-    padding: 30px 15px;
+	/*padding: 30px 15px;*/
 }
 
 .navbar-nav > li > a {
@@ -905,6 +905,9 @@ Nav Menu style
 .contact-banner,
 .about-banner,
 .blog-banner,
+.addmissing-banner,
+.currentlymissing-banner,
+.vilnius-banner,
 .home{
     background-size: cover;
     position: relative;
@@ -927,7 +930,15 @@ Nav Menu style
 .blog-banner{
     background: url(../images/background/blog-bg.jpg) no-repeat bottom center;
 }
-
+.addmissing-banner{
+    background: url(../images/background/addmissing-bg.jpg) no-repeat bottom center;
+}
+.currentlymissing-banner{
+    background: url(../images/background/currentlymissing-bg.jpg) no-repeat bottom center;
+}
+.vilnius-banner{
+    background: url(../images/background/contactVilnius.jpg) no-repeat bottom center;
+}
 
 
 /*
