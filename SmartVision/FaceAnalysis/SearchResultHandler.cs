@@ -19,7 +19,6 @@ namespace FaceAnalysis
 {
     public class SearchResultHandler
     {
-
         private const string emailSubject = "{0} possibility that your missing person was detected!";
         private const string smsBodyBeginning = "Good afternoon. There's a {0} possibility that your missing person ";
         private const string smsBodyEnding = " was detected. Please check you email for more detailed information.";
@@ -27,6 +26,7 @@ namespace FaceAnalysis
         private const string emailBodyEnding = " was detected at this location - ";
 
         private readonly IScheduler scheduler;
+
         private static readonly ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData> likelinessLevelData =
             new ConcurrentDictionary<LikelinessConfidence, LikelinessLevelData>
         (
@@ -78,12 +78,17 @@ namespace FaceAnalysis
         {
             scheduler = new StdSchedulerFactory().GetScheduler().GetAwaiter().GetResult();
             scheduler.Start();
-            scheduler.Context.Put("cameraProperties", cameraProperties);
+            UpdateProperties(cameraProperties);
         }
 
         public void Complete()
         {
             scheduler.Shutdown();
+        }
+
+        public void UpdateProperties(CameraProperties cameraProperties)
+        {
+            scheduler.Context.Put("cameraProperties", cameraProperties);
         }
 
         /// <summary>
@@ -116,6 +121,14 @@ namespace FaceAnalysis
             }
         }
 
+        /// <summary>
+        /// Schedules a notification job.
+        /// Detail depend on the likeliness level
+        /// </summary>
+        /// <typeparam name="JobType">Type of job to create</typeparam>
+        /// <param name="likelinessResult">Likeliness result</param>
+        /// <param name="group">Group of the job to create</param>
+        /// <returns></returns>
         private async Task ScheduleJobByLikeliness<JobType>(LikelinessResult likelinessResult, string group) where JobType : IJob
         {
             var jobKey = new JobKey(likelinessResult.FaceToken, group);

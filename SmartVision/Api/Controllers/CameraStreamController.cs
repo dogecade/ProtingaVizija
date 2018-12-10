@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,7 +48,7 @@ namespace Api.Controllers
                 //error must've occured, should alert user.
                 return null;
             }
-            
+
             if (analysisResult.Faces.Count == 0)
             {
                 return Json(new { result = "No faces have been found in the provided picture" }, JsonRequestBehavior.AllowGet);
@@ -59,8 +58,7 @@ namespace Api.Controllers
 
             foreach (var face in analysisResult.Faces)
             {
-                var searchResult = await apiCalls.SearchFaceInFaceset(Keys.facesetToken, face.Face_token);
-
+                var searchResult = await apiCalls.SearchFaceInFaceset(face.Face_token);
                 if (searchResult != null)
                 {
                     foreach (var likelinessResult in searchResult.LikelinessConfidences()) //might want to set the camera properties to some value.
@@ -69,13 +67,13 @@ namespace Api.Controllers
                             ? likelinessResult.Confidence
                             : biggestConfidence;
 
-                        //await SearchResultHandler.HandleOneResult(likelinessResult, LikelinessConfidence.HighProbability, cameraProperties: null);
+                        await SearchResultHandler.HandleOneResult(likelinessResult, LikelinessConfidence.HighProbability, cameraProperties: null);
                     }
                 }
 
             }
 
-            return Json(new { result = "There was a " + biggestConfidence.ToString() + " that the person/people were similar to any reported missing people" }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = biggestConfidence.ToString() }, JsonRequestBehavior.AllowGet);
         }
         public string FixBase64ForImage(string Image)
         {

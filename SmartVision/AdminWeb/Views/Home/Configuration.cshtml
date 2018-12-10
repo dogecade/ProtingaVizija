@@ -1,0 +1,78 @@
+﻿@using AdminWeb.Models
+
+@{
+    ViewBag.Title = "Configuration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model CameraPropertiesModel
+@{
+    ViewBag.Title = "Configuration";
+}
+
+<h2>Configuration</h2>
+
+<div class="contact-clean">
+    @using (Html.BeginForm("ChangeProperties", "Home", FormMethod.Post))
+    {
+        <div class="form-group center">
+            @Html.Label("The camera is located in a bus: ")
+            @Html.CheckBoxFor(model => model.IsBus, new { @id = "isBus" })
+        </div>
+        <div id="cameraForm" class="form-group center">
+            @Html.Label("Street name")
+            @Html.TextBoxFor(model => model.StreetName, new { @class = "form-control" })
+            @Html.Label("House number")
+            @Html.TextBoxFor(model => model.HouseNumber, new { @class = "form-control" })
+            @Html.Label("City")
+            @Html.TextBoxFor(model => model.CityName, new { @class = "form-control" })
+            @Html.Label("Country")
+            @Html.TextBoxFor(model => model.CountryName, new { @class = "form-control" })
+            @Html.Label("Post code")
+            @Html.TextBoxFor(model => model.PostalCode, new { @class = "form-control" })
+            @Html.Label("API Key")
+            @Html.TextBoxFor(model => model.ApiKey, new { @class = "form-control" })
+            @Html.Label("API Secret")
+            @Html.TextBoxFor(model => model.ApiSecret, new { @class = "form-control" })
+            @Html.Label("Faceset Token")
+            @Html.TextBoxFor(model => model.FacesetToken, new { @class = "form-control" })
+        </div>
+        <div id="busForm" style="display: none;" class="form-group center">
+            @Html.Label("Bus number:")
+            @Html.DropDownListFor(model => model.BusId, Model.BusModel.Buses)
+        </div>
+        <div class="form-group center">
+            <input class="btn btn-primary d-flex m-auto" type="submit" id="submit" value="Submit">
+            <input class="btn btn-primary d-flex m-auto" id="startProcessing" value="Start processing">
+        </div>
+    }
+</div>
+<style>
+    .drop-down {
+        top: 100%;
+    }
+</style>
+
+@section scripts
+{
+    <script>
+        $('#isBus').change(function () {
+            $('#cameraForm').toggle();
+            $('#busForm').toggle();
+        });
+
+        $('#startProcessing').click(function () {
+            $.ajax({
+                url: '@Url.Action("StartProcessor", "Home")',
+                type: 'GET',
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    alert("Processor started succesfully!");
+                },
+                error: function () {
+                    alert("An error occured when starting processor");
+                }
+            });
+        });
+    </script>
+}

@@ -37,8 +37,10 @@ namespace WindowsForms
                 return false;
             }
             processor = new FaceProcessor(source);
+            processor.Start();
+
             source.NewFrame += GetFrame;
-            source.Start();
+            source.Start(); 
             return true;
         }
 

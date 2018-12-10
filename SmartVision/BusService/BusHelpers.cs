@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using Objects.Buses;
@@ -151,10 +152,18 @@ namespace BusService
         {
             // Get data of all buses
             var allBuses = new List<string>();
-            using (var client = new WebClient())
+            try
             {
-                string result = client.DownloadString("https://www.stops.lt/vilnius/gps_full.txt");
-                allBuses = result.Split('\n').ToList();
+                using (var client = new WebClient())
+                {
+                    string result = client.DownloadString("https://www.stops.lt/vilnius/gps_full.txt");
+                    allBuses = result.Split('\n').ToList();
+                }
+            }
+            catch (WebException)
+            {
+                Debug.WriteLine("Can't reach bus file");
+                return null;
             }
 
             allBuses.RemoveAt(0);

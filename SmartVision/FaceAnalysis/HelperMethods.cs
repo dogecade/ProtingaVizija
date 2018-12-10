@@ -77,14 +77,17 @@ namespace FaceAnalysis
             return imgClone;
         }
 
+        /// <summary>
+        /// Combines multiple frames into a single one,
+        /// preserving identifying information
+        /// </summary>
+        /// <typeparam name="IdentifierType">Type that identifies each bitmap / rectangle</typeparam>
+        /// <param name="dictionary">Dictionary of identifier / bitmap pairs</param>
+        /// <returns></returns>
         //TODO: should probably attempt to add padding to help prevent "phantom" face rectangles.
-        public static Tuple<IDictionary<IdentifierType, Rectangle>, Bitmap>  ProcessImages<IdentifierType>(IDictionary<IdentifierType, Bitmap> dictionary)
-        {
+        public static (IDictionary<IdentifierType, Rectangle> rectangles, Bitmap image) ProcessImages<IdentifierType>(IDictionary<IdentifierType, Bitmap> dictionary)
+        { 
             const int MAX_EDGE_IMAGES = 3;
-            if (dictionary?.Any() != true)
-                throw new ArgumentException("List null or empty");
-            else if (dictionary.Count() > MAX_EDGE_IMAGES * MAX_EDGE_IMAGES)
-                throw new ArgumentException(string.Format("Number of bitmaps exceeds limit ({0})", MAX_EDGE_IMAGES));
             foreach (var key in dictionary.Keys)
                 dictionary[key] = ProcessImage(dictionary[key]);
             Point currentPosition = new Point(0, 0);
@@ -111,8 +114,8 @@ namespace FaceAnalysis
                     currentPosition.X = 0;
                     currentPosition.Y += maxHeight;
                 }      
-            return new Tuple<IDictionary<IdentifierType, Rectangle>, Bitmap>(idsRectangles, conjoinedBitmap);
-            
+
+            return (idsRectangles, conjoinedBitmap);          
         }
     }
 }
