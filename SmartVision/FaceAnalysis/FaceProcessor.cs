@@ -187,7 +187,7 @@ namespace FaceAnalysis
                     {
                         var rectangle = (Rectangle)face.Face_rectangle;
                         rectangle.Location = Point.Subtract(rectangle.Location, (Size)pair.Value.Location);
-                        return (Rectangle)face.Face_rectangle;
+                        return rectangle;
                     })
                     .ToList();
             }
