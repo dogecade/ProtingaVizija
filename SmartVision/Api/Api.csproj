@@ -337,6 +337,8 @@
     <Content Include="img\jonas.jpg" />
     <Content Include="img\logo-.png" />
     <Content Include="img\logo-black-.png" />
+    <Content Include="img\logo-black-sm.jpg" />
+    <Content Include="img\logo-black.jpg" />
     <Content Include="img\logo-black.png" />
     <Content Include="img\logo.png" />
     <Content Include="img\maps.jpg" />

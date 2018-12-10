@@ -69,13 +69,13 @@ namespace Api.Controllers
                             ? likelinessResult.Confidence
                             : biggestConfidence;
 
-                        await SearchResultHandler.HandleOneResult(likelinessResult, LikelinessConfidence.HighProbability, cameraProperties: null);
+                        //await SearchResultHandler.HandleOneResult(likelinessResult, LikelinessConfidence.HighProbability, cameraProperties: null);
                     }
                 }
 
             }
 
-            return Json(new { result = biggestConfidence.ToString() }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = "There was a " + biggestConfidence.ToString() + " that the person/people were similar to any reported missing people" }, JsonRequestBehavior.AllowGet);
         }
         public string FixBase64ForImage(string Image)
         {

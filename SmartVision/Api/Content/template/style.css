@@ -790,7 +790,7 @@ textarea::-ms-input-placeholder{
     height: 50px;
     width: 150px;
     margin-top: -25px;
-    margin-left: -75px;
+    /*margin-left: -75px;*/
 }
 .object{
     width: 8px;
