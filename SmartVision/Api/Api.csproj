@@ -322,6 +322,7 @@
     <Content Include="img\contact-img.png" />
     <Content Include="img\ee667347-7615-4d89-8d27-57f611cc568b.jpeg" />
     <Content Include="img\face.png" />
+    <Content Include="img\facebook.png" />
     <Content Include="img\fashion-img1.jpg" />
     <Content Include="img\feature-img.jpg" />
     <Content Include="img\gram-img1.jpg" />
@@ -335,6 +336,7 @@
     <Content Include="img\howtoadd.jpg" />
     <Content Include="img\howwilliknow.jpg" />
     <Content Include="img\jonas.jpg" />
+    <Content Include="img\linkedin.png" />
     <Content Include="img\logo-.png" />
     <Content Include="img\logo-black-.png" />
     <Content Include="img\logo-black-sm.jpg" />
