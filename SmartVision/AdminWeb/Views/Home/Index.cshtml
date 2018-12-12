@@ -41,6 +41,7 @@
 
     #imgSelected > img {
         border: 1px solid black;
+        min-height: 3em;
     }
 
     #imgSelected {
@@ -51,27 +52,34 @@
         width: 100%;
     }
 
-    .hoverableButton {
-        overflow: hidden;
+    #buttons {
         position: absolute;
-        top: 0%;
+        right: 0;
+        top: 0;
+    }
+
+    #buttons > button {
+        overflow: hidden;
+        background-color: rgba(0,0,255,0);
+        border-color: rgba(0,0,255,0);
+        width: auto;
+        cursor: pointer;
+    }
+
+    #buttons > button > span {
+        font-size: 2em;
         opacity: 0;
         transition: opacity .35s ease;
-        border-radius: 0;
-        color: white !important;
-        text-align: center;
-        width: 10%;
+        -webkit-text-fill-color: white !important;
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: black;
     }
 
-    .removeButton {
-        left: 80%;
+    #buttons > button:hover > span {
+        -webkit-text-fill-color: darkred !important;
     }
 
-    .closeButton {
-        left: 90%;
-    }
-
-    #imgSelected:hover > .hoverableButton {
+    #imgSelected:hover > #buttons > button > span {
         opacity: 1;
     }
 
@@ -136,7 +144,7 @@
                 data: { streamId: id },
                 success: function (data) {
                     $('#' + id).remove();
-                    $(element).parent().remove();
+                    $(element).parent().parent().remove();
                 },
                 error: function () {
                     alert('Error remove POST');
@@ -150,12 +158,14 @@
             $('#streams').append(
                 '<div id="imgSelected">' +
                 '<img src="' + $(streamElement).children('img').attr('src') + '" /> ' +
-                '<button data-id="' + streamElement.id + '"class="btn btn-square btn-danger hoverableButton removeButton" onclick="removeStream(this)">' +
+                '<div id="buttons">' +
+                '<button data-id="' + streamElement.id + '" onclick="removeStream(this)">' +
                 '<span class="fa fa-ban"></span>' +
                 '</button>' +
-                '<button data-id="' + streamElement.id + '"class="btn btn-square btn-warning hoverableButton closeButton" onclick="$(this).parent().remove()">' +
+                '<button data-id="' + streamElement.id + '" onclick="$(this).parent().parent().remove()">' +
                 '<span class="fa fa-times"></span>' +
                 '</button>' +
+                '</div>'+
                 '</div>'
             );
         }
@@ -181,7 +191,7 @@
                 dataType: "json",
                 data: { streamUrl: streamUrl, streamType: streamType },
                 success: function (streamData) {
-                    $('#streamUrl').val('');
+                    $('#streamURL').val('');
                     addStream(streamData);
                 },
                 error: function () {
