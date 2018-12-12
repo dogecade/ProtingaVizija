@@ -19,7 +19,8 @@ namespace FaceAnalysis
     /// </summary>
     public class FaceProcessor
     {
-        private const int MAX_SOURCES = 16;
+        private const int MAX_EDGE_SOURCES = 3;
+        private int MAX_SOURCES { get { return MAX_EDGE_SOURCES * MAX_EDGE_SOURCES; } }
         private const int BUFFER_LIMIT = 10000;
         private ConcurrentDictionary<IVideoSource, ProcessableVideoSource> sources = new ConcurrentDictionary<IVideoSource, ProcessableVideoSource>();
         private readonly BroadcastBlock<(IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON)> broadcastBlock;
@@ -68,7 +69,17 @@ namespace FaceAnalysis
                 new TransformBlock<IDictionary<ProcessableVideoSource, Bitmap>,
                                    (IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON)>
             (async dict => {
-                var (rectangles, image) = HelperMethods.ProcessImages(dict);
+                foreach (var pair in dict)
+                    try
+                    {
+                        var processedBitmap = HelperMethods.ProcessImage(pair.Value);
+                        dict[pair.Key] = processedBitmap;
+                    }
+                    catch (ArgumentException) //bitmap must be invalid, don't take it.
+                    {
+                        dict.Remove(pair.Key);
+                    }
+                var (rectangles, image) = HelperMethods.JoinImages(dict, MAX_EDGE_SOURCES);
                 var processedFrame = await ProcessFrame(image);
                 await batchBlock.TriggerBatch();
                 return (rectangles, processedFrame);

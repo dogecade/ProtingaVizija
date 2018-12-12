@@ -139,7 +139,9 @@ namespace StreamingBackend
 
         private async void SendNewFrameToClients(object sender, NewFrameEventArgs e)
         {
-            var byteImage = HelperMethods.ImageToByte(new Bitmap(e.Frame));
+            byte[] byteImage;
+            lock (sender)
+                byteImage = HelperMethods.ImageToByte(new Bitmap(e.Frame));
             foreach (var client in clients.Keys)
                 try
                 {
