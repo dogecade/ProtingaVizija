@@ -5,19 +5,26 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
+using Microsoft.AspNet.Identity;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Net.Http;
 using Helpers;
+using Web.Models;
+using Web;
+using Web.Controllers;
+using Microsoft.AspNet.Identity.Owin;
+using System.Web;
 
 namespace Api.Controllers
+
 {
     [Authorize]
     public class AddPersonController : Controller
     {
+        
         // GET: AddPerson
         public ActionResult AddContactPerson()
         {
@@ -70,6 +77,9 @@ namespace Api.Controllers
                 string imgLoc = await httpClient.PostImageToApiString(image);
                 missingPersons.faceImg = imgLoc;
                 HttpContent content = await httpClient.PostMissingPersonToApiAsync(missingPersons);
+                var name = User.Identity.Name;
+                var userManager = this.HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                var user = await userManager.FindByNameAsync(name);
                 string missingParsed = await content.ReadAsStringAsync();
                 return View("View");
             }

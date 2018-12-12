@@ -2,9 +2,9 @@
 {
     public class Keys
     {
-        public const string faceApiKey = "FW0jcVi02ETQMdUAxsozEpAsdkfgU0Ft";
-        public const string faceApiSecret = "BwOOwainGwgrOnD_MeLzDLcFTSNwauLo";
-        public const string facesetToken = "fb0783a31e742a4cb22aa8d0a5381a4b";
+        public const string faceApiKey = "K09HCKlqecGOhjaaXCMdJ3NjseSivPTk";
+        public const string faceApiSecret = "Gp1fJogc6WX0mObT_dnk_mfUoQs_eRIt";
+        public const string facesetToken = "49c8cffd1ad4de06ac986b5d3a365aac";
 
         public const string twilioAccountSid = "AC1e8895bbdfc2f7752de17d658f777da9";
         public const string twilioAuthToken = "3c96253878a3c13a1dad2876149dfe2c";

@@ -4,11 +4,14 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using Helpers;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Web.Models;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace Web.Controllers
 {
@@ -17,7 +20,6 @@ namespace Web.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
         public AccountController()
         {
         }
@@ -153,10 +155,22 @@ namespace Web.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    HttpClientWrapper httpClient = new HttpClientWrapper();
+                    Objects.Person.ContactPerson cp = new Objects.Person.ContactPerson();
+                    cp.emailAddress = model.Email;
+                    cp.lastName = model.lastName;
+                    cp.firstName = model.firstName;
+                    cp.phoneNumber = model.phoneNumberis;
+                    HttpContent content = await httpClient.PostContactPersonToApiAsync(cp);
+                    string testas = await content.ReadAsStringAsync();
+                    cp = JsonConvert.DeserializeObject<Objects.Person.ContactPerson>(testas);
+                    user.idas = cp.Id.ToString();
                     
+                    await UserManager.UpdateAsync(user);
+                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -394,6 +408,8 @@ namespace Web.Controllers
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
+
+        
 
         //
         // GET: /Account/ExternalLoginFailure

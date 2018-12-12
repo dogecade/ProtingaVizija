@@ -230,6 +230,23 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812121806234_InitialCreate.cs" />
+    <Compile Include="Migrations\201812121806234_InitialCreate.Designer.cs">
+      <DependentUpon>201812121806234_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812121842323_firstName.cs" />
+    <Compile Include="Migrations\201812121842323_firstName.Designer.cs">
+      <DependentUpon>201812121842323_firstName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812121907042_phoneNumberis.cs" />
+    <Compile Include="Migrations\201812121907042_phoneNumberis.Designer.cs">
+      <DependentUpon>201812121907042_phoneNumberis.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812121920257_idas.cs" />
+    <Compile Include="Migrations\201812121920257_idas.Designer.cs">
+      <DependentUpon>201812121920257_idas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -565,6 +582,20 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201812121806234_InitialCreate.resx">
+      <DependentUpon>201812121806234_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812121842323_firstName.resx">
+      <DependentUpon>201812121842323_firstName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812121907042_phoneNumberis.resx">
+      <DependentUpon>201812121907042_phoneNumberis.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812121920257_idas.resx">
+      <DependentUpon>201812121920257_idas.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
