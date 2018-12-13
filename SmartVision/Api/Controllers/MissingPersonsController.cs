@@ -21,7 +21,8 @@ namespace Api.Controllers
         public IQueryable<MissingPerson> GetMissingPersons()
         {
             db.Configuration.ProxyCreationEnabled = false;
-            return db.MissingPersons;
+            
+            return db.MissingPersons.Include("ContactPersons");
         }
 
         // GET: api/MissingPersons/5

@@ -17,6 +17,8 @@ using Web;
 using Web.Controllers;
 using Microsoft.AspNet.Identity.Owin;
 using System.Web;
+using Newtonsoft.Json;
+using System.Data.Entity;
 
 namespace Api.Controllers
 
@@ -78,9 +80,25 @@ namespace Api.Controllers
                 missingPersons.faceImg = imgLoc;
                 HttpContent content = await httpClient.PostMissingPersonToApiAsync(missingPersons);
                 var name = User.Identity.Name;
-                var userManager = this.HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                var user = await userManager.FindByNameAsync(name);
+                ApplicationDbContext db = new ApplicationDbContext();
+                ApplicationUser applicationUser= db.Users.FirstOrDefault(x => x.UserName == name);
+                //db.Users.Find
+                //var userManager = this.HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                //ApplicationUser user = await userManager.FindByNameAsync(name);
+                //ApplicationUser user = await userManager.Users
+                                //.Include(x => x.idas)
+                                //.SingleAsync(x => x.UserName == name);
+                
+                string contactPerson = await httpClient.Get("http://viltomas.eu/api/ContactPersons/" + applicationUser.idas);
                 string missingParsed = await content.ReadAsStringAsync();
+                ContactPerson contactP = JsonConvert.DeserializeObject<ContactPerson>(contactPerson);
+                MissingPerson missingP = JsonConvert.DeserializeObject<MissingPerson>(missingParsed);
+                MissingContact mc = new MissingContact();
+                
+                mc.contactPerson = contactP;
+                mc.missingPerson = missingP;
+                var xasx = await httpClient.PostRelToApi(mc);
+                var a = await xasx.ReadAsStringAsync();
                 return View("View");
             }
         }
