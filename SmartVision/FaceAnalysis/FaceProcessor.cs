@@ -33,7 +33,10 @@ namespace FaceAnalysis
         private readonly BatchDictionaryBlock<ProcessableVideoSource, Bitmap> batchBlock;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
         private readonly SearchResultHandler resultHandler;
-        
+
+        private IDisposable batchLink;
+
+        public bool IsProcessing { get; private set; }
 
         /// <summary>
         /// Event that processing is completed.
@@ -91,7 +94,6 @@ namespace FaceAnalysis
               batchBlock => manyPicturesAnalysisBlock => broadcastBlock => faceTokenBlock
                                                                         => searchBufferBlock => searchActionBlock
             */
-            batchBlock.LinkTo(manyPicturesAnalysisBlock, linkOptions);
             manyPicturesAnalysisBlock.LinkTo(broadcastBlock, linkOptions, item => item.Item2 != null);
             manyPicturesAnalysisBlock.LinkTo(DataflowBlock.NullTarget<(IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON)>());
             broadcastBlock.LinkTo(faceTokenBlock, linkOptions);
@@ -148,7 +150,19 @@ namespace FaceAnalysis
         /// <returns></returns>
         public async Task Start()
         {
+            IsProcessing = true;
+            batchLink = batchBlock.LinkTo(manyPicturesAnalysisBlock, new DataflowLinkOptions { PropagateCompletion = true });
             await batchBlock.TriggerBatch();
+        }
+
+        /// <summary>
+        /// Halts processing
+        /// </summary>
+        /// <returns></returns>
+        public void Stop()
+        {
+            IsProcessing = false;
+            batchLink.Dispose();
         }
 
         /// <summary>
@@ -173,6 +187,7 @@ namespace FaceAnalysis
         /// </summary>
         public async void Complete()
         {
+            IsProcessing = false;
             foreach (var source in sources.Values)
                 RemoveSource(source);
             batchBlock.Complete();

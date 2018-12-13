@@ -13,5 +13,33 @@
 input,
 select,
 textarea {
-    max-width: 280px;
+    max-width: 400px;
 }
+
+.btn-primary {
+    background-color: #004225;
+    border-color: #004225;
+}
+
+    .btn-primary:focus, .btn-primary.focus, .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(1, 66, 37, 0.5);
+        border-color: #004225;
+    }
+
+    .btn-primary:hover {
+        background-color: #002112;
+        border-color: #004225;
+    }
+
+    .btn-primary:active {
+        background-color: #002112 !important;
+        border-color: #004225 !important;
+    }
+
+    html {
+        overflow-y: scroll;
+    }
+
+    .navbar-brand > img {
+        width: auto !important;
+    }

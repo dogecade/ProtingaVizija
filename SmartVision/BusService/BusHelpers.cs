@@ -148,7 +148,7 @@ namespace BusService
             return minIndex;
         }
 
-        public static List<AvailableBus> GetAllAvailableBusses()
+        public static List<AvailableBus> GetAllAvailableBuses()
         {
             // Get data of all buses
             var allBuses = new List<string>();
