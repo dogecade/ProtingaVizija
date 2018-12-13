@@ -33,7 +33,7 @@ namespace FaceAnalysis
         private readonly ActionBlock<IDictionary<ProcessableVideoSource, Bitmap>> disposalBlock;
         private readonly BatchDictionaryBlock<ProcessableVideoSource, Bitmap> batchBlock;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
-        private readonly SearchResultHandler resultHandler;
+        private readonly ISearchResultHandler resultHandler;
 
         private volatile bool isProcessing = false;
 
