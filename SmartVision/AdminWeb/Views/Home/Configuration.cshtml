@@ -45,11 +45,11 @@
             <input class="btn btn-primary d-flex m-auto" type="submit" id="submit" value="Save">
             @if (!Model.IsProcessing)
             {
-                <button class="btn btn-primary d-flex m-auto" id="startStopProcessing"><span class="fa fa-play"></span> Start processing</button>
+                <button type="button" class="btn btn-primary d-flex m-auto" id="startStopProcessing"><span class="fa fa-play"></span> Start processing</button>
             }
             else
             {
-                <button class="btn btn-primary d-flex m-auto" id="startStopProcessing"><span class="fa fa-stop"></span> Stop processing</button>
+                <button type="button" class="btn btn-primary d-flex m-auto" id="startStopProcessing"><span class="fa fa-stop"></span> Stop processing</button>
             }
         </div>
     }
@@ -90,12 +90,13 @@
         $('#startStopProcessing').click(function () {
             var isProcessing = @Model.IsProcessing.ToString().ToLower();
             var status = isProcessing ? "stopp" : "start";
+            console.log("aaaa");
             $.ajax({
                 url: '@Url.Action("StartStopProcessor", "Home")',
                 type: 'GET',
                 contentType: "application/json; charset=utf-8",
                 success: function (result) {
-                    alert("Processor " + action + "ed succesfully!");
+                    window.location.reload(false); 
                 },
                 error: function () {
                     alert("An error occured when " + status + "ing processor");

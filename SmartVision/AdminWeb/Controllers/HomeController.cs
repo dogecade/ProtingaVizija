@@ -66,7 +66,7 @@ namespace AdminWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddCamera(string streamUrl, string streamType)
+        public async Task<ActionResult> AddCamera(string streamUrl, string streamType)
         {
             if (string.IsNullOrWhiteSpace(streamUrl))
                 return null;
@@ -83,7 +83,7 @@ namespace AdminWeb.Controllers
                 default:
                     return null;
             }
-            var (url, id) = MJPEGStreamManager.AddStream(stream);
+            var (url, id) = await MJPEGStreamManager.AddStreamAsync(stream);
             return Json(new { url, id }, JsonRequestBehavior.AllowGet);
         }
 
@@ -101,6 +101,7 @@ namespace AdminWeb.Controllers
             config.AppSettings.Settings["Street"].Value = properties.StreetName;
             config.AppSettings.Settings["City"].Value = properties.CityName;
             config.AppSettings.Settings["Country"].Value = properties.CountryName;
+
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");
             return RedirectToAction("Configuration");

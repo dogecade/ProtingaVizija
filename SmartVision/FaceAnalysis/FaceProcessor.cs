@@ -30,13 +30,14 @@ namespace FaceAnalysis
         private readonly BufferBlock<string> searchBufferBlock = new BufferBlock<string>(new DataflowBlockOptions { BoundedCapacity = BUFFER_LIMIT });
         private readonly TransformBlock<IDictionary<ProcessableVideoSource, Bitmap>,
                                         (IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON)> manyPicturesAnalysisBlock;
+        private readonly ActionBlock<IDictionary<ProcessableVideoSource, Bitmap>> disposalBlock;
         private readonly BatchDictionaryBlock<ProcessableVideoSource, Bitmap> batchBlock;
         private static readonly FaceApiCalls faceApiCalls = new FaceApiCalls(new HttpClientWrapper());
         private readonly SearchResultHandler resultHandler;
 
-        private IDisposable batchLink;
+        private volatile bool isProcessing = false;
 
-        public bool IsProcessing { get; private set; }
+        public bool IsProcessing { get { return isProcessing; } private set { isProcessing = value; } }
 
         /// <summary>
         /// Event that processing is completed.
@@ -87,6 +88,11 @@ namespace FaceAnalysis
                 await batchBlock.TriggerBatch();
                 return (rectangles, processedFrame);
             });
+            disposalBlock = new ActionBlock<IDictionary<ProcessableVideoSource, Bitmap>>(dict =>
+            {
+                foreach (var bitmap in dict.Values)
+                    bitmap.Dispose();
+            });
             broadcastBlock = new BroadcastBlock<(IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON)>(item => item);
             batchBlock = new BatchDictionaryBlock<ProcessableVideoSource, Bitmap>();
 
@@ -94,6 +100,8 @@ namespace FaceAnalysis
               batchBlock => manyPicturesAnalysisBlock => broadcastBlock => faceTokenBlock
                                                                         => searchBufferBlock => searchActionBlock
             */
+            batchBlock.LinkTo(manyPicturesAnalysisBlock, linkOptions, delegate { return IsProcessing; });
+            batchBlock.LinkTo(disposalBlock, linkOptions);
             manyPicturesAnalysisBlock.LinkTo(broadcastBlock, linkOptions, item => item.Item2 != null);
             manyPicturesAnalysisBlock.LinkTo(DataflowBlock.NullTarget<(IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON)>());
             broadcastBlock.LinkTo(faceTokenBlock, linkOptions);
@@ -130,6 +138,18 @@ namespace FaceAnalysis
             source.Stream.NewFrame += QueueFrame;
             FrameProcessed += source.UpdateRectangles;
         }
+        
+        /// <summary>
+        /// Adds source, then, if it's the first source & processing is enabled, awaits batch trigger.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public async Task AddSourceAsync(ProcessableVideoSource source)
+        {
+            AddSource(source);
+            if (sources.Count == 1 && IsProcessing)
+                await batchBlock.TriggerBatch();
+        }
 
         /// <summary>
         /// Removes source from processor (if present)
@@ -151,8 +171,8 @@ namespace FaceAnalysis
         public async Task Start()
         {
             IsProcessing = true;
-            batchLink = batchBlock.LinkTo(manyPicturesAnalysisBlock, new DataflowLinkOptions { PropagateCompletion = true });
-            await batchBlock.TriggerBatch();
+            if (sources.Count > 0)
+                await batchBlock.TriggerBatch();
         }
 
         /// <summary>
@@ -162,7 +182,6 @@ namespace FaceAnalysis
         public void Stop()
         {
             IsProcessing = false;
-            batchLink.Dispose();
         }
 
         /// <summary>
