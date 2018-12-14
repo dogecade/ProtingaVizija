@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Send A Photo";
+    ViewBag.Title = "Smart Vision";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link rel="stylesheet" href="~/Content/modal-spin.css">
@@ -11,25 +11,9 @@
         <button id="captureButton" type="submit" class="child myButton" value=""></button>
     </div>
 
-<div id="snapshotModal" class="modal fadeModal in " role="dialog" data-url="@Url.Action("SnapshotModalView", "CameraStream")">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h4>This is a header</h4>
-        </div>
-        <div class="modal-body row" id="modalBody">
-            <div class="col-md-6">
-                
-            </div>
-            <div id="personInformation" class="col-md-6">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" data-dismiss="modal" id="analyzeButton">Analyze picture</button>
-            <button class="btn btn-primary" data-dismiss="modal" id="closeModal">Cancel</button>
-        </div>
-    </div>
+    <div id="snapshotModal" class="modal fadeModal in " role="dialog" data-url="@Url.Action("SnapshotModalView", "CameraStream")">
 
-</div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="~/Scripts/GetCameraFeed.js"></script>
@@ -38,13 +22,15 @@
         $('#captureButton').on('click', function () {
             var url = $("#snapshotModal").data('url');
             $.get(url,
-                function(content) {
+                function (content) {
                     $("#snapshotModal").html(content);
-                    var canvas = document.getElementById('canvas');
-                    canvas.width = 250;
-                    canvas.height = 250;
+                    var video = $('#video')[0];
+                    var canvas = document.createElement('canvas');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
                     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-                    img = canvas.toDataURL();
+                    var img = canvas.toDataURL('image/jpeg');
+                    $('#image-canvas').prepend($('<img/>').attr({ 'src': img }));
                     $('#snapshotModal').modal('show');
                     $('#analyzeButton').on('click', function () {
                         $("#personInformation").empty();
@@ -56,7 +42,7 @@
                             data: { 'imgBase64': JSON.stringify(img) },
                             success: function (data) {
                                 $("#personInformation").empty();
-                                $("#personInformation").append('<div>' + data.result +'</div>');
+                                $("#personInformation").append('<div>' + data.result + '</div>');
                             },
                             error: function () {
                                 $("#personInformation").empty();
@@ -73,4 +59,3 @@
 
     </script>
 </body>
-
