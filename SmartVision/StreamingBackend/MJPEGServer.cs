@@ -113,10 +113,8 @@ namespace StreamingBackend
             }
         }
 
-        private async Task SendImageToClientAsync(TcpClient client, Bitmap img)
+        private async Task SendByteImageToClientAsync(TcpClient client, byte[] image)
         {
-            var image = HelperMethods.ImageToByte(img);
-
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(boundary);
@@ -131,7 +129,7 @@ namespace StreamingBackend
                 await SendStringToClientAsync(client, "\r\n");
                 client.GetStream().Flush();
             }
-            catch (Exception e ) when (e is System.IO.IOException || e is InvalidOperationException)
+            catch (Exception e ) when (e is System.IO.IOException || e is InvalidOperationException || e is ArgumentException)
             {
                 Debug.WriteLine("An error occured when sending image to client stream: ");
                 Debug.WriteLine(e);
@@ -141,18 +139,18 @@ namespace StreamingBackend
 
         private async void SendNewFrameToClients(object sender, NewFrameEventArgs e)
         {
-            var bitmap = new Bitmap(e.Frame);
+            byte[] byteImage;
+            lock (sender)
+                byteImage = HelperMethods.ImageToByte(new Bitmap(e.Frame));
             foreach (var client in clients.Keys)
                 try
                 {
-                    await SendImageToClientAsync(client, new Bitmap(bitmap));
+                    await SendByteImageToClientAsync(client, byteImage);
                 }
                 catch (ObjectDisposedException)
                 {
                     Debug.WriteLine("Client has already disconnected");
                 }
-                
-            bitmap.Dispose();
         }
     }
 }
