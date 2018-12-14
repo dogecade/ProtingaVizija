@@ -9,6 +9,8 @@
         public string PostalCode { get; }
         public bool IsBus { get; }
         public int BusId { get; }
+        public double Latitude { get; }
+        public double Longitude { get; }
 
         public CameraProperties(int busId)
         {
@@ -25,6 +27,14 @@
             PostalCode = postalCode;
             IsBus = isBus;
             BusId = busId;
+            Latitude = 0;
+            Longitude = 0;
+        }
+
+        public CameraProperties(double latitude, double longitude)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
         }
     }
 }

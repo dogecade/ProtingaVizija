@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Constants;
 using FaceAnalysis;
 using Helpers;
+using Objects.CameraProperties;
 
 namespace Api.Controllers
 {
@@ -26,7 +27,7 @@ namespace Api.Controllers
 
         [HttpPost]
         //this should probably return action result, otherwise nothing will happen in the frontend IIRC
-        public async Task<ActionResult> CaptureSnapshot(string imgBase64)
+        public async Task<ActionResult> CaptureSnapshot(string imgBase64, string latitude, string longitude)
         {
             FaceApiCalls apiCalls = new FaceApiCalls(new HttpClientWrapper());
 
@@ -67,13 +68,16 @@ namespace Api.Controllers
                             ? likelinessResult.Confidence
                             : biggestConfidence;
 
-                        await SearchResultHandler.HandleOneResult(likelinessResult, LikelinessConfidence.HighProbability, cameraProperties: null);
+                        if (likelinessResult.Confidence >= LikelinessConfidence.HighProbability)
+                        {
+                            await SearchResultHandler.HandleOneResult(likelinessResult, new CameraProperties(Convert.ToDouble(latitude), Convert.ToDouble(longitude)));
+                        }
                     }
                 }
 
             }
 
-            return Json(new { result = biggestConfidence.ToString() }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = "There was a " + biggestConfidence.ToString() + " that the person/people from your picture are currently missing. Thank you for the submission, appropriate actions will be taken." }, JsonRequestBehavior.AllowGet);
         }
         public string FixBase64ForImage(string Image)
         {

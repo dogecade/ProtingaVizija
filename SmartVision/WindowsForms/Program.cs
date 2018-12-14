@@ -15,6 +15,8 @@ namespace WindowsForms
         [STAThread]
         static void Main()
         {
+            FaceApiCalls x = new FaceApiCalls(new HttpClientWrapper());
+            var a = x.CreateNewFaceset("5").Result.Faceset_token;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormFaceDetection());

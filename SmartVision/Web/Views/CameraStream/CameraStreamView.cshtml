@@ -30,6 +30,15 @@
                     canvas.height = video.videoHeight;
                     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
                     var img = canvas.toDataURL('image/jpeg');
+
+                    var latitude;
+                    var longitude;
+
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+                    });
+
                     $('#image-canvas').prepend($('<img/>').attr({ 'src': img }));
                     $('#snapshotModal').modal('show');
                     $('#analyzeButton').on('click', function () {
@@ -39,7 +48,11 @@
                             url: '/CameraStream/CaptureSnapshot',
                             type: 'POST',
                             dataType: "json",
-                            data: { 'imgBase64': JSON.stringify(img) },
+                            data: {
+                                'imgBase64': JSON.stringify(img),
+                                'latitude': JSON.stringify(latitude),
+                                'longitude': JSON.stringify(longitude)
+                            },
                             success: function (data) {
                                 $("#personInformation").empty();
                                 $("#personInformation").append('<div>' + data.result + '</div>');
