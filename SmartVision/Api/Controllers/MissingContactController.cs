@@ -14,26 +14,27 @@ namespace Api.Controllers
     {
         private pstop2018Entities1 db = new pstop2018Entities1();
         [HttpPost]
-        public IHttpActionResult CreateRel(MissingContact missingContact)
+        public string CreateRel(MissingContact missingContact)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return "bolgas modelis";
             }
             try
             {
+                db.Configuration.ProxyCreationEnabled = false;
                 db.ContactPersons.Attach(missingContact.contactPerson);
                 db.MissingPersons.Attach(missingContact.missingPerson);
                 missingContact.contactPerson.MissingPersons.Add(missingContact.missingPerson);
                 missingContact.missingPerson.ContactPersons.Add(missingContact.contactPerson);
                 db.SaveChanges();
 
-                return Ok();
+                return "ok";
             }
             catch (System.Exception e)
             {
                 Trace.WriteLine(e);
-                return InternalServerError();
+                return e.ToString();
             }
         }
     }

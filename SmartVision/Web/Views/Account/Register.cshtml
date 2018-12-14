@@ -1,0 +1,117 @@
+﻿@model Web.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Content/Contact-Form-Clean.css">
+@*<h2>@ViewBag.Title.</h2>*@
+
+<div class="contact-clean">
+    <br />
+    <br />
+    <br /><br /><br />
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", @role = "form" }))
+    { <section id="contact" class="">
+            <div class="">
+                <div class="row d-flex justify-content-center">
+                    <div class="center">
+                        <div class="">
+                            <div class="head_title">
+                                <h2 align="center">Registration form</h2>
+                                <h5 align="center">
+                                    <em>
+                                        Keep in mind that all of the fields are mandatory.
+                                    </em>
+                                </h5>
+                                <div style="text-align: center;">
+                                    <span style="display:block; font-size: 15px; color: red">
+                                        @ViewBag.Message
+                                    </span>
+                                </div>
+                                <div class="separator_left" style="width:100%"></div>
+                            </div>
+                        </div><!-- End off Head Title -->
+                        @Html.AntiForgeryToken()
+                        @*<h4>Create a new account.</h4>
+                            <hr />*@
+                        @Html.ValidationSummary("", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Email, new { @class = "form-control", @type = "email", @required = "", pattern = "[^@\\s]+@[^@\\s]+\\.[^@\\s]+" })
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                                </div>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.firstName, new { @class = "col-md-2 control-label" })
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                    </div>
+                                    @Html.TextBoxFor(m => m.firstName, new { @class = "form-control", @type = "text", @name = "firstName", @required = "" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.lastName, new { @class = "col-md-2 control-label" })
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                        </div>
+                                        @Html.TextBoxFor(m => m.lastName, new { @class = "form-control", @type = "text", @name = "lastName", @required = "" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.phoneNumberis, new { @class = "col-md-2 control-label" })
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+                                            </div>
+                                            @Html.TextBoxFor(m => m.phoneNumberis, new { @class = "form-control", @type = "tel", @required = "", @pattern = "^[+][0-9]+$" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                            </div>
+                                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", @name = "password", @id = "password", @required = "", @type = "password" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                            </div>
+                                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @name = "confirm_password", @id = "confirm_password", @required = "", @type = "password" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <input type="submit" class="btn btn-default" value="Register" />
+                                        </div>
+                                    </div>
+
+                                </div><!--End off row -->
+                            </div><!--End off container -->
+                        </div>
+        </section><!--End off Contact Section-->
+    }
+
+    <script>
+        $('#password, #confirm_password').on('keyup', function () {
+            if ($('#password').val() === $('#confirm_password').val() && $('#password').val() !== "" && $('#confirm_password').val() !== "") {
+                $('#password').css('border-color', 'green');
+                $('#confirm_password').css('border-color', 'green');
+            } else if ($('#password').val() === "" || $('#confirm_password').val() === "") {
+                $('#password').css('border-color', '');
+                $('#confirm_password').css('border-color', '');
+            } else {
+                $('#password').css('border-color', 'red');
+                $('#confirm_password').css('border-color', 'red');
+            }
+        });
+    </script>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
