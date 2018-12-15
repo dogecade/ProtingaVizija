@@ -18,19 +18,17 @@ namespace StreamingBackend
             new System.Threading.AutoResetEvent(false).WaitOne();
         }
 
-        //TODO: this assumes that it's an MJPEG stream, it could be a JPEG stream as well
-        public static (string url, string id) AddStream(string sourceUrl)
+        public static async Task<(string url, string id)> AddStreamAsync(IVideoSource source)
         {
-            return AddStream(new ProcessableVideoSource(new MJPEGStream(sourceUrl)));
+            return await AddStreamAsync(new ProcessableVideoSource(source));
         }
 
-        public static (string url, string id) AddStream(ProcessableVideoSource source)
+        public static async Task<(string url, string id)> AddStreamAsync(ProcessableVideoSource source)
         {
             var server = new MJPEGServer(source, start: true);
             streamServers[source] = server;
-            Processor.AddSource(source);
+            await Processor.AddSourceAsync(source);
             return (server.Url, source.Id.ToString());
-            
         }
         
         public static void RemoveStream(string sourceId)    

@@ -17,7 +17,7 @@ using Quartz.Impl.Matchers;
 
 namespace FaceAnalysis
 {
-    public class SearchResultHandler
+    public class SearchResultHandler : ISearchResultHandler
     {
         private const string emailSubject = "{0} possibility that your missing person was detected!";
         private const string smsBodyBeginning = "Good afternoon. There's a {0} possibility that your missing person ";

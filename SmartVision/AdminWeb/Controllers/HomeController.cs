@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using AdminWeb.Models;
+using AForge.Video;
 using BusService;
+using Objects.CameraProperties;
 using StreamingBackend;
 
 namespace AdminWeb.Controllers
@@ -17,43 +19,89 @@ namespace AdminWeb.Controllers
             return View();
         }
 
+        private (string apiKey, string apiSecret, string facesetToken) GetApiDetailsFromConfig()
+        {
+            return (ConfigurationManager.AppSettings["ApiKey"],
+                    ConfigurationManager.AppSettings["ApiSecret"],
+                    ConfigurationManager.AppSettings["FacesetToken"]);
+        }
+
+        private (string postCode, string houseNo, string street, string city, string country, int busId, bool isBus) GetCameraDetailsFromConfig()
+        {
+            if (!int.TryParse(ConfigurationManager.AppSettings["BusId"], out int busId))
+                busId = 0;
+            if (!bool.TryParse(WebConfigurationManager.AppSettings["IsBus"], out bool isBus))
+                isBus = false;
+            return (ConfigurationManager.AppSettings["PostCode"],
+                    ConfigurationManager.AppSettings["HouseNo"],
+                    ConfigurationManager.AppSettings["Street"],
+                    ConfigurationManager.AppSettings["City"],
+                    ConfigurationManager.AppSettings["Country"],
+                    busId,
+                    isBus);
+        }
+
         public ActionResult Configuration()
         {
-            CameraPropertiesModel propertiesModel = new CameraPropertiesModel();
-            propertiesModel.BusModel = new BusModel();
-            var allBuses = BusHelpers.GetAllAvailableBusses();
+            CameraPropertiesModel propertiesModel = new CameraPropertiesModel
+            {
+                BusModel = new BusModel()
+            };
+            var allBuses = BusHelpers.GetAllAvailableBuses();
             if (allBuses != null)
                 propertiesModel.BusModel.Buses = allBuses
                     .Select(bus => new SelectListItem { Text = bus.Name, Value = bus.Id });
-            propertiesModel.ApiKey = ConfigurationManager.AppSettings["ApiKey"];
-            propertiesModel.ApiSecret = ConfigurationManager.AppSettings["ApiSecret"];
-            propertiesModel.FacesetToken = ConfigurationManager.AppSettings["FacesetToken"];
+            else
+                propertiesModel.BusModel.Buses = Enumerable.Empty<SelectListItem>();
+            (propertiesModel.ApiKey, propertiesModel.ApiSecret, propertiesModel.FacesetToken) = GetApiDetailsFromConfig();
+            (propertiesModel.PostalCode,
+            propertiesModel.HouseNumber,
+            propertiesModel.StreetName,
+            propertiesModel.CityName,
+            propertiesModel.CountryName,
+            propertiesModel.BusId,
+            propertiesModel.IsBus) = GetCameraDetailsFromConfig();
+            propertiesModel.IsProcessing = MJPEGStreamManager.Processor.IsProcessing;
             return View(propertiesModel);   
         }
 
         [HttpPost]
-        public ActionResult AddCamera(string streamUrl)
+        public async Task<ActionResult> AddCamera(string streamUrl, string streamType)
         {
-            Debug.WriteLine(streamUrl);
-            if (streamUrl != null)
-            {
-                streamUrl = streamUrl.Replace(@"""", string.Empty);
-                var (url, id) = MJPEGStreamManager.AddStream(streamUrl);
-                return Json(new { url, id }, JsonRequestBehavior.AllowGet);
-            }
-            else
+            if (string.IsNullOrWhiteSpace(streamUrl))
                 return null;
+            Debug.WriteLine($"Adding stream {streamUrl}");
+            IVideoSource stream;
+            switch (streamType)
+            {
+                case "jpeg":
+                    stream = new JPEGStream(streamUrl);
+                    break;
+                case "mjpeg":
+                    stream = new MJPEGStream(streamUrl);
+                    break;
+                default:
+                    return null;
+            }
+            var (url, id) = await MJPEGStreamManager.AddStreamAsync(stream);
+            return Json(new { url, id }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult ChangeProperties(CameraPropertiesModel properties)
         {
-            //TODO: save camera properties to config as well.
             MJPEGStreamManager.Processor.UpdateProperties(properties);
+            MJPEGStreamManager.Processor.UpdateKeys(new FaceAnalysis.ApiKeySet(properties.ApiKey, properties.ApiSecret, properties.FacesetToken));
             Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
             config.AppSettings.Settings["ApiKey"].Value = properties.ApiKey;
             config.AppSettings.Settings["ApiSecret"].Value = properties.ApiSecret;
             config.AppSettings.Settings["FacesetToken"].Value = properties.FacesetToken;
+            config.AppSettings.Settings["PostCode"].Value = properties.PostalCode;
+            config.AppSettings.Settings["HouseNo"].Value = properties.HouseNumber;
+            config.AppSettings.Settings["Street"].Value = properties.StreetName;
+            config.AppSettings.Settings["City"].Value = properties.CityName;
+            config.AppSettings.Settings["Country"].Value = properties.CountryName;
+
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");
             return RedirectToAction("Configuration");
@@ -68,10 +116,9 @@ namespace AdminWeb.Controllers
         [HttpPost]
         public ActionResult RemoveStream(string streamId)
         {
-            Debug.WriteLine(streamId);
+            Debug.WriteLine($"Removing stream {streamId}");
             if (streamId != "")
             {
-                streamId = streamId.Replace(@"""", string.Empty);
                 MJPEGStreamManager.RemoveStream(streamId);
                 return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
             }
@@ -80,11 +127,20 @@ namespace AdminWeb.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> StartProcessor()
+        public async Task<ActionResult> StartStopProcessor()
         {
-            //TODO: fetch latest properties from config and set that before starting.
-            //TODO: stopping
-            await MJPEGStreamManager.Processor.Start();
+            var (apiKey, apiSecret, facesetToken) = GetApiDetailsFromConfig();
+            var (postCode, houseNo, street, city, country, busId, isBus) = GetCameraDetailsFromConfig();
+            var properties = new CameraProperties(street, houseNo, city, country, postCode, busId, isBus);
+            var keySet = new FaceAnalysis.ApiKeySet(apiKey, apiSecret, facesetToken);
+            MJPEGStreamManager.Processor.UpdateProperties(properties);
+            MJPEGStreamManager.Processor.UpdateKeys(keySet);
+
+            if (!MJPEGStreamManager.Processor.IsProcessing)
+                await MJPEGStreamManager.Processor.Start();
+            else
+                MJPEGStreamManager.Processor.Stop();
+
             return Json(new { result = "success" }, JsonRequestBehavior.AllowGet);
         }
 

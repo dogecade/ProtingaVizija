@@ -83,19 +83,17 @@ namespace FaceAnalysis
         /// </summary>
         /// <typeparam name="IdentifierType">Type that identifies each bitmap / rectangle</typeparam>
         /// <param name="dictionary">Dictionary of identifier / bitmap pairs</param>
+        /// <param name="maxEdgeImages">How many images should be on one "edge" of the image</param>
         /// <returns></returns>
         //TODO: should probably attempt to add padding to help prevent "phantom" face rectangles.
-        public static (IDictionary<IdentifierType, Rectangle> rectangles, Bitmap image) ProcessImages<IdentifierType>(IDictionary<IdentifierType, Bitmap> dictionary)
+        public static (IDictionary<IdentifierType, Rectangle> rectangles, Bitmap image) JoinImages<IdentifierType>(IDictionary<IdentifierType, Bitmap> dictionary, int maxEdgeImages)
         { 
-            const int MAX_EDGE_IMAGES = 3;
-            foreach (var key in dictionary.Keys)
-                dictionary[key] = ProcessImage(dictionary[key]);
             Point currentPosition = new Point(0, 0);
             var idsRectangles = new Dictionary<IdentifierType, Rectangle>();
             var rows = dictionary
                .Where(pair => pair.Value != null)
                .Select((pair, i) => new { Index = i, Value = pair})
-               .GroupBy(pair => pair.Index / MAX_EDGE_IMAGES)
+               .GroupBy(pair => pair.Index / maxEdgeImages)
                .Select(pairList => pairList.Select(element => element.Value));
             Bitmap conjoinedBitmap = new Bitmap(width: rows.Max(row => row.Sum(pair => pair.Value.Width)),
                                                 height: rows.Sum(row => row.Max(pair => pair.Value.Height)));

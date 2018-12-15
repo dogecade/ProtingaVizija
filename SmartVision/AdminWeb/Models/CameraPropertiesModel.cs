@@ -19,6 +19,7 @@ namespace AdminWeb.Models
         public string PostalCode { get; set; }
         public bool IsBus { get; set; }
         public int BusId { get; set; }
+        public bool IsProcessing { get; set; }
 
         public static implicit operator CameraProperties(CameraPropertiesModel model)
         {

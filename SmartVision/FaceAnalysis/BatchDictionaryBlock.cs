@@ -26,6 +26,7 @@ namespace FaceAnalysis
         private TaskCompletionSource<bool> signal = null;
 
         private readonly object signalLock = new object();
+        private readonly object dictionaryLock = new object();
 
         public BatchDictionaryBlock()
         {
@@ -33,8 +34,9 @@ namespace FaceAnalysis
 
             target = new ActionBlock<(KeyType, ValueType)>(item =>
             {
-                if (dictionary.TryGetValue(item.Item1, out ValueType value) && value is IDisposable disposableValue)
-                    disposableValue.Dispose();
+                lock (dictionaryLock)
+                    if (dictionary.TryGetValue(item.Item1, out ValueType value) && value is IDisposable disposableValue)
+                        disposableValue.Dispose();
                 dictionary[item.Item1] = item.Item2;
                 lock (signalLock)
                     if (signal != null && !signal.Task.IsCompleted)
@@ -57,7 +59,8 @@ namespace FaceAnalysis
         {
             await HasValueAsync();
             var oldDictionary = dictionary;
-            dictionary = new ConcurrentDictionary<KeyType, ValueType>();
+            lock (dictionaryLock)
+                dictionary = new ConcurrentDictionary<KeyType, ValueType>();
             if (source is BufferBlock<IDictionary<KeyType, ValueType>>)
                 ((BufferBlock<IDictionary<KeyType, ValueType>>)source).Post(oldDictionary);         
         }

@@ -1850,5 +1850,18 @@ Blog Details Page
     width:100%;
 }
 
+.fbButton {
+    background: url(../../img/facebook.png) no-repeat;
+    cursor: pointer;
+    border: none;
+    width: 30px;
+    height: 30px;
+}
 
-
+.linkedinButton {
+    background: url(../../img/linkedin.png) no-repeat;
+    cursor: pointer;
+    border: none;
+    width: 30px;
+    height: 30px;
+}

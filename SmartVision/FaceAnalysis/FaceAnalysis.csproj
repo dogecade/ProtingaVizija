@@ -109,6 +109,7 @@
     <Compile Include="FaceProcessor.cs" />
     <Compile Include="FaceApiCalls.cs" />
     <Compile Include="HelperMethods.cs" />
+    <Compile Include="ISearchResultHandler.cs" />
     <Compile Include="JSON\AddFaceJSON.cs" />
     <Compile Include="JSON\DeleteFacesetJSON.cs" />
     <Compile Include="JSON\FrameAnalysisJSON.cs" />
