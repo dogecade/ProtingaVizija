@@ -1,4 +1,4 @@
-﻿using NotificationService;
+﻿﻿using NotificationService;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -11,7 +11,6 @@ using BusService;
 using Quartz;
 using Quartz.Impl;
 using LocationService;
-using Objects;
 using Objects.CameraProperties;
 using Objects.ContactInformation;
 using Quartz.Impl.Matchers;
@@ -167,10 +166,15 @@ namespace FaceAnalysis
         /// <summary>
         /// Handles a single searchResult with no scheduling - sends it out if it meets the minimum confidence requirement.
         /// </summary>
+        /// <param name="minimumConfidence">Minimum confidence to send the notification</param>
         /// <returns></returns>
-        public static async Task HandleOneResult(LikelinessResult result, CameraProperties cameraProperties = null)
+        public static async Task HandleOneResult(LikelinessResult result, LikelinessConfidence minimumConfidence, CameraProperties cameraProperties = null)
         {
-            await SendNotification(result.FaceToken, result.Confidence, cameraProperties);
+            if (result.Confidence >= minimumConfidence)
+            {
+                Debug.WriteLine(string.Format("Probability {0} meets minimum confidence requirement, notification will be sent.", result.Confidence));
+                await SendNotification(result.FaceToken, result.Confidence, cameraProperties);
+            }
         }
 
         /// <summary>
@@ -197,8 +201,8 @@ namespace FaceAnalysis
 
                 var location = (cameraProperties.IsBus)
                     ? new Location(bus)
-                    : (cameraProperties.Latitude == 0 && cameraProperties.Longitude == 0) ? new Location(cameraProperties.StreetName, cameraProperties.HouseNumber, cameraProperties.CityName,
-                        cameraProperties.CountryName, cameraProperties.PostalCode) : LocationHelpers.CoordinatesToLocation(cameraProperties.Latitude, cameraProperties.Longitude);
+                    : new Location(cameraProperties.StreetName, cameraProperties.HouseNumber, cameraProperties.CityName,
+                        cameraProperties.CountryName, cameraProperties.PostalCode);
 
                 locationString = (cameraProperties.IsBus)
                     ? BusHelpers.GetBusLocation(bus)
@@ -259,7 +263,7 @@ namespace FaceAnalysis
         internal class SendNotificationJob : IJob
         {
             public async Task Execute(IJobExecutionContext context)
-            {
+            { 
                 var faceToken = context.JobDetail.Key.Name;
                 var confidence = (LikelinessConfidence)context.JobDetail.JobDataMap.GetInt("confidence");
                 Debug.WriteLine(string.Format("Executing notifaction job, faceToken={0}, confidence={1}", faceToken, confidence));

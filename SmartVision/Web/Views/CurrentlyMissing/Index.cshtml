@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="~/Content/modal-spin.css">
 @{
     ViewBag.Title = "Smart Vision";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
@@ -37,8 +36,8 @@
                 <div class="grid models text-center">
                     @foreach (var item in Model)
                     {
-                        string phoneNumber = "'+37066666'";
-                        string email = "'admin@admin.com'";
+                        string phoneNumber = "''";
+                        string email = "''";
                         <div class="grid-item model-item transition metal ium" style="border:1px #333 solid">
                             <img alt="" src="http://viltomas.eu/img/@item.faceImg">
                             @item.firstName @item.lastName @item.dateOfBirth

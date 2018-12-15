@@ -68,16 +68,20 @@ namespace Api.Controllers
                             ? likelinessResult.Confidence
                             : biggestConfidence;
 
-                        if (likelinessResult.Confidence >= LikelinessConfidence.HighProbability)
-                        {
-                            await SearchResultHandler.HandleOneResult(likelinessResult, new CameraProperties(Convert.ToDouble(latitude), Convert.ToDouble(longitude)));
-                        }
+                        await SearchResultHandler.HandleOneResult(result: likelinessResult, 
+                                                                  minimumConfidence: LikelinessConfidence.VeryHighProbability,
+                                                                  cameraProperties: new CameraProperties(Convert.ToDouble(latitude), Convert.ToDouble(longitude)));
                     }
                 }
 
             }
 
-            return Json(new { result = "There was a " + biggestConfidence.ToString() + " that the person/people from your picture are currently missing. Thank you for the submission, appropriate actions will be taken." }, JsonRequestBehavior.AllowGet);
+            return
+                Json(new
+                { result =
+                    string.Format("There's a {0} probability that the person/people from your picture are currently missing. Thank you for the submission, appropriate actions will be taken.",
+                    biggestConfidence.ToPrettyString())
+                }, JsonRequestBehavior.AllowGet);
         }
         public string FixBase64ForImage(string Image)
         {

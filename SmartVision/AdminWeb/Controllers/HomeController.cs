@@ -19,7 +19,6 @@ namespace AdminWeb.Controllers
 
         public ActionResult Configuration()
         {
-            //TODO: fetch camera properties.
             CameraPropertiesModel propertiesModel = new CameraPropertiesModel();
             propertiesModel.BusModel = new BusModel();
             var allBuses = BusHelpers.GetAllAvailableBusses();

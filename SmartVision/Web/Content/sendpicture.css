@@ -47,7 +47,13 @@
 		bottom:5%;
     }
 
- 
+    #analyzeButton {
+        padding: 0;
+    }
+
+    #analyzeButton > span {
+        line-height: 125px;
+    }
 
     .myButton {
         background: url(../../img/camera.png) no-repeat;

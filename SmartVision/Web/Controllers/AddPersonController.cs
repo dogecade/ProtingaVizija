@@ -82,23 +82,18 @@ namespace Api.Controllers
                 var name = User.Identity.Name;
                 ApplicationDbContext db = new ApplicationDbContext();
                 ApplicationUser applicationUser= db.Users.FirstOrDefault(x => x.UserName == name);
-                //db.Users.Find
-                //var userManager = this.HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                //ApplicationUser user = await userManager.FindByNameAsync(name);
-                //ApplicationUser user = await userManager.Users
-                                //.Include(x => x.idas)
-                                //.SingleAsync(x => x.UserName == name);
                 
                 string contactPerson = await httpClient.Get("http://viltomas.eu/api/ContactPersons/" + applicationUser.idas);
                 string missingParsed = await content.ReadAsStringAsync();
                 ContactPerson contactP = JsonConvert.DeserializeObject<ContactPerson>(contactPerson);
                 MissingPerson missingP = JsonConvert.DeserializeObject<MissingPerson>(missingParsed);
-                MissingContact mc = new MissingContact();
-                
-                mc.contactPerson = contactP;
-                mc.missingPerson = missingP;
-                var xasx = await httpClient.PostRelToApi(mc);
-                var a = await xasx.ReadAsStringAsync();
+                MissingContact mc = new MissingContact
+                {
+                    contactPerson = contactP,
+                    missingPerson = missingP
+                };
+                var contentResponse = await httpClient.PostRelToApi(mc);
+                var contentString = await content.ReadAsStringAsync();
                 return View("View");
             }
         }
