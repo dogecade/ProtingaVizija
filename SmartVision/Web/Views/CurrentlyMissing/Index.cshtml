@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<Objects.Person.MissingPerson>
+@using System.Linq
+@using System.Web.Script.Serialization
 
 <link rel="stylesheet" href="~/Content/Lightbox-Gallery.css">
 <link rel="stylesheet" href="~/Content/modal-spin.css">
@@ -47,8 +49,13 @@
                                 phoneNumber = "'" + item.ContactPersons.First().phoneNumber + "'";
                                 email = "'" + item.ContactPersons.First().emailAddress + "'";
                             }
-                            <a class="btn btn-default m-top-20" onclick="callModal('@item.firstName','@item.lastName', '@item.dateOfBirth', '@item.lastSeenDate', '@item.lastSeenLocation', '@item.Additional_Information',
-                               '@item.faceImg', @phoneNumber, @email);">View Details<i class="fa fa-long-arrow-right"></i></a>
+                            @{ var serializer = new JavaScriptSerializer(); }
+                            <a class="btn btn-default m-top-20"
+                               onclick="callModal('@serializer.Serialize(item)')"
+                               >
+                                View Details
+                                <i class="fa fa-long-arrow-right"></i>
+                            </a>
                         </div><!-- End off grid item -->
                     }
                 </div>
@@ -63,23 +70,25 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script>
-    function callModal(firstName, lastName, dateOfBirth, lastSeenDate, lastSeenLocation, Additional_Information, faceImg, phoneNumber, emailAddress) {
+
+    function callModal(itemJson) {
+        var item = JSON.parse(itemJson);
         var url = $("#moreInformationModal").data('url');
         $.get(url,
             function (content) {
                 $("#moreInformationModal").html(content);
                 $("#imageWrap").append(
                     '<div class=""><img id = ' +
-                    faceImg +
-                    ' class="img-thumbnail selectable-face imgsize" src="http://viltomas.eu/img/' + faceImg + '" /></div>');
-                $("#name").append('<div>' + firstName + '</div>');
-                $("#surname").append('<div>' + lastName + '</div>');
-                $("#dob").append('<div>' + dateOfBirth + '</div>');
-                $("#lso").append('<div>' + lastSeenDate + '</div>');
-                $("#lsl").append('<div>' + lastSeenLocation + '</div>');
-                $("#adinfo").append('<div class="" style="width:200%; word-wrap:break-word;">' + Additional_Information + '</div>');
-                $("#email").append('<div>' + emailAddress + '</div>');
-                $("#phone").append('<div>' + phoneNumber + '</div>');
+                    item.faceImg +
+                    ' class="img-thumbnail selectable-face imgsize" src="http://viltomas.eu/img/' + item.faceImg +  '" /></div>');
+                $("#name").append('<div>' + item.firstName + '</div>');
+                $("#surname").append('<div>' + item.lastName + '</div>');
+                $("#dob").append('<div>' + item.dateOfBirth + '</div>');
+                $("#lso").append('<div>' + item.lastSeenDate + '</div>');
+                $("#lsl").append('<div>' + item.lastSeenLocation + '</div>');
+                $("#adinfo").append('<div class="" style="width:200%; word-wrap:break-word;">' + item.Additional_Information + '</div>');
+                $("#email").append('<div>' + item.ContactPersons[0].emailAddress + '</div>');
+                $("#phone").append('<div>' + item.ContactPersons[0].phoneNumber + '</div>');
 
                 $("#moreInformationModal").modal('show');
             });
