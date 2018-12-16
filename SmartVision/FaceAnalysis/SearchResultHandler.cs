@@ -173,8 +173,8 @@ namespace FaceAnalysis
             if (result.Confidence >= minimumConfidence)
             {
                 Debug.WriteLine(string.Format("Probability {0} meets minimum confidence requirement, notification will be sent.", result.Confidence));
-            }
                 await SendNotification(result.FaceToken, result.Confidence, cameraProperties);
+            }
         }
 
         /// <summary>

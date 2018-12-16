@@ -1,0 +1,50 @@
+﻿@using Api.Models
+@{
+    ViewBag.Title = "Smart Vision";
+}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddContactPerson</title>
+    <link rel="stylesheet" href="~/Content/Contact-Form-Clean.css">
+</head>
+
+<body>
+    <div class="contact-clean">
+        <form method="post">
+            <h2 class="text-center">Contact person details</h2>
+            @model ContactPerson
+            @{
+                using (Html.BeginForm("AddContactPerson", "AddPerson", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group center">
+                        <label>First name:</label>
+                        @Html.TextBoxFor(m => m.firstName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "[a-zA-Z\xC0-\uFFFF ,.'-]+$" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Last name:</label>
+                        @Html.TextBoxFor(m => m.lastName, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "[a-zA-Z\xC0-\uFFFF ,.'-]+$" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Missing person ID:</label>
+                        @Html.TextBoxFor(m => m.MissingPersons, new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "^[0-9]+$" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Phone number:</label>
+                        @Html.TextBoxFor(m => m.phoneNumber, new { @class = "form-control", @type = "tel", @required = "", @pattern = "^[+][0-9]+$" })
+                    </div>
+                    <div class="form-group center">
+                        <label>Email address:</label>
+                        @Html.TextBoxFor(m => m.emailAddress, new { @class = "form-control", @type = "email", @required = "", pattern = "[^@\\s]+@[^@\\s]+\\.[^@\\s]+", title = "Please type a valid email address." })
+                    </div>
+                    <div class="form-group d-flex justify-content-center align-items-center align-content-center">
+                        <input class="btn btn-primary d-flex align-self-center" type="submit" style="margin:0px;" value="Submit" />
+                    </div>
+                }
+            }
+        </form>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>

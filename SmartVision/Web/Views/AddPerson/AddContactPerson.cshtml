@@ -1,0 +1,61 @@
+﻿@model Objects.Person.ContactPerson
+
+@{
+    ViewBag.Title = "AddContactPerson";
+}
+<link rel="stylesheet" href="~/Content/Contact-Form-Clean.css">
+
+<body style="background-color: #0C0404;">
+    <div class="contact-clean">
+        @using (Html.BeginForm("AddContactPerson", "AddPerson", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <h2 class="text-center">Contact person details</h2>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group center">
+                @Html.LabelFor(model => model.firstName, "First Name:", htmlAttributes: new { @class = "control-label" })
+                <div>
+                    @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "[a-zA-Z\xC0-\uFFFF ,.'-]+$" } })
+                    @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group center">
+                @Html.LabelFor(model => model.lastName, "Last Name:", htmlAttributes: new { @class = "control-label" })
+                <div>
+                    @Html.EditorFor(model => model.lastName, new { htmlAttributes = new { @class = "form-control", @type = "text", @name = "name", @required = "", pattern = "[a-zA-Z\xC0-\uFFFF ,.'-]+$" } })
+                    @Html.ValidationMessageFor(model => model.lastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group center">
+                @Html.LabelFor(model => model.phoneNumber, "Phone Number:", htmlAttributes: new { @class = "control-label" })
+                <div>
+                    @Html.EditorFor(model => model.phoneNumber, new { htmlAttributes = new { @class = "form-control", @type = "tel", @required = "", @pattern = "^[+][0-9]+$" } })
+                    @Html.ValidationMessageFor(model => model.phoneNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group center">
+                @Html.LabelFor(model => model.emailAddress, "Email Address:", new { @class = "control-label" })
+                <div>
+                    @Html.EditorFor(model => model.emailAddress, new { htmlAttributes = new { @class = "form-control", @type = "email", @required = "", pattern = "[^@\\s]+@[^@\\s]+\\.[^@\\s]+" } })
+                    @Html.ValidationMessageFor(model => model.emailAddress, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group d-flex justify-content-center align-items-center align-content-center">
+                <input type="submit" value="ADD" class="btn btn-primary d-flex align-self-center" />
+            </div>
+
+        }
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</body>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
