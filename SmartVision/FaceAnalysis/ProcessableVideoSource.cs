@@ -40,7 +40,7 @@ namespace FaceAnalysis
             bitmap = HelperMethods.ProcessImage(bitmap);
             if (faceRectangles != null)
                 using (Graphics g = Graphics.FromImage(bitmap))
-                using (Pen pen = new Pen(new SolidBrush(Color.Red), 1))
+                using (Pen pen = new Pen(new SolidBrush(Color.Red), 3))
                     foreach (Rectangle face in faceRectangles)
                         g.DrawRectangle(pen, face);
 
