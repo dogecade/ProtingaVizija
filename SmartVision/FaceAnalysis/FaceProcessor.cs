@@ -85,13 +85,15 @@ namespace FaceAnalysis
                     }
                 var (rectangles, image) = HelperMethods.JoinImages(dict, MAX_EDGE_SOURCES);
                 var processedFrame = await ProcessFrame(image);
-                await batchBlock.TriggerBatch();
+                if (sources.Count > 0)
+                    await batchBlock.TriggerBatch();
                 return (rectangles, processedFrame);
             });
             disposalBlock = new ActionBlock<IDictionary<ProcessableVideoSource, Bitmap>>(dict =>
             {
-                foreach (var bitmap in dict.Values)
-                    bitmap.Dispose();
+                if (dict != null)
+                    foreach (var bitmap in dict.Values)
+                        bitmap.Dispose();
             });
             broadcastBlock = new BroadcastBlock<(IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON)>(item => item);
             batchBlock = new BatchDictionaryBlock<ProcessableVideoSource, Bitmap>();
@@ -100,7 +102,7 @@ namespace FaceAnalysis
               batchBlock => manyPicturesAnalysisBlock => broadcastBlock => faceTokenBlock
                                                                         => searchBufferBlock => searchActionBlock
             */
-            batchBlock.LinkTo(manyPicturesAnalysisBlock, linkOptions, delegate { return IsProcessing; });
+            batchBlock.LinkTo(manyPicturesAnalysisBlock, linkOptions, dict => IsProcessing && dict.Count > 0);
             batchBlock.LinkTo(disposalBlock, linkOptions);
             manyPicturesAnalysisBlock.LinkTo(broadcastBlock, linkOptions, item => item.Item2 != null);
             manyPicturesAnalysisBlock.LinkTo(DataflowBlock.NullTarget<(IDictionary<ProcessableVideoSource, Rectangle>, FrameAnalysisJSON)>());
