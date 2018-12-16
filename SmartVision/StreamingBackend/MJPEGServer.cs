@@ -23,7 +23,7 @@ namespace StreamingBackend
                                         "\r\n";
         private bool listen;
         private Task listeningTask;
-        private ConcurrentDictionary<TcpClient, bool> clients = new ConcurrentDictionary<TcpClient, bool>();
+        private ConcurrentDictionary<TcpClient, NewFrameEventHandler> clients = new ConcurrentDictionary<TcpClient, NewFrameEventHandler>();
         private readonly TcpListener listener;
         private readonly ProcessableVideoSource source;
         public MJPEGServer(ProcessableVideoSource source, int port = 0, bool start = false)
@@ -43,7 +43,6 @@ namespace StreamingBackend
             Port = int.Parse(listener.LocalEndpoint.ToString().Split(':')[1]);
             Debug.WriteLine(string.Format("Server has started on port {0}, waiting for a connection...", Port));
 
-            source.NewFrame += SendNewFrameToClients;
             if (!source.Stream.IsRunning)
                 source.Start();
 
@@ -55,10 +54,9 @@ namespace StreamingBackend
         {
             foreach (var client in clients.Keys)
                 client.Dispose();
-            clients = new ConcurrentDictionary<TcpClient, bool>();
+            clients = new ConcurrentDictionary<TcpClient, NewFrameEventHandler>();
 
             source.Stop();
-            source.NewFrame -= SendNewFrameToClients;
 
             listener.Stop();
             listen = false;
@@ -78,39 +76,28 @@ namespace StreamingBackend
                     Debug.WriteLine("Stopping listening");
                     return;
                 }
-
                 Debug.WriteLine("A client connected.");
-                clients[client] = true;
+                void eventHandler(object sender, NewFrameEventArgs e) => SendNewFrameToClient(sender, e, client);
+                clients[client] = eventHandler;
+                source.NewFrame += eventHandler;
                 await SendStringToClientAsync(client, header);
                 client.GetStream().Flush();
             }
         }
 
-        private void CheckClientStatus(TcpClient client)
+        private void RemoveClient(TcpClient client)
         {
-            if (!client.Connected)
+            if (clients.TryRemove(client, out var eventHandler))
             {
-                Debug.WriteLine("Client has disconnected");
-                if (clients.TryRemove(client, out _))
-                {
-                    client.Dispose();
-                }
+                source.NewFrame -= eventHandler;
+                client.Dispose();
             }
         }
 
         private async Task SendStringToClientAsync(TcpClient client, string text)
         {
             var bytes = Encoding.ASCII.GetBytes(text);
-            try
-            {
-                await client.GetStream().WriteAsync(bytes, 0, bytes.Length);
-            }
-            catch (System.IO.IOException e)
-            {
-                Debug.WriteLine("An error occured when sending string to client stream: ");
-                Debug.WriteLine(e);
-                CheckClientStatus(client);
-            }
+            await client.GetStream().WriteAsync(bytes, 0, bytes.Length);
         }
 
         private async Task SendByteImageToClientAsync(TcpClient client, byte[] image)
@@ -122,35 +109,29 @@ namespace StreamingBackend
             stringBuilder.AppendLine("Content-Length: " + image.Length.ToString());
             stringBuilder.AppendLine();
 
-            try
-            {
-                await SendStringToClientAsync(client, stringBuilder.ToString());
-                await client.GetStream().WriteAsync(image, 0, image.Length);
-                await SendStringToClientAsync(client, "\r\n");
-                client.GetStream().Flush();
-            }
-            catch (Exception e ) when (e is System.IO.IOException || e is InvalidOperationException || e is ArgumentException)
-            {
-                Debug.WriteLine("An error occured when sending image to client stream: ");
-                Debug.WriteLine(e);
-                CheckClientStatus(client);
-            }
+            await SendStringToClientAsync(client, stringBuilder.ToString());
+            await client.GetStream().WriteAsync(image, 0, image.Length);
+            await SendStringToClientAsync(client, "\r\n");
+            client.GetStream().Flush();
         }
 
-        private async void SendNewFrameToClients(object sender, NewFrameEventArgs e)
+        private async void SendNewFrameToClient(object sender, NewFrameEventArgs e, TcpClient client)
         {
             byte[] byteImage;
             lock (sender)
                 byteImage = HelperMethods.ImageToByte(new Bitmap(e.Frame));
-            foreach (var client in clients.Keys)
-                try
+            try
+            {
+                await SendByteImageToClientAsync(client, byteImage);
+            }
+            catch (Exception exception) when (exception is System.IO.IOException || exception is InvalidOperationException || exception is ArgumentException)
+            {
+                if (!client.Connected)
                 {
-                    await SendByteImageToClientAsync(client, byteImage);
+                    Debug.WriteLine("Client has disconnected");
+                    RemoveClient(client);
                 }
-                catch (ObjectDisposedException)
-                {
-                    Debug.WriteLine("Client has already disconnected");
-                }
+            }
         }
     }
 }
