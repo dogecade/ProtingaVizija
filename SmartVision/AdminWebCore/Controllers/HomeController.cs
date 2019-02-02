@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,15 +6,20 @@ using AdminWeb.Models;
 using System.Configuration;
 using BusService;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using StreamingBackend;
 using AForge.Video;
-using System.Web.Configuration;
 using Objects.CameraProperties;
 
 namespace AdminWeb.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly FaceProcesssingService processingService;
+
+        public HomeController(FaceProcesssingService processingService)
+        {
+            this.processingService = processingService;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -63,7 +66,7 @@ namespace AdminWeb.Controllers
             propertiesModel.CountryName,
             propertiesModel.BusId,
             propertiesModel.IsBus) = GetCameraDetailsFromConfig();
-            propertiesModel.IsProcessing = MJPEGStreamManager.Processor.IsProcessing;
+            propertiesModel.IsProcessing = processingService.Processor.IsProcessing;
             return View(propertiesModel);
         }
 
@@ -85,15 +88,15 @@ namespace AdminWeb.Controllers
                 default:
                     return null;
             }
-            var (url, id) = await MJPEGStreamManager.AddStreamAsync(stream);
+            var (url, id) = await processingService.AddStreamAsync(stream);
             return Json(new { url, id });
         }
 
         [HttpPost]
         public ActionResult ChangeProperties(CameraPropertiesModel properties)
         {
-            MJPEGStreamManager.Processor.UpdateProperties(properties);
-            MJPEGStreamManager.Processor.UpdateKeys(new FaceAnalysis.ApiKeySet(properties.ApiKey, properties.ApiSecret, properties.FacesetToken));
+            processingService.Processor.UpdateProperties(properties);
+            processingService.Processor.UpdateKeys(new FaceAnalysis.ApiKeySet(properties.ApiKey, properties.ApiSecret, properties.FacesetToken));
             /* TODO: need a better way for this
             Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
             config.AppSettings.Settings["ApiKey"].Value = properties.ApiKey;
@@ -114,7 +117,7 @@ namespace AdminWeb.Controllers
         [HttpGet]
         public ActionResult GetStreamList()
         {
-            return Json(new { result = MJPEGStreamManager.GetStreams() });
+            return Json(new { result = processingService.GetStreams() });
         }
 
         [HttpPost]
@@ -123,7 +126,7 @@ namespace AdminWeb.Controllers
             Debug.WriteLine($"Removing stream {streamId}");
             if (streamId != "")
             {
-                MJPEGStreamManager.RemoveStream(streamId);
+                processingService.RemoveStream(streamId);
                 return Json(new { result = "success" });
             }
             else
@@ -133,17 +136,18 @@ namespace AdminWeb.Controllers
         [HttpGet]
         public async Task<ActionResult> StartStopProcessor()
         {
+            /*
             var (apiKey, apiSecret, facesetToken) = GetApiDetailsFromConfig();
             var (postCode, houseNo, street, city, country, busId, isBus) = GetCameraDetailsFromConfig();
             var properties = new CameraProperties(street, houseNo, city, country, postCode, busId, isBus);
             var keySet = new FaceAnalysis.ApiKeySet(apiKey, apiSecret, facesetToken);
-            MJPEGStreamManager.Processor.UpdateProperties(properties);
-            MJPEGStreamManager.Processor.UpdateKeys(keySet);
-
-            if (!MJPEGStreamManager.Processor.IsProcessing)
-                await MJPEGStreamManager.Processor.Start();
+            processingService.Processor.UpdateProperties(properties);
+            processingService.Processor.UpdateKeys(keySet);
+            */
+            if (!processingService.Processor.IsProcessing)
+                await processingService.Processor.Start();
             else
-                MJPEGStreamManager.Processor.Stop();
+                processingService.Processor.Stop();
 
             return Json(new { result = "success" });
         }

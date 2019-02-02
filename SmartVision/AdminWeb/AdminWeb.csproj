@@ -270,10 +270,6 @@
       <Project>{2FD7541F-EAC2-4888-86D7-9E6D88D4DB41}</Project>
       <Name>Objects</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StreamingBackend\StreamingBackend.csproj">
-      <Project>{39cdf351-c36a-4099-aabd-cc04f785d85b}</Project>
-      <Name>StreamingBackend</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

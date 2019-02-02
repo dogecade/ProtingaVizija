@@ -10,7 +10,7 @@ namespace FaceAnalysis
     interface ISearchResultHandler
     {
         void UpdateProperties(CameraProperties cameraProperties);
-        void Complete();
+        Task Complete();
         Task HandleSearchResult(LikelinessResult result);
     }
 }

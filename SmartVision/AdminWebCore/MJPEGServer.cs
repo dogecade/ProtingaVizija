@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using AForge.Video;
 using FaceAnalysis;
 
-namespace StreamingBackend
+namespace AdminWeb
 {
     public class MJPEGServer
     {
@@ -41,7 +41,7 @@ namespace StreamingBackend
         {
             listener.Start();
             Port = int.Parse(listener.LocalEndpoint.ToString().Split(':')[1]);
-            Debug.WriteLine(string.Format("Server has started on port {0}, waiting for a connection...", Port));
+            Debug.WriteLine($"Server has started on port {Port}, waiting for a connection...");
 
             if (!source.Stream.IsRunning)
                 source.Start();
@@ -76,7 +76,7 @@ namespace StreamingBackend
                     Debug.WriteLine("Stopping listening");
                     return;
                 }
-                Debug.WriteLine("A client connected.");
+                Debug.WriteLine($"A client connected to server on port {Port}.");
                 void eventHandler(object sender, NewFrameEventArgs e) => SendNewFrameToClient(sender, e, client);
                 clients[client] = eventHandler;
                 source.NewFrame += eventHandler;
