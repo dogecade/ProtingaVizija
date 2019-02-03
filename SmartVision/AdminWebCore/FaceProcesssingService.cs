@@ -5,19 +5,27 @@ using System.Threading;
 using System.Threading.Tasks;
 using AForge.Video;
 using FaceAnalysis;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 
 namespace AdminWeb
 {
     public class FaceProcessingService : BackgroundService, IFaceProcessingService
     {
+        private IHubContext<FaceDetectedAlertHub> hubContext;
         public FaceProcessor Processor { get; }
         private readonly ConcurrentDictionary<ProcessableVideoSource, MJPEGServer> streamServers = new ConcurrentDictionary<ProcessableVideoSource, MJPEGServer>();
 
-        public FaceProcessingService()
+        public FaceProcessingService(IHubContext<FaceDetectedAlertHub> hubContext)
         {
-            //TODO: add camera properties?
+            this.hubContext = hubContext;
             Processor = new FaceProcessor();
+            Processor.FacesDetected += HandleFacesDetectedEvent;
+        }
+
+        private async void HandleFacesDetectedEvent(object sender, FacesDetectedEventArgs e)
+        {
+            await hubContext.Clients.All.SendAsync("FacesDetected", e.Sources.Select(source => source.Id.ToString()));
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -27,6 +35,7 @@ namespace AdminWeb
                 await Processor.Complete();
                 foreach (var source in streamServers.Keys)
                     RemoveStream(source);
+                Processor.FacesDetected -= HandleFacesDetectedEvent;
             });
         }
 

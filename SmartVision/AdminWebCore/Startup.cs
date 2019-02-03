@@ -31,6 +31,7 @@ namespace AdminWeb
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSingleton<IFaceProcessingService, FaceProcessingService>();
         }
@@ -51,7 +52,10 @@ namespace AdminWeb
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<FaceDetectedAlertHub>("/faceDetectedHub");
+            });
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

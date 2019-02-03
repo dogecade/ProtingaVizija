@@ -88,27 +88,23 @@
 @section scripts
 {
     <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
-    <script src="~/signalr/hubs"></script>
     <script>
         $(function () {
-            /*
-            var alerter = $.connection.faceDetectedAlert;
 
-            console.log(alerter);
-            console.log($.connection);
+            var connection = new signalR.HubConnectionBuilder().withUrl("/faceDetectedHub").build();
 
-            alerter.client.alertFaceDetected = function (ids) {
+            connection.on("FacesDetected", function (ids) {
                 ids.forEach(function (id) {
                     $('#' + id + '> span').stop();
                     $('#' + id + '> span').show(0).delay(5000).hide(0);
                 });
-            }
-
-            $.connection.hub.start({ transport: 'longPolling' }, function () {
-                console.log('connection started!');
             });
-            */
 
+            connection.start(/*{ transport: 'longPolling' }, */).then(function () {
+                console.log('connection started!');
+            }).catch(function (e) {
+                return console.error(e.toString());
+            });
         });
 
         $(document).ready(function() {
