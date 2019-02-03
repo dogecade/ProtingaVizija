@@ -91,7 +91,7 @@
     <script src="~/signalr/hubs"></script>
     <script>
         $(function () {
-
+            /*
             var alerter = $.connection.faceDetectedAlert;
 
             console.log(alerter);
@@ -107,6 +107,7 @@
             $.connection.hub.start({ transport: 'longPolling' }, function () {
                 console.log('connection started!');
             });
+            */
 
         });
 
@@ -118,8 +119,8 @@
                 success: function (data) {
                     data.result.forEach(function (streamTuple) {
                         var stream = {
-                            url: streamTuple.Item1,
-                            id: streamTuple.Item2
+                            url: streamTuple.item1,
+                            id: streamTuple.item2
                         };
                         addStream(stream);
                     });
@@ -150,7 +151,6 @@
         };
 
         function selectStream(streamElement) {
-            streamElement.w
             $('#imgSelected').remove();
             $('#streams').append(
                 '<div id="imgSelected">' +
