@@ -13,9 +13,9 @@ namespace AdminWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly FaceProcesssingService processingService;
+        private readonly IFaceProcessingService processingService;
 
-        public HomeController(FaceProcesssingService processingService)
+        public HomeController(IFaceProcessingService processingService)
         {
             this.processingService = processingService;
         }
@@ -24,26 +24,23 @@ namespace AdminWeb.Controllers
         {
             return View();
         }
+
         private (string apiKey, string apiSecret, string facesetToken) GetApiDetailsFromConfig()
         {
-            return (ConfigurationManager.AppSettings["ApiKey"],
-                    ConfigurationManager.AppSettings["ApiSecret"],
-                    ConfigurationManager.AppSettings["FacesetToken"]);
+            return (Properties.Settings.Default.ApiKey,
+                    Properties.Settings.Default.ApiSecret,
+                    Properties.Settings.Default.FacesetToken);
         }
 
         private (string postCode, string houseNo, string street, string city, string country, int busId, bool isBus) GetCameraDetailsFromConfig()
         {
-            if (!int.TryParse(ConfigurationManager.AppSettings["BusId"], out int busId))
-                busId = 0;
-            if (!bool.TryParse(ConfigurationManager.AppSettings["IsBus"], out bool isBus))
-                isBus = false;
-            return (ConfigurationManager.AppSettings["PostCode"],
-                    ConfigurationManager.AppSettings["HouseNo"],
-                    ConfigurationManager.AppSettings["Street"],
-                    ConfigurationManager.AppSettings["City"],
-                    ConfigurationManager.AppSettings["Country"],
-                    busId,
-                    isBus);
+            return (Properties.Settings.Default.PostCode,
+                    Properties.Settings.Default.HouseNo,
+                    Properties.Settings.Default.Street,
+                    Properties.Settings.Default.City,
+                    Properties.Settings.Default.Country,
+                    Properties.Settings.Default.BusId,
+                    Properties.Settings.Default.IsBus);
         }
 
         public ActionResult Configuration()
@@ -97,20 +94,18 @@ namespace AdminWeb.Controllers
         {
             processingService.Processor.UpdateProperties(properties);
             processingService.Processor.UpdateKeys(new FaceAnalysis.ApiKeySet(properties.ApiKey, properties.ApiSecret, properties.FacesetToken));
-            /* TODO: need a better way for this
-            Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
-            config.AppSettings.Settings["ApiKey"].Value = properties.ApiKey;
-            config.AppSettings.Settings["ApiSecret"].Value = properties.ApiSecret;
-            config.AppSettings.Settings["FacesetToken"].Value = properties.FacesetToken;
-            config.AppSettings.Settings["PostCode"].Value = properties.PostalCode;
-            config.AppSettings.Settings["HouseNo"].Value = properties.HouseNumber;
-            config.AppSettings.Settings["Street"].Value = properties.StreetName;
-            config.AppSettings.Settings["City"].Value = properties.CityName;
-            config.AppSettings.Settings["Country"].Value = properties.CountryName;
+            Properties.Settings.Default.ApiKey = properties.ApiKey;
+            Properties.Settings.Default.ApiSecret = properties.ApiSecret;
+            Properties.Settings.Default.FacesetToken = properties.FacesetToken;
+            Properties.Settings.Default.PostCode = properties.PostalCode;
+            Properties.Settings.Default.HouseNo = properties.HouseNumber;
+            Properties.Settings.Default.Street = properties.StreetName;
+            Properties.Settings.Default.City = properties.CityName;
+            Properties.Settings.Default.Country = properties.CountryName;
 
-            config.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection("appSettings");
-            */
+            Properties.Settings.Default.Save();
+            Properties.Settings.Default.Reload();
+
             return RedirectToAction("Configuration");
         }
 
@@ -136,14 +131,13 @@ namespace AdminWeb.Controllers
         [HttpGet]
         public async Task<ActionResult> StartStopProcessor()
         {
-            /*
             var (apiKey, apiSecret, facesetToken) = GetApiDetailsFromConfig();
             var (postCode, houseNo, street, city, country, busId, isBus) = GetCameraDetailsFromConfig();
             var properties = new CameraProperties(street, houseNo, city, country, postCode, busId, isBus);
             var keySet = new FaceAnalysis.ApiKeySet(apiKey, apiSecret, facesetToken);
             processingService.Processor.UpdateProperties(properties);
             processingService.Processor.UpdateKeys(keySet);
-            */
+            
             if (!processingService.Processor.IsProcessing)
                 await processingService.Processor.Start();
             else

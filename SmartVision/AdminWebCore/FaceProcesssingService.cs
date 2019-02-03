@@ -9,12 +9,12 @@ using Microsoft.Extensions.Hosting;
 
 namespace AdminWeb
 {
-    public class FaceProcesssingService : BackgroundService
+    public class FaceProcessingService : BackgroundService, IFaceProcessingService
     {
         public FaceProcessor Processor { get; }
         private readonly ConcurrentDictionary<ProcessableVideoSource, MJPEGServer> streamServers = new ConcurrentDictionary<ProcessableVideoSource, MJPEGServer>();
 
-        public FaceProcesssingService()
+        public FaceProcessingService()
         {
             //TODO: add camera properties?
             Processor = new FaceProcessor();
@@ -48,7 +48,7 @@ namespace AdminWeb
             foreach (var source in streamServers.Keys)
                 if (source.Id.ToString() == sourceId)
                 {
-                    RemoveStream(source);
+                    RemoveStream(source, removeFromProcessor: true);
                     return;
                 }
 

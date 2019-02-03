@@ -32,7 +32,7 @@ namespace AdminWeb
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddSingleton<FaceProcesssingService>();
+            services.AddSingleton<IFaceProcessingService, FaceProcessingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

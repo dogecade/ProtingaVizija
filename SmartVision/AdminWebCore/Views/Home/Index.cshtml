@@ -179,7 +179,6 @@
         $("#submit").click(function () {
             var streamUrl = $('#streamURL').val();
             var streamType = $('input[name=streamType]:checked').val();
-            console.log(streamType);
             if (streamUrl === "")
                 return;
             $.ajax({

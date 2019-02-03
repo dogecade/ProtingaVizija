@@ -2,7 +2,7 @@
 {
     public class Keys
     {
-        public const string faceApiKey = "a";
+        public const string faceApiKey = "aIUYTYUGYTUFUYFYTDYTDYTDYD";
         public const string faceApiSecret = "b";
         public const string facesetToken = "c";
 

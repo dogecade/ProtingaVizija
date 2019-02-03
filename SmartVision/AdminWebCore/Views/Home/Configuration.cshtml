@@ -90,7 +90,6 @@
         $('#startStopProcessing').click(function () {
             var isProcessing = @Model.IsProcessing.ToString().ToLower();
             var status = isProcessing ? "stopp" : "start";
-            console.log("aaaa");
             $.ajax({
                 url: '@Url.Action("StartStopProcessor", "Home")',
                 type: 'GET',
