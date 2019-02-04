@@ -206,7 +206,7 @@ namespace FaceAnalysis
         /// <summary>
         /// Completes the processor - completes its blocks, removes all its sources, etc.
         /// </summary>
-        public async void Complete()
+        public async Task Complete()
         {
             IsProcessing = false;
             foreach (var source in sources.Values)
@@ -214,7 +214,7 @@ namespace FaceAnalysis
             batchBlock.Complete();
             searchBufferBlock.Complete();
             await searchActionBlock.Completion;
-            resultHandler.Complete();
+            await resultHandler.Complete();
         }
 
         /// <summary>

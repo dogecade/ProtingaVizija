@@ -17,21 +17,16 @@ namespace Helpers
             httpClient = new HttpClient();
         }
 
-        public string PostSync(string url, MultipartFormDataContent httpContent)
+        public string PostSync(string url, HttpContent httpContent)
         {
             return Post(url, httpContent).Result;
         }
 
-        public async Task<string> Post(string url, MultipartFormDataContent httpContent)
+        public async Task<string> Post(string url, HttpContent httpContent)
         {
-            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
-            {
-                Version = HttpVersion.Version10,
-                Content = httpContent
-            };
             try
             {
-                using (var response = await httpClient.SendAsync(httpRequestMessage))
+                using (var response = await httpClient.PostAsync(url, httpContent))
                 {
                     var responseString = await response.Content.ReadAsStringAsync();
 
@@ -39,11 +34,10 @@ namespace Helpers
                         return responseString;
                     else
                     {
-                        throw new HttpRequestException(response.ToString() + '\n' + responseString + '\n');
+                        throw new HttpRequestException(responseString);
                     }
                 }
             }
-
             catch (HttpRequestException e)
             {
                 Debug.WriteLine(e);

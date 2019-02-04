@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,16 +19,16 @@ namespace FaceAnalysis
         public string Secret { get; }
         public string FacesetToken { get; }
 
-        public (StringContent keyContent, StringContent secretContent) GetHttpContentWithoutFaceset()
+        public (KeyValuePair<string, string> keyPair, KeyValuePair<string, string> secretPair) GetKeyValuePairsWithoutFaceset()
         {
-            return (new StringContent(Key),
-                    new StringContent(Secret));
+            return (new KeyValuePair<string, string>("api_key", Key),
+                    new KeyValuePair<string, string>("api_secret", Secret));
         }
-        public (StringContent keyContent, StringContent secretContent, StringContent FacesetTokenContent) GetHttpContent()
+        public (KeyValuePair<string, string> keyPair, KeyValuePair<string, string> secretPair, KeyValuePair<string, string> facesetTokenPair) GetKeyValuePairs()
         {
-            return (new StringContent(Key),
-                    new StringContent(Secret),
-                    new StringContent(FacesetToken));
+            return (new KeyValuePair<string, string>("api_key", Key),
+                    new KeyValuePair<string, string>("api_secret", Secret),
+                    new KeyValuePair<string, string>("faceset_token", FacesetToken));
         }
     }
 }

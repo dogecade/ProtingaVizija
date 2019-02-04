@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Constants;
 using Helpers;
@@ -12,17 +17,15 @@ namespace FaceAnalysis
     {
         public ApiKeySet ApiKeys
         {
-            get
+            get => keys;
+            set 
             {
-                return keys;
-            }
-            set
-            {
-                lock (keysLock)
-                    keys = value;
+                keysLock.EnterWriteLock();
+                keys = value;
+                keysLock.ExitWriteLock();
             }
         }
-        private readonly object keysLock = new object();
+        private readonly ReaderWriterLockSlim keysLock = new ReaderWriterLockSlim();
         private const string rootUrl = "https://api-us.faceplusplus.com/facepp/v3/";
         private readonly string detectUrl = rootUrl + "detect";
         private readonly string createUrl = rootUrl + "faceset/create";
@@ -46,7 +49,7 @@ namespace FaceAnalysis
             this.httpClientWrapper = httpClientWrapper;
             keys = keySet;
         }
-        
+
         /// <summary>
         /// Calls frame analyze API
         /// </summary>
@@ -54,18 +57,19 @@ namespace FaceAnalysis
         /// <returns>FrameAnalysisJSON</returns>
         public async Task<FrameAnalysisJSON> AnalyzeFrame(byte[] image)
         {
-            using (var formData = new MultipartFormDataContent())
+            var (keyPair, secretPair) = keys.GetKeyValuePairsWithoutFaceset();
+            keysLock.EnterReadLock();
+            var pairs = new KeyValuePair<string, string>[]
             {
-                lock (keysLock)
-                {
-                    var (keyContent, secretContent) = keys.GetHttpContentWithoutFaceset();
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                }
-                formData.Add(new StringContent(Convert.ToBase64String(image)), "image_base64");
+                keyPair,
+                secretPair,
+                new KeyValuePair<string, string>("image_base64", Convert.ToBase64String(image))
+            };
+            keysLock.ExitReadLock();
 
-                return DeserializeResponse<FrameAnalysisJSON>(await httpClientWrapper.Post(detectUrl, formData));
-            }
+            var encodedPairs = pairs.Select(pair => WebUtility.UrlEncode(pair.Key) + "=" + WebUtility.UrlEncode(pair.Value));
+
+            return DeserializeResponse<FrameAnalysisJSON>(await httpClientWrapper.Post(detectUrl, new StringContent(string.Join("&", encodedPairs), Encoding.UTF8, "application/x-www-form-urlencoded")));
         }
 
         /// <summary>
@@ -75,18 +79,19 @@ namespace FaceAnalysis
         /// <returns>CreateFacesetJSON</returns>
         public async Task<CreateFacesetJSON> CreateNewFaceset(string facesetName)
         {
-            using (var formData = new MultipartFormDataContent())
+            var (keyPair, secretPair) = keys.GetKeyValuePairsWithoutFaceset();
+            keysLock.EnterReadLock();
+            var pairs = new KeyValuePair<string, string>[]
             {
-                lock (keysLock)
-                {
-                    var (keyContent, secretContent) = keys.GetHttpContentWithoutFaceset();
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                }
-                formData.Add(new StringContent(facesetName), "display_name");
+                keyPair,
+                secretPair,
+                new KeyValuePair<string, string>("display_name", facesetName)
+            };
+            keysLock.ExitReadLock();
 
-                return DeserializeResponse<CreateFacesetJSON>(await httpClientWrapper.Post(createUrl, formData));
-            }
+            var encodedPairs = pairs.Select(pair => WebUtility.UrlEncode(pair.Key) + "=" + WebUtility.UrlEncode(pair.Value));
+
+            return DeserializeResponse<CreateFacesetJSON>(await httpClientWrapper.Post(createUrl, new StringContent(string.Join("&", encodedPairs), Encoding.UTF8, "application/x-www-form-urlencoded")));
         }
 
         /// <summary>
@@ -97,19 +102,20 @@ namespace FaceAnalysis
         /// <returns>AddFaceJSON</returns>
         public async Task<AddFaceJSON> AddFaceToFaceset(string faceToken)
         {
-            using (var formData = new MultipartFormDataContent())
+            var (keyPair, secretPair, facesetPair) = keys.GetKeyValuePairs();
+            keysLock.EnterReadLock();
+            var pairs = new KeyValuePair<string, string>[]
             {
-                lock (keysLock)
-                {
-                    var (keyContent, secretContent, facesetTokenContent) = keys.GetHttpContent();
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(facesetTokenContent, "faceset_token");
-                }
-                formData.Add(new StringContent(faceToken), "face_tokens");
+                keyPair,
+                secretPair,
+                facesetPair,
+                new KeyValuePair<string, string>("face_tokens", faceToken)
+            };
+            keysLock.ExitReadLock();
 
-                return DeserializeResponse<AddFaceJSON>(await httpClientWrapper.Post(addUrl, formData));
-            }
+            var encodedPairs = pairs.Select(pair => WebUtility.UrlEncode(pair.Key) + "=" + WebUtility.UrlEncode(pair.Value));
+
+            return DeserializeResponse<AddFaceJSON>(await httpClientWrapper.Post(addUrl, new StringContent(string.Join("&", encodedPairs), Encoding.UTF8, "application/x-www-form-urlencoded")));
         }
 
         /// <summary>
@@ -120,19 +126,20 @@ namespace FaceAnalysis
         /// <returns>RemoveFaceJSON</returns>
         public async Task<RemoveFaceJSON> RemoveFaceFromFaceset(string faceToken)
         {
-            using (var formData = new MultipartFormDataContent())
+            var (keyPair, secretPair, facesetPair) = keys.GetKeyValuePairs();
+            keysLock.EnterReadLock();
+            var pairs = new KeyValuePair<string, string>[]
             {
-                lock (keysLock)
-                {
-                    var (keyContent, secretContent, facesetTokenContent) = keys.GetHttpContent();
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(facesetTokenContent, "faceset_token");
-                }
-                formData.Add(new StringContent(faceToken), "face_tokens");
+                keyPair,
+                secretPair,
+                facesetPair,
+                new KeyValuePair<string, string>("face_tokens", faceToken)
+            };
+            keysLock.ExitReadLock();
 
-                return DeserializeResponse<RemoveFaceJSON>(await httpClientWrapper.Post(removeUrl, formData));
-            }
+            var encodedPairs = pairs.Select(pair => WebUtility.UrlEncode(pair.Key) + "=" + WebUtility.UrlEncode(pair.Value));
+
+            return DeserializeResponse<RemoveFaceJSON>(await httpClientWrapper.Post(removeUrl, new StringContent(string.Join("&", encodedPairs), Encoding.UTF8, "application/x-www-form-urlencoded")));
         }
 
         /// <summary>
@@ -142,19 +149,20 @@ namespace FaceAnalysis
         /// <returns>FoundFacesJSON</returns>
         public async Task<FoundFacesJSON> SearchFaceInFaceset(string faceToken)
         {
-            using (var formData = new MultipartFormDataContent())
+            var (keyPair, secretPair, facesetPair) = keys.GetKeyValuePairs();
+            keysLock.EnterReadLock();
+            var pairs = new KeyValuePair<string, string>[]
             {
-                lock (keysLock)
-                {
-                    var (keyContent, secretContent, facesetTokenContent) = keys.GetHttpContent();
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(facesetTokenContent, "faceset_token");
-                }
-                formData.Add(new StringContent(faceToken), "face_token");
+                keyPair,
+                secretPair,
+                facesetPair,
+                new KeyValuePair<string, string>("face_token", faceToken)
+            };
+            keysLock.ExitReadLock();
 
-                return DeserializeResponse<FoundFacesJSON>(await httpClientWrapper.Post(searchUrl, formData));
-            }
+            var encodedPairs = pairs.Select(pair => WebUtility.UrlEncode(pair.Key) + "=" + WebUtility.UrlEncode(pair.Value));
+
+            return DeserializeResponse<FoundFacesJSON>(await httpClientWrapper.Post(searchUrl, new StringContent(string.Join("&", encodedPairs), Encoding.UTF8, "application/x-www-form-urlencoded")));
         }
 
         /// <summary>
@@ -164,18 +172,19 @@ namespace FaceAnalysis
         /// <returns>FacesetDetailsJSON</returns>
         public async Task<FacesetDetailsJSON> GetFacesetDetail()
         {
-            using (var formData = new MultipartFormDataContent())
+            var (keyPair, secretPair, facesetPair) = keys.GetKeyValuePairs();
+            keysLock.EnterReadLock();
+            var pairs = new KeyValuePair<string, string>[]
             {
-                lock (keysLock)
-                {
-                    var (keyContent, secretContent, facesetTokenContent) = keys.GetHttpContent();
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(facesetTokenContent, "faceset_token");
-                }
+                keyPair,
+                secretPair,
+                facesetPair
+            };
+            keysLock.ExitReadLock();
 
-                return DeserializeResponse<FacesetDetailsJSON>(await httpClientWrapper.Post(getDetailUrl, formData));
-            }
+            var encodedPairs = pairs.Select(pair => WebUtility.UrlEncode(pair.Key) + "=" + WebUtility.UrlEncode(pair.Value));
+
+            return DeserializeResponse<FacesetDetailsJSON>(await httpClientWrapper.Post(getDetailUrl, new StringContent(string.Join("&", encodedPairs), Encoding.UTF8, "application/x-www-form-urlencoded")));
         }
 
         /// <summary>
@@ -184,18 +193,19 @@ namespace FaceAnalysis
         /// <returns>DeleteFacesetJSON</returns>
         public async Task<DeleteFacesetJSON> DeleteFaceset()
         {
-            using (var formData = new MultipartFormDataContent())
+            var (keyPair, secretPair, facesetPair) = keys.GetKeyValuePairs();
+            keysLock.EnterReadLock();
+            var pairs = new KeyValuePair<string, string>[]
             {
-                lock (keysLock)
-                {
-                    var (keyContent, secretContent, facesetTokenContent) = keys.GetHttpContent();
-                    formData.Add(keyContent, "api_key");
-                    formData.Add(secretContent, "api_secret");
-                    formData.Add(facesetTokenContent, "faceset_token");
-                };
+                keyPair,
+                secretPair,
+                facesetPair
+            };
+            keysLock.ExitReadLock();
 
-                return DeserializeResponse<DeleteFacesetJSON>(await httpClientWrapper.Post(deleteFacesetUrl, formData));
-            }
+            var encodedPairs = pairs.Select(pair => WebUtility.UrlEncode(pair.Key) + "=" + WebUtility.UrlEncode(pair.Value));
+
+            return DeserializeResponse<DeleteFacesetJSON>(await httpClientWrapper.Post(deleteFacesetUrl, new StringContent(string.Join("&", encodedPairs), Encoding.UTF8, "application/x-www-form-urlencoded")));
         }
 
         private T DeserializeResponse<T>(string response) where T : IApiResponseJSON

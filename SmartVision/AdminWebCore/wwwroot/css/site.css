@@ -1,0 +1,48 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
+for details on configuring this project to bundle and minify static web assets. */
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 400px;
+}
+
+.btn-primary,
+.navbar {
+    background-color: #004225;
+    border-color: #004225;
+}
+
+.btn-primary:focus, .btn-primary.focus, .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(1, 66, 37, 0.5);
+    border-color: #004225;
+}
+
+.btn-primary:hover {
+    background-color: #002112;
+    border-color: #004225;
+}
+
+.btn-primary:active {
+    background-color: #002112 !important;
+    border-color: #004225 !important;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+.navbar-brand > img {
+    width: auto !important;
+}

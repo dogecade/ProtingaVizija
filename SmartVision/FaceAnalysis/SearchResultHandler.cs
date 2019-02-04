@@ -81,9 +81,9 @@ namespace FaceAnalysis
             UpdateProperties(cameraProperties);
         }
 
-        public void Complete()
+        public async Task Complete()
         {
-            scheduler.Shutdown();
+            await scheduler.Shutdown();
         }
 
         public void UpdateProperties(CameraProperties cameraProperties)

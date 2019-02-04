@@ -47,7 +47,6 @@ namespace LocationService
         public static string CreateLocationPictureFromCoordinates(Location location)
         {
             string coordinates = location.Latitude + "," + location.Longitude;
-            var x = Keys.googleApiKey;
 
             return mapRootUrl +
                    "center=" + coordinates +

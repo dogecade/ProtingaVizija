@@ -1,3 +1,7 @@
 language: csharp
+dotnet: 2.1.502
 solution: ./SmartVision/SmartVision.sln
-install: nuget restore ./SmartVision/SmartVision.sln
+mono: latest
+script:
+  - cd ./SmartVision/AdminWebCore
+  - dotnet restore
