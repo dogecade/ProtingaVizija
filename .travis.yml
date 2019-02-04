@@ -3,6 +3,6 @@ dotnet: 2.1.502
 solution: ./SmartVision/SmartVision.sln
 mono: latest
 script:
-  - cd AdminWebCore
+  - cd ./SmartVision/AdminWebCore
   - dotnet restore
   - dotnet build -c Release
