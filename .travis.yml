@@ -5,4 +5,3 @@ mono: latest
 script:
   - cd ./SmartVision/AdminWebCore
   - dotnet restore
-  - dotnet build -c Release
